@@ -28,6 +28,11 @@
 
 body{
   font-family:'Sarabun',sans-serif;
+  background-color:#bfe3a8;
+  background-image:
+    radial-gradient(circle at 16% 90%, rgba(255,255,255,0.30), transparent 42%),
+    radial-gradient(circle at 85% 12%, rgba(255,255,180,0.35), transparent 38%),
+    linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%);
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
@@ -988,6 +993,11 @@ body{
 
 body{
   font-family:'Sarabun',sans-serif;
+  background-color:#bfe3a8;
+  background-image:
+    radial-gradient(circle at 16% 90%, rgba(255,255,255,0.30), transparent 42%),
+    radial-gradient(circle at 85% 12%, rgba(255,255,180,0.35), transparent 38%),
+    linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%);
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
@@ -2363,6 +2373,9 @@ body { padding-bottom: 72px; }
   background: #faeeda; border-radius: 99px; padding: 2px 10px;
 }
 .vh-date { font-size: 0.66rem; color: #b08030; font-weight: 700; }
+.vh-date-head { font-size: 0.78rem; font-weight: 800; color: #9a6000; margin-bottom: 10px; }
+.vh-ver-block { margin-bottom: 12px; }
+.vh-ver-block:last-child { margin-bottom: 0; }
 .vh-title { font-size: 0.88rem; font-weight: 800; color: #5a3a10; margin: 6px 0 6px; }
 .vh-list { list-style: none; padding: 0; margin: 0; }
 .vh-list li {
@@ -2518,11 +2531,22 @@ body { padding-bottom: 72px; }
 #admin-fab {
   position: fixed; right: 0; top: 72%; transform: translateY(-50%);
   z-index: 1500;
+  display: none; align-items: center; justify-content: center;
   background: linear-gradient(135deg,#6b7280,#3f4654); color: #fff; border: none;
   border-radius: 14px 0 0 14px; padding: 11px 8px; font-size: 1.2rem; cursor: pointer;
   box-shadow: -2px 2px 10px rgba(0,0,0,0.28);
 }
+#admin-fab.show { display: flex; }
 #admin-fab:active { transform: translateY(-50%) scale(0.93); }
+.admin-hide-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.22); color: #fff;
+  border-radius: 99px; padding: 6px 14px; font-family: inherit;
+  font-size: 0.78rem; font-weight: 800;
+}
+.admin-hide-btn:active { transform: scale(0.95); }
+.admin-money-current { font-size: 0.68rem; font-weight: 600; color: #2a8030; margin-left: 4px; }
+.admin-money-current b { font-weight: 800; }
 #admin-overlay {
   display: none;
   position: fixed; inset: 0;
@@ -2568,6 +2592,46 @@ body { padding-bottom: 72px; }
   font-size: 0.82rem; font-weight: 800; margin-top: 4px;
 }
 .admin-exit-btn:active { transform: scale(0.97); }
+
+/* ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) ===== */
+#farmland-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#farmland-overlay.show { display: flex; }
+.fl-summary {
+  display: flex; gap: 10px; margin-bottom: 12px;
+}
+.fl-sum-box {
+  flex: 1; background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(200,160,80,0.35); border-radius: 12px;
+  padding: 10px; text-align: center;
+}
+.fl-sum-label { font-size: 0.66rem; color: #b08030; font-weight: 700; }
+.fl-sum-value { font-size: 1.05rem; font-weight: 800; color: #5a3a10; margin-top: 2px; }
+.fl-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(200,160,80,0.3); border-radius: 14px;
+  padding: 12px; margin-bottom: 10px;
+}
+.fl-emoji {
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px;
+  background: #e6f3da; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.fl-info { flex: 1; min-width: 0; }
+.fl-name { font-size: 0.9rem; font-weight: 800; color: #5a3a10; }
+.fl-desc { font-size: 0.7rem; color: #9a7850; margin: 2px 0 6px; line-height: 1.4; }
+.fl-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.fl-tag { font-size: 0.62rem; font-weight: 700; border-radius: 99px; padding: 2px 8px; background: #eef3e3; color: #4a6a1a; }
+.fl-value { font-size: 0.82rem; font-weight: 800; color: #7a4a00; }
+.fl-empty { text-align: center; color: #b08030; font-size: 0.82rem; padding: 24px 12px; line-height: 1.6; }
 
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
@@ -2624,6 +2688,9 @@ body { padding-bottom: 72px; }
 .space-free-label {
   color: #ffe8b0; font-size: 0.9rem; font-weight: 800;
 }
+#farm-space-bar { cursor: pointer; transition: transform 0.1s, filter 0.1s; }
+#farm-space-bar:hover { filter: brightness(1.08); }
+#farm-space-bar:active { transform: scale(0.98); }
 .usable-bar {
   background: linear-gradient(135deg,#3a6a8b,#2a4a6b) !important;
   margin-left: 6px;
@@ -3048,11 +3115,11 @@ body { padding-bottom: 72px; }
         <h2>🛠️ สำหรับผู้ดูแลระบบ</h2>
         <div class="version-current">เครื่องมือทดสอบ — เพิ่มเงิน / เร่งเวลา</div>
       </div>
-      <button class="version-close" id="admin-close">✕</button>
+      <button class="admin-hide-btn" id="admin-hide-btn">ซ่อน ⤵</button>
     </div>
     <div class="version-body">
       <div class="admin-block">
-        <div class="admin-title">💵 เพิ่มจำนวนเงิน</div>
+        <div class="admin-title">💵 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> บาท</span></div>
         <div class="admin-row">
           <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
           <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
@@ -3078,6 +3145,20 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
+<!-- ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) ===== -->
+<div id="farmland-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🌾 ที่ดินเพื่อการเกษตร</h2>
+        <div class="version-current" id="farmland-summary">รวมพื้นที่ 0 ตร.ม.</div>
+      </div>
+      <button class="version-close" id="farmland-close">✕</button>
+    </div>
+    <div class="version-body" id="farmland-body"></div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
@@ -3099,7 +3180,7 @@ body { padding-bottom: 72px; }
 
   <!-- FARM TAB -->
   <div id="tab-farm">
-    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div>
+    <div class="space-bar-inline" id="farm-space-bar" title="ดูรายละเอียดที่ดินเกษตร"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div>
     <div id="farm-sections-container"></div>
   </div>
 
@@ -4125,6 +4206,72 @@ const UPDATE_HISTORY = [
       'ปิดแผง (✕) จะเก็บการเปลี่ยนแปลงไว้ทดสอบต่อ จนกว่าจะกดออกจากโหมด',
     ],
   },
+  {
+    version: '0.21',
+    date: '15/06/2026',
+    title: 'ปรับ flow แผงผู้ดูแลระบบ',
+    details: [
+      'แถบลอย 🛠️ ไม่แสดงตอนเริ่ม — เข้าผ่านเมนู "สำหรับผู้ดูแลระบบ" เท่านั้น',
+      'เปลี่ยนปุ่ม ✕ เป็น "ซ่อน" — กดแล้วหุบแผงเป็นแถบลอยขอบขวา',
+      'กดออกจากผู้ดูแลระบบ แถบลอยหายทั้งหมด (ไม่เหลือแถบซ่อน)',
+      'กดปุ่มยอดเงินสำเร็จรูปจะเด้งใส่ช่องกรอก + แสดงยอดเงินปัจจุบันข้างหัวข้อ',
+    ],
+  },
+  {
+    version: '0.22',
+    date: '15/06/2026',
+    title: 'แก้บั๊กแผงแอดมินต้องกด 2 ครั้ง',
+    details: [
+      'แก้อาการกดเมนูผู้ดูแลระบบครั้งแรกแผงไม่เด้ง (ต้องกดซ้ำ)',
+      'กันคลิกพื้นหลังเด้งปิดทันทีตอนเพิ่งเปิด (ghost click บนมือถือ) ภายใน 400ms',
+    ],
+  },
+  {
+    version: '0.23',
+    date: '15/06/2026',
+    title: 'แก้ต้นเหตุแผงแอดมินต้องกด 2 ครั้ง (จริง)',
+    details: [
+      'ประกาศตัวแปร gameMinute ที่เดิมไม่ถูกประกาศ ทำให้ openAdmin เกิด ReferenceError ครั้งแรก',
+      'ตอนนี้กดเมนูผู้ดูแลระบบครั้งเดียวแผงเด้งทันที + แก้ความเสี่ยงนาฬิกาเกมพร้อมกัน',
+    ],
+  },
+  {
+    version: '0.24',
+    date: '15/06/2026',
+    title: 'จัดกลุ่มประวัติการอัพเดตตามวันที่',
+    details: [
+      'เวอร์ชันที่อยู่วันเดียวกันถูกรวมไว้ในกล่องเดียว แสดงวันที่ครั้งเดียว',
+      'ไล่เวอร์ชันย่อยภายในกล่องวันนั้น อ่านง่ายขึ้น',
+    ],
+  },
+  {
+    version: '0.25',
+    date: '15/06/2026',
+    title: 'เพิ่มทรัพย์สินเริ่มต้นในพื้นที่ใช้สอย',
+    details: [
+      'เพิ่ม "โรงเก็บสินค้า" (20 ตร.ม.) ในหมวดบ้านและที่อยู่อาศัย — มีตั้งแต่เริ่มเกม',
+      'เพิ่ม "บ้านน้องหมา" (5 ตร.ม.) ในหมวดเดียวกัน — มีตั้งแต่เริ่มเกม',
+    ],
+  },
+  {
+    version: '0.26',
+    date: '15/06/2026',
+    title: 'ปรับธีมเกมเป็นบรรยากาศฟาร์ม',
+    details: [
+      'เพิ่มพื้นหลังไล่สีท้องฟ้า → ทุ่งหญ้าเขียว พร้อมแสงแดดมุมขวาบน',
+      'คงพาเนลโทนครีม-ทองเดิมให้เข้ากับธีม ไม่กระทบเลย์เอาต์',
+    ],
+  },
+  {
+    version: '0.27',
+    date: '15/06/2026',
+    title: 'กดแถบพื้นที่เกษตรดูรายละเอียดที่ดิน',
+    details: [
+      'แถบ "พื้นที่เกษตร" กดได้ → เด้งหน้าต่างรายละเอียดที่ดิน (ดึงข้อมูลจากทรัพย์สิน)',
+      'แสดงพื้นที่รวม + มูลค่ารวม + รายการที่ดินแต่ละแปลง พร้อมแท็ก',
+      'พื้นที่และมูลค่าจะเพิ่มขึ้นอัตโนมัติเมื่อซื้อที่ดินเพิ่ม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4286,6 +4433,7 @@ const GAME_GUIDE = [
 // ============================================================
 let gold = 500, exp = 0, level = 1;
 let day  = 1;
+let gameMinute = 0;  // นาฬิกาเกม (ใช้โดยระบบเปลี่ยนวัน + เร่งเวลาแอดมิน)
 // ===== ระบบพลังงาน (เฟส 2) — ทำงานด้วยตนเองใช้พลังงาน =====
 const ENERGY_MAX = 100;
 let energy = ENERGY_MAX;
@@ -4640,6 +4788,16 @@ let assetsState = {
       desc:'บ้านไม้ชั้นเดียว อายุกว่า 20 ปี\nมีห้องนอน 2 ห้อง ห้องน้ำ 1 ห้อง',
       marketValue:180000, sold:false, area:40,
       tags:[{cls:'tag-condition',label:'⚠️ สภาพเก่า'},{cls:'tag-size',label:'📐 40 ตร.ม.'},{cls:'tag-type',label:'🏠 ที่พักอาศัย'}]
+    },
+    { id:'warehouse1', name:'โรงเก็บสินค้า', emoji:'🏬',
+      desc:'โรงเก็บสินค้าและผลผลิตในฟาร์ม\nหลังคาสังกะสี พื้นปูน',
+      marketValue:30000, sold:false, area:20,
+      tags:[{cls:'tag-size',label:'📐 20 ตร.ม.'},{cls:'tag-type',label:'📦 จัดเก็บสินค้า'}]
+    },
+    { id:'doghouse1', name:'บ้านน้องหมา', emoji:'🐶',
+      desc:'บ้านไม้หลังเล็กสำหรับสุนัขเฝ้าฟาร์ม',
+      marketValue:2000, sold:false, area:5,
+      tags:[{cls:'tag-size',label:'📐 5 ตร.ม.'},{cls:'tag-type',label:'🐕 ที่อยู่สัตว์เลี้ยง'}]
     }
   ],
   lands: [
@@ -6895,20 +7053,67 @@ function openVersionHistory(){
   if(cur) cur.textContent = 'เวอร์ชันปัจจุบัน v' + GAME_VERSION;
   const body = document.getElementById('version-body');
   if(body){
-    body.innerHTML = UPDATE_HISTORY.slice().reverse().map(function(u){
-      const lis = u.details.map(function(d){ return '<li>' + d + '</li>'; }).join('');
-      return '<div class="vh-entry">'
-        + '<div class="vh-top"><span class="vh-ver">v' + u.version + '</span>'
-        + '<span class="vh-date">📅 ' + u.date + '</span></div>'
-        + '<div class="vh-title">' + u.title + '</div>'
-        + '<ul class="vh-list">' + lis + '</ul>'
-        + '</div>';
+    // จัดกลุ่มเวอร์ชันที่อยู่วันเดียวกันให้อยู่กล่องเดียว (ใหม่สุดอยู่บน)
+    const groups = [];
+    UPDATE_HISTORY.slice().reverse().forEach(function(u){
+      let g = groups.length && groups[groups.length-1].date === u.date ? groups[groups.length-1] : null;
+      if(!g){ g = { date: u.date, items: [] }; groups.push(g); }
+      g.items.push(u);
+    });
+    body.innerHTML = groups.map(function(g){
+      const vers = g.items.map(function(u){
+        const lis = u.details.map(function(d){ return '<li>' + d + '</li>'; }).join('');
+        return '<div class="vh-ver-block">'
+          + '<span class="vh-ver">v' + u.version + '</span>'
+          + '<div class="vh-title">' + u.title + '</div>'
+          + '<ul class="vh-list">' + lis + '</ul>'
+          + '</div>';
+      }).join('');
+      return '<div class="vh-entry"><div class="vh-date-head">📅 ' + g.date + '</div>' + vers + '</div>';
     }).join('');
   }
   document.getElementById('version-overlay').classList.add('show');
 }
 function closeVersionHistory(){
   document.getElementById('version-overlay').classList.remove('show');
+}
+
+// ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) — ข้อมูลจากทรัพย์สิน (lands) =====
+function openFarmland(){
+  const lands = (assetsState.lands || []).filter(l => !l.sold);
+  const totalArea = lands.reduce((s,l)=> s + (l.space || 0), 0);
+  const totalVal  = lands.reduce((s,l)=> s + (l.marketValue || 0), 0);
+  const sum = document.getElementById('farmland-summary');
+  if(sum) sum.textContent = `รวมพื้นที่ ${totalArea.toLocaleString('th-TH')} ตร.ม. · มูลค่ารวม ฿${totalVal.toLocaleString('th-TH')}`;
+  const body = document.getElementById('farmland-body');
+  if(body){
+    if(lands.length === 0){
+      body.innerHTML = '<div class="fl-empty">🌱 ยังไม่มีที่ดินเกษตร<br>ซื้อที่ดินเพิ่มเพื่อขยายพื้นที่เพาะปลูก</div>';
+    } else {
+      body.innerHTML =
+        `<div class="fl-summary">
+          <div class="fl-sum-box"><div class="fl-sum-label">พื้นที่รวม</div><div class="fl-sum-value">${totalArea.toLocaleString('th-TH')} ตร.ม.</div></div>
+          <div class="fl-sum-box"><div class="fl-sum-label">มูลค่ารวม</div><div class="fl-sum-value">฿${totalVal.toLocaleString('th-TH')}</div></div>
+        </div>` +
+        lands.map(function(l){
+          const tags = (l.tags || []).map(function(t){ return `<span class="fl-tag">${t.label}</span>`; }).join('');
+          const desc = (l.desc || '').replace(/\n/g, '<br>');
+          return `<div class="fl-card">
+            <div class="fl-emoji">${l.emoji || '🌾'}</div>
+            <div class="fl-info">
+              <div class="fl-name">${l.name}</div>
+              <div class="fl-desc">${desc}</div>
+              <div class="fl-tags">${tags}</div>
+              <div class="fl-value">💰 มูลค่า ฿${(l.marketValue||0).toLocaleString('th-TH')}</div>
+            </div>
+          </div>`;
+        }).join('');
+    }
+  }
+  document.getElementById('farmland-overlay').classList.add('show');
+}
+function closeFarmland(){
+  document.getElementById('farmland-overlay').classList.remove('show');
 }
 
 // ===== GAME GUIDE (คู่มือการเล่น) =====
@@ -7145,6 +7350,7 @@ function adminAddMoney(amount){
   if(!amount || amount <= 0){ toast('❌ ระบุจำนวนเงินให้ถูกต้อง'); return; }
   gold += amount;
   updateTopbar();
+  updateAdminMoneyDisplay();
   toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
 }
 function adminSkipDays(n){
@@ -7175,16 +7381,29 @@ function adminFillEnergy(){
 // โหมดผู้ดูแลระบบ — เก็บ snapshot ตอนเข้า เพื่อคืนค่าเงิน/เวลาตอนออก
 let adminActive = false;
 let adminSnapshot = null;
+let adminOpenedAt = 0;  // กันคลิกพื้นหลังเด้งปิดทันทีตอนเพิ่งเปิด (ghost click บนมือถือ)
+// อัปเดตยอดเงินปัจจุบันข้างหัวข้อ "เพิ่มจำนวนเงิน"
+function updateAdminMoneyDisplay(){
+  const el = document.getElementById('admin-money-current');
+  if(el) el.textContent = gold.toLocaleString('th-TH');
+}
+// เปิด/เด้งแผงแอดมินขึ้นกลางจอ (เข้าโหมดถ้ายังไม่เข้า + เก็บ snapshot)
 function openAdmin(){
   if(!adminActive){
     adminActive = true;
     adminSnapshot = { gold: gold, day: day, gameMinute: gameMinute, energy: energy };
   }
   document.getElementById('admin-overlay').classList.add('show');
+  document.getElementById('admin-fab').classList.remove('show');  // ซ่อนแถบลอยขณะเปิดแผง
+  adminOpenedAt = Date.now();
+  updateAdminMoneyDisplay();
 }
-// ปิดแผง (ยังอยู่ในโหมดแอดมิน — เก็บการเปลี่ยนแปลงไว้ทดสอบต่อ)
-function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
-// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด
+// ซ่อนแผง → หุบเป็นแถบลอยขอบขวา (ยังอยู่ในโหมดแอดมิน)
+function hideAdmin(){
+  document.getElementById('admin-overlay').classList.remove('show');
+  if(adminActive) document.getElementById('admin-fab').classList.add('show');
+}
+// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิม + เก็บแถบลอยหายทั้งหมด
 function exitAdmin(){
   if(adminSnapshot){
     gold       = adminSnapshot.gold;
@@ -7201,6 +7420,7 @@ function exitAdmin(){
     if(currentTab === 'market') renderMarket();
   }
   document.getElementById('admin-overlay').classList.remove('show');
+  document.getElementById('admin-fab').classList.remove('show');
   toast('🚪 ออกจากผู้ดูแลระบบ — คืนค่าเงิน/เวลาเดิมแล้ว');
 }
 
@@ -7252,6 +7472,12 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('guide-close').addEventListener('click', closeGuide);
   document.getElementById('guide-overlay').addEventListener('click', function(e){
     if(e.target === this) closeGuide();
+  });
+  // แถบพื้นที่เกษตร → เปิดรายละเอียดที่ดิน
+  document.getElementById('farm-space-bar').addEventListener('click', openFarmland);
+  document.getElementById('farmland-close').addEventListener('click', closeFarmland);
+  document.getElementById('farmland-overlay').addEventListener('click', function(e){
+    if(e.target === this) closeFarmland();
   });
 })();
 
@@ -7316,7 +7542,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
 // ─────────────────────────── ADMIN (สำหรับผู้ดูแลระบบ) ───────────────────────────
 (function(){
   document.getElementById('admin-fab').addEventListener('click', openAdmin);
-  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-hide-btn').addEventListener('click', hideAdmin);
   document.getElementById('admin-exit-btn').addEventListener('click', exitAdmin);
   document.getElementById('admin-money-btn').addEventListener('click', function(){
     const inp = document.getElementById('admin-money-input');
@@ -7327,9 +7553,17 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('admin-fill-energy').addEventListener('click', adminFillEnergy);
   const ao = document.getElementById('admin-overlay');
   ao.addEventListener('click', function(e){
-    if(e.target === this){ closeAdmin(); return; }
+    if(e.target === this){
+      if(Date.now() - adminOpenedAt < 400) return;  // กัน ghost click ตอนเพิ่งเปิด
+      hideAdmin(); return;  // คลิกพื้นหลัง = ซ่อน (หุบเป็นแถบลอย)
+    }
     const moneyChip = e.target.closest('[data-money]');
-    if(moneyChip){ adminAddMoney(moneyChip.dataset.money); return; }
+    if(moneyChip){
+      // บวกยอดที่เลือกสะสมในช่องกรอก — ต้องกด "เพิ่มเงิน" เองก่อนถึงจะเพิ่มจริง
+      const inp = document.getElementById('admin-money-input');
+      inp.value = (Math.max(0, Math.floor(Number(inp.value) || 0)) + Number(moneyChip.dataset.money));
+      return;
+    }
     const dayChip = e.target.closest('[data-skipday]');
     if(dayChip){ adminSkipDays(Number(dayChip.dataset.skipday)); return; }
   });
