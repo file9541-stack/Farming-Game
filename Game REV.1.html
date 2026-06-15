@@ -118,6 +118,12 @@ body{
   border-color:rgba(30,130,200,0.25);
   color:#1050a0;
 }
+.topstat-energy {
+  background:rgba(245,180,20,0.15);
+  border-color:rgba(220,160,20,0.35);
+  color:#9a6000; cursor:pointer;
+}
+.topstat-energy:hover { filter:brightness(1.05); }
 #btn-nextday{
   margin-left:auto; flex-shrink:0;
   background:linear-gradient(135deg,#f5c518,#e0a010);
@@ -1040,6 +1046,12 @@ body{
   border-color:rgba(30,130,200,0.25);
   color:#1050a0;
 }
+.topstat-energy {
+  background:rgba(245,180,20,0.15);
+  border-color:rgba(220,160,20,0.35);
+  color:#9a6000; cursor:pointer;
+}
+.topstat-energy:hover { filter:brightness(1.05); }
 #btn-nextday{
   margin-left:auto; flex-shrink:0;
   background:linear-gradient(135deg,#f5c518,#e0a010);
@@ -2383,6 +2395,36 @@ body { padding-bottom: 72px; }
 }
 .gd-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
 
+/* ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) — ใช้โครงเดียวกับ version modal ===== */
+#food-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#food-overlay.show { display: flex; }
+.food-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 12px; padding: 8px 10px; margin-bottom: 8px;
+}
+.food-emoji { font-size: 1.5rem; flex-shrink: 0; }
+.food-info { flex: 1; min-width: 0; }
+.food-name { font-size: 0.84rem; font-weight: 700; color: #5a3a10; }
+.food-sub { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.food-eat-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#4abf4a,#2a8030); color: #fff;
+  border-radius: 10px; padding: 7px 12px; font-family: inherit;
+  font-size: 0.76rem; font-weight: 800;
+}
+.food-eat-btn:active { transform: scale(0.94); }
+.food-empty { text-align: center; color: #b08030; font-size: 0.8rem; padding: 24px 12px; line-height: 1.6; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2659,7 +2701,7 @@ body { padding-bottom: 72px; }
     <div class="navd-res-row">
       <div class="navd-res">💎 0</div>
       <div class="navd-res">💵 0 บาท</div>
-      <div class="navd-res">⚡ 0/100</div>
+      <div class="navd-res" id="navd-energy">⚡ 100/100</div>
     </div>
   </div>
 
@@ -2777,10 +2819,25 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
+<!-- ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) ===== -->
+<div id="food-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🍽️ กินอาหารฟื้นพลังงาน</h2>
+        <div class="version-current" id="food-energy">⚡ 100/100</div>
+      </div>
+      <button class="version-close" id="food-close">✕</button>
+    </div>
+    <div class="version-body" id="food-body"></div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
     <div class="topstat topstat-cash">💵 <span id="t-gold">80</span> <span style="font-size:0.65rem;opacity:0.75;">บาท</span></div>
+    <div class="topstat topstat-energy" id="t-energy" title="กดเพื่อกินอาหารฟื้นพลังงาน">⚡ 100/100</div>
     <div class="topstat topstat-day" id="t-datetime" style="font-size:0.7rem;">📅 --</div>
   </div>
   <div id="topbar-row2">
@@ -3390,6 +3447,17 @@ const BUILD_INFO = {
   big:   { verb:'สร้างคอก',     money:3000, seconds:90 },
   ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75 },
 };
+// ===== ระบบอาหาร (เฟส 2) — กินเพื่อฟื้นฟูพลังงาน =====
+// ใช้ของในคลัง (id ตรงกับผลผลิต) มากินเพื่อเติมพลังงาน
+const FOOD_RESTORE = {
+  corn:   { emoji:'🌽', name:'ข้าวโพด',          restore:8  },
+  mango:  { emoji:'🥭', name:'มะม่วง',           restore:12 },
+  egg:    { emoji:'🥚', name:'ไข่ไก่',           restore:6  },
+  milk:   { emoji:'🥛', name:'นมสด',             restore:10 },
+  apple:  { emoji:'🍎', name:'แอปเปิ้ล',         restore:8  },
+  rice:   { emoji:'🌾', name:'ข้าว',             restore:5  },
+  bread:  { emoji:'🍞', name:'ขนมปัง (อาหารสำเร็จรูป)', restore:20 },
+};
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3667,6 +3735,16 @@ const UPDATE_HISTORY = [
       'พื้นที่ถูกจองระหว่างก่อสร้าง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
     ],
   },
+  {
+    version: '0.12',
+    date: '15/06/2026',
+    title: 'ระบบพลังงาน + อาหาร เฟส 2',
+    details: [
+      'เพิ่มค่าพลังงาน (สูงสุด 100) แสดงบนแถบบนและในเมนู',
+      'การปลูก/เก็บเกี่ยว/ดูแลสัตว์-ปลา/ก่อสร้าง ใช้พลังงาน — หมดแล้วทำงานไม่ได้',
+      'เพิ่มระบบอาหาร: กดป้าย ⚡ เพื่อกินของในคลัง (ข้าวโพด/ไข่/นม/ผลไม้/ขนมปัง) ฟื้นพลังงาน',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3681,6 +3759,15 @@ const GAME_GUIDE = [
       'กดปุ่ม ➕ ในแต่ละหมวด เพื่อสั่งก่อสร้าง (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
       'ก่อสร้างใช้ทั้งพื้นที่ว่างและเงินทุน และต้องรอเวลาก่อสร้างจริง',
       'เมื่อครบเวลา สิ่งปลูกสร้างจะพร้อมใช้งานทันที',
+    ],
+  },
+  {
+    icon: '⚡', title: 'พลังงานและอาหาร',
+    lines: [
+      'การทำงานด้วยตนเอง (ปลูก/เก็บเกี่ยว/ดูแลสัตว์/ก่อสร้าง) ใช้พลังงาน',
+      'พลังงานสูงสุด 100 — ดูได้ที่ป้าย ⚡ บนแถบบนและในเมนู',
+      'พลังงานหมดจะทำงานไม่ได้ ต้องกินอาหารเพื่อฟื้นฟู',
+      'กดป้าย ⚡ บนแถบบน เพื่อเปิดหน้ากินอาหาร (เช่น ข้าวโพด ไข่ไก่ นม ผลไม้ ขนมปัง)',
     ],
   },
   {
@@ -3777,6 +3864,16 @@ const GAME_GUIDE = [
 // ============================================================
 let gold = 500, exp = 0, level = 1;
 let day  = 1;
+// ===== ระบบพลังงาน (เฟส 2) — ทำงานด้วยตนเองใช้พลังงาน =====
+const ENERGY_MAX = 100;
+let energy = ENERGY_MAX;
+// พลังงานที่ใช้ต่อการกระทำแต่ละอย่าง
+const ENERGY_COST = {
+  plant: 3, harvest: 2,        // ปลูกพืช / เก็บเกี่ยว
+  treePlant: 3, treeHarvest: 2, // ปลูกไม้ผล / เก็บไม้ผล
+  animalCollect: 2, fishCollect: 2, // ดูแล/เก็บผลผลิตสัตว์-ปลา
+  build: 10,                   // ก่อสร้าง (ทำเอง)
+};
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
 let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
@@ -3867,6 +3964,7 @@ function startConstruction(type){
     toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
     return;
   }
+  if(!spendEnergy(ENERGY_COST.build)) return;  // ทำเองใช้พลังงาน (เฟส 2)
   gold -= b.money;
   constructions.push({ type, finishAt: Date.now() + b.seconds * 1000 });
   updateTopbar();
@@ -4166,6 +4264,38 @@ function updateTopbar(){
     rankEl.firstChild.textContent = rank.emoji + ' ';
     rankEl.style.color = rank.color;
   }
+}
+
+// ===== ระบบพลังงาน + อาหาร (เฟส 2) =====
+// อัปเดตป้ายพลังงานทั้ง topbar และเมนู drawer
+function renderEnergy(){
+  const txt = `⚡ ${energy}/${ENERGY_MAX}`;
+  const tEl = document.getElementById('t-energy');
+  if(tEl) tEl.textContent = txt;
+  const dEl = document.getElementById('navd-energy');
+  if(dEl) dEl.textContent = txt;
+}
+// ใช้พลังงาน n หน่วย — ไม่พอ → คืน false พร้อมแจ้งเตือน (ชวนกินอาหาร)
+function spendEnergy(n){
+  if(energy < n){
+    toast(`❌ พลังงานไม่พอ! ต้องใช้ ⚡ ${n} (เหลือ ${energy})<br>กินอาหารเพื่อฟื้นฟูพลังงาน 🍽️`, true);
+    return false;
+  }
+  energy -= n;
+  renderEnergy();
+  return true;
+}
+// กินอาหาร 1 ชิ้นจากคลัง → ฟื้นพลังงาน (ไม่เกินค่าสูงสุด)
+function eatFood(id){
+  const f = FOOD_RESTORE[id];
+  if(!f) return;
+  if(energy >= ENERGY_MAX){ toast('⚡ พลังงานเต็มแล้ว ไม่ต้องกินเพิ่ม'); return; }
+  if(!removeInv(id, 1)){ toast(`❌ ไม่มี ${f.emoji} ${f.name} ในคลัง`); return; }
+  const before = energy;
+  energy = Math.min(ENERGY_MAX, energy + f.restore);
+  renderEnergy();
+  toast(`🍽️ กิน ${f.emoji} ${f.name} — ฟื้นพลังงาน +${energy - before} (⚡ ${energy}/${ENERGY_MAX})`);
+  renderFoodList();
 }
 
 function setLog(msg){ document.getElementById('log-box').textContent = msg; }
@@ -4484,6 +4614,7 @@ function renderFarm(){
 function clickPlot(i){
   const p = plots[i];
   if(p.crop){
+    if(!spendEnergy(ENERGY_COST.harvest)) return;  // เก็บเกี่ยวใช้พลังงาน
     const c = CROPS.find(x=>x.id===p.crop);
     addInv(c.id, c.name, c.emoji, 1, c.sell);
     addExp(c.exp);
@@ -4496,6 +4627,7 @@ function clickPlot(i){
   if(!cropDef){ setLog('เลือกพืชก่อน — ซื้อเมล็ดพันธุ์ที่ร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีเมล็ด ${cropDef.emoji} ${cropDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
+  if(!spendEnergy(ENERGY_COST.plant)) return;  // ปลูกพืชใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   plots[i] = {crop:cropDef.id};
   setLog(`ปลูก ${cropDef.emoji} ${cropDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บเกี่ยว`);
@@ -4532,6 +4664,7 @@ function renderTrees(){
 function clickTree(i){
   const p = treePlots[i];
   if(p.tree){
+    if(!spendEnergy(ENERGY_COST.treeHarvest)) return;  // เก็บไม้ผลใช้พลังงาน
     const t = TREES.find(x=>x.id===p.tree);
     addInv(t.id, t.name, t.emoji, t.harvestQty, t.sell);
     addExp(t.exp*t.harvestQty);
@@ -4543,6 +4676,7 @@ function clickTree(i){
   if(!treeDef){ setLog('เลือกต้นไม้ — ซื้อกล้าไม้จากร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีกล้า ${treeDef.emoji} ${treeDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
+  if(!spendEnergy(ENERGY_COST.treePlant)) return;  // ปลูกไม้ผลใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   treePlots[i] = {tree:treeDef.id};
   setLog(`ปลูก ${treeDef.emoji} ${treeDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บ`);
@@ -4600,6 +4734,7 @@ function clickPen(size, idx){
   if(!pen) return;
   if(pen.animal){
     // เก็บผลผลิต
+    if(!spendEnergy(ENERGY_COST.animalCollect)) return;  // ดูแลสัตว์ใช้พลังงาน
     const a = ANIMALS.find(x=>x.id===pen.animal);
     addInv(a.product, a.productName, a.productEmoji, 1, a.sell);
     addExp(a.exp);
@@ -4643,6 +4778,7 @@ function renderFish(){
 function collectFish(i){
   const p = fishPonds[i];
   if(!p.fish) return;
+  if(!spendEnergy(ENERGY_COST.fishCollect)) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
   addExp(f.exp);
@@ -6233,6 +6369,35 @@ function closeGuide(){
   document.getElementById('guide-overlay').classList.remove('show');
 }
 
+// ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) =====
+function renderFoodList(){
+  const enEl = document.getElementById('food-energy');
+  if(enEl) enEl.textContent = `⚡ ${energy}/${ENERGY_MAX}`;
+  const body = document.getElementById('food-body');
+  if(!body) return;
+  const rows = Object.keys(FOOD_RESTORE).map(function(id){
+    const inv = getInv(id);
+    if(!inv || inv.qty < 1) return '';
+    const f = FOOD_RESTORE[id];
+    return `<div class="food-row">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-info">
+        <div class="food-name">${f.name}</div>
+        <div class="food-sub">ฟื้นพลังงาน +${f.restore} · มีในคลัง ${inv.qty}</div>
+      </div>
+      <button class="food-eat-btn" data-foodid="${id}">กิน</button>
+    </div>`;
+  }).filter(Boolean).join('');
+  body.innerHTML = rows || '<div class="food-empty">🍽️ ยังไม่มีอาหารในคลัง<br>เก็บเกี่ยวผลผลิต เช่น ข้าวโพด ไข่ไก่ นม ผลไม้<br>แล้วนำมากินเพื่อฟื้นพลังงาน</div>';
+}
+function openFood(){
+  renderFoodList();
+  document.getElementById('food-overlay').classList.add('show');
+}
+function closeFood(){
+  document.getElementById('food-overlay').classList.remove('show');
+}
+
 </script>
 <script>
 // ============================================================
@@ -6277,6 +6442,19 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('guide-close').addEventListener('click', closeGuide);
   document.getElementById('guide-overlay').addEventListener('click', function(e){
     if(e.target === this) closeGuide();
+  });
+})();
+
+// ─────────────────────────── ENERGY / FOOD (พลังงาน + อาหาร) ───────────────────────────
+(function(){
+  const tEnergy = document.getElementById('t-energy');
+  if(tEnergy) tEnergy.addEventListener('click', openFood);
+  document.getElementById('food-close').addEventListener('click', closeFood);
+  const fo = document.getElementById('food-overlay');
+  fo.addEventListener('click', function(e){
+    if(e.target === this){ closeFood(); return; }
+    const btn = e.target.closest('.food-eat-btn');
+    if(btn) eatFood(btn.dataset.foodid);
   });
 })();
 
@@ -6651,6 +6829,7 @@ window.onload = function(){
   updateTopbar();
   updateSpaceLabels();
   renderVersionLabels();
+  renderEnergy();
   startConstructionTimer();
   genOrder(); genOrder(); genOrder();
   renderOrders();
