@@ -4177,6 +4177,15 @@ const UPDATE_HISTORY = [
       'ไล่เวอร์ชันย่อยภายในกล่องวันนั้น อ่านง่ายขึ้น',
     ],
   },
+  {
+    version: '0.25',
+    date: '15/06/2026',
+    title: 'เพิ่มทรัพย์สินเริ่มต้นในพื้นที่ใช้สอย',
+    details: [
+      'เพิ่ม "โรงเก็บสินค้า" (20 ตร.ม.) ในหมวดบ้านและที่อยู่อาศัย — มีตั้งแต่เริ่มเกม',
+      'เพิ่ม "บ้านน้องหมา" (5 ตร.ม.) ในหมวดเดียวกัน — มีตั้งแต่เริ่มเกม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4693,6 +4702,16 @@ let assetsState = {
       desc:'บ้านไม้ชั้นเดียว อายุกว่า 20 ปี\nมีห้องนอน 2 ห้อง ห้องน้ำ 1 ห้อง',
       marketValue:180000, sold:false, area:40,
       tags:[{cls:'tag-condition',label:'⚠️ สภาพเก่า'},{cls:'tag-size',label:'📐 40 ตร.ม.'},{cls:'tag-type',label:'🏠 ที่พักอาศัย'}]
+    },
+    { id:'warehouse1', name:'โรงเก็บสินค้า', emoji:'🏬',
+      desc:'โรงเก็บสินค้าและผลผลิตในฟาร์ม\nหลังคาสังกะสี พื้นปูน',
+      marketValue:30000, sold:false, area:20,
+      tags:[{cls:'tag-size',label:'📐 20 ตร.ม.'},{cls:'tag-type',label:'📦 จัดเก็บสินค้า'}]
+    },
+    { id:'doghouse1', name:'บ้านน้องหมา', emoji:'🐶',
+      desc:'บ้านไม้หลังเล็กสำหรับสุนัขเฝ้าฟาร์ม',
+      marketValue:2000, sold:false, area:5,
+      tags:[{cls:'tag-size',label:'📐 5 ตร.ม.'},{cls:'tag-type',label:'🐕 ที่อยู่สัตว์เลี้ยง'}]
     }
   ],
   lands: [
