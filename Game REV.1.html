@@ -2688,9 +2688,16 @@ body { padding-bottom: 72px; }
 .space-free-label {
   color: #ffe8b0; font-size: 0.9rem; font-weight: 800;
 }
-#farm-space-bar { cursor: pointer; transition: transform 0.1s, filter 0.1s; }
-#farm-space-bar:hover { filter: brightness(1.08); }
-#farm-space-bar:active { transform: scale(0.98); }
+.farmland-btn {
+  display: inline-block; vertical-align: top; margin-left: 6px; margin-bottom: 10px;
+  background: linear-gradient(135deg,#4a8b3a,#2e6b20);
+  color: #eaffd8; font-family: inherit; font-size: 0.9rem; font-weight: 800;
+  border: none; border-radius: 12px; padding: 7px 14px; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30,80,10,0.25);
+  transition: transform 0.1s, filter 0.1s;
+}
+.farmland-btn:hover { filter: brightness(1.08); }
+.farmland-btn:active { transform: scale(0.97); }
 .usable-bar {
   background: linear-gradient(135deg,#3a6a8b,#2a4a6b) !important;
   margin-left: 6px;
@@ -3180,7 +3187,7 @@ body { padding-bottom: 72px; }
 
   <!-- FARM TAB -->
   <div id="tab-farm">
-    <div class="space-bar-inline" id="farm-space-bar" title="ดูรายละเอียดที่ดินเกษตร"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div>
+    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div><button id="farmland-btn" class="farmland-btn">🌍 ที่ดิน</button>
     <div id="farm-sections-container"></div>
   </div>
 
@@ -4279,6 +4286,15 @@ const UPDATE_HISTORY = [
     details: [
       'เพิ่มปุ่ม "ตั้งขาย" ในการ์ดที่ดินบนหน้าต่างพื้นที่เกษตร (ใช้ flow ขายเดิม)',
       'ลบหมวด "ที่ดิน" ออกจากหน้าทรัพย์สินของฉัน (ย้ายมารวมที่เดียว)',
+    ],
+  },
+  {
+    version: '0.29',
+    date: '15/06/2026',
+    title: 'แยกปุ่ม "ที่ดิน" ข้างแถบพื้นที่เกษตร',
+    details: [
+      'เพิ่มปุ่ม "🌍 ที่ดิน" ข้างแถบพื้นที่เกษตร กดแล้วเปิดหน้าต่างรายละเอียด/ตั้งขายที่ดิน',
+      'แถบพื้นที่เกษตรกดแล้วไม่ทำอะไร (ย้ายการเปิดมาที่ปุ่มแทน ให้ผู้เล่นเห็นชัดขึ้น)',
     ],
   },
 ];
@@ -7484,8 +7500,8 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('guide-overlay').addEventListener('click', function(e){
     if(e.target === this) closeGuide();
   });
-  // แถบพื้นที่เกษตร → เปิดรายละเอียดที่ดิน
-  document.getElementById('farm-space-bar').addEventListener('click', openFarmland);
+  // ปุ่ม "ที่ดิน" ข้างแถบพื้นที่เกษตร → เปิดรายละเอียด/ตั้งขายที่ดิน
+  document.getElementById('farmland-btn').addEventListener('click', openFarmland);
   document.getElementById('farmland-close').addEventListener('click', closeFarmland);
   document.getElementById('farmland-overlay').addEventListener('click', function(e){
     if(e.target === this){ closeFarmland(); return; }
