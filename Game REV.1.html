@@ -4147,6 +4147,15 @@ const UPDATE_HISTORY = [
       'กดปุ่มยอดเงินสำเร็จรูปจะเด้งใส่ช่องกรอก + แสดงยอดเงินปัจจุบันข้างหัวข้อ',
     ],
   },
+  {
+    version: '0.22',
+    date: '15/06/2026',
+    title: 'แก้บั๊กแผงแอดมินต้องกด 2 ครั้ง',
+    details: [
+      'แก้อาการกดเมนูผู้ดูแลระบบครั้งแรกแผงไม่เด้ง (ต้องกดซ้ำ)',
+      'กันคลิกพื้นหลังเด้งปิดทันทีตอนเพิ่งเปิด (ghost click บนมือถือ) ภายใน 400ms',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7198,6 +7207,7 @@ function adminFillEnergy(){
 // โหมดผู้ดูแลระบบ — เก็บ snapshot ตอนเข้า เพื่อคืนค่าเงิน/เวลาตอนออก
 let adminActive = false;
 let adminSnapshot = null;
+let adminOpenedAt = 0;  // กันคลิกพื้นหลังเด้งปิดทันทีตอนเพิ่งเปิด (ghost click บนมือถือ)
 // อัปเดตยอดเงินปัจจุบันข้างหัวข้อ "เพิ่มจำนวนเงิน"
 function updateAdminMoneyDisplay(){
   const el = document.getElementById('admin-money-current');
@@ -7211,6 +7221,7 @@ function openAdmin(){
   }
   document.getElementById('admin-overlay').classList.add('show');
   document.getElementById('admin-fab').classList.remove('show');  // ซ่อนแถบลอยขณะเปิดแผง
+  adminOpenedAt = Date.now();
   updateAdminMoneyDisplay();
 }
 // ซ่อนแผง → หุบเป็นแถบลอยขอบขวา (ยังอยู่ในโหมดแอดมิน)
@@ -7362,7 +7373,10 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('admin-fill-energy').addEventListener('click', adminFillEnergy);
   const ao = document.getElementById('admin-overlay');
   ao.addEventListener('click', function(e){
-    if(e.target === this){ hideAdmin(); return; }  // คลิกพื้นหลัง = ซ่อน (หุบเป็นแถบลอย)
+    if(e.target === this){
+      if(Date.now() - adminOpenedAt < 400) return;  // กัน ghost click ตอนเพิ่งเปิด
+      hideAdmin(); return;  // คลิกพื้นหลัง = ซ่อน (หุบเป็นแถบลอย)
+    }
     const moneyChip = e.target.closest('[data-money]');
     if(moneyChip){
       // บวกยอดที่เลือกสะสมในช่องกรอก — ต้องกด "เพิ่มเงิน" เองก่อนถึงจะเพิ่มจริง
