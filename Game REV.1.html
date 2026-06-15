@@ -2514,6 +2514,46 @@ body { padding-bottom: 72px; }
 }
 #material-overlay.show { display: flex; }
 
+/* ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== */
+#admin-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#admin-overlay.show { display: flex; }
+.admin-block {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px; padding: 12px; margin-bottom: 10px;
+}
+.admin-title { font-size: 0.84rem; font-weight: 800; color: #5a3a10; margin-bottom: 8px; }
+.admin-row { display: flex; gap: 8px; }
+.admin-input {
+  flex: 1; min-width: 0; border: 1.5px solid #d4b878; border-radius: 10px;
+  padding: 8px 12px; font-family: inherit; font-size: 0.85rem; color: #5a3a10;
+  outline: none; background: #fffdf7;
+}
+.admin-input:focus { border-color: #e0a010; }
+.admin-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#4abf4a,#2a8030); color: #fff;
+  border-radius: 10px; padding: 8px 14px; font-family: inherit;
+  font-size: 0.8rem; font-weight: 800;
+}
+.admin-btn:active { transform: scale(0.95); }
+.admin-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.admin-chip {
+  border: 1px solid rgba(220,160,20,0.4); cursor: pointer;
+  background: rgba(245,197,24,0.18); color: #7a4a00;
+  border-radius: 99px; padding: 6px 12px; font-family: inherit;
+  font-size: 0.74rem; font-weight: 700;
+}
+.admin-chip:active { transform: scale(0.95); }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2887,6 +2927,11 @@ body { padding-bottom: 72px; }
       <span class="navd-badge nb-amber" id="navd-version-badge">v0.00</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="admin">
+      <div class="navd-icon">🛠️</div>
+      <span class="navd-label">สำหรับผู้ดูแลระบบ</span>
+      <i class="navd-chevron">›</i>
+    </div>
   </div>
 
   <div class="navd-footer">
@@ -2976,6 +3021,43 @@ body { padding-bottom: 72px; }
       <button class="version-close" id="material-close">✕</button>
     </div>
     <div class="version-body" id="material-body"></div>
+  </div>
+</div>
+
+<!-- ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== -->
+<div id="admin-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🛠️ สำหรับผู้ดูแลระบบ</h2>
+        <div class="version-current">เครื่องมือทดสอบ — เพิ่มเงิน / เร่งเวลา</div>
+      </div>
+      <button class="version-close" id="admin-close">✕</button>
+    </div>
+    <div class="version-body">
+      <div class="admin-block">
+        <div class="admin-title">💵 เพิ่มจำนวนเงิน</div>
+        <div class="admin-row">
+          <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
+          <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
+        </div>
+        <div class="admin-quick">
+          <button class="admin-chip" data-money="1000">+1,000</button>
+          <button class="admin-chip" data-money="10000">+10,000</button>
+          <button class="admin-chip" data-money="100000">+100,000</button>
+          <button class="admin-chip" data-money="1000000">+1,000,000</button>
+        </div>
+      </div>
+      <div class="admin-block">
+        <div class="admin-title">⏩ เร่งเวลา</div>
+        <div class="admin-quick">
+          <button class="admin-chip" data-skipday="1">⏭️ ผ่านไป 1 วัน</button>
+          <button class="admin-chip" data-skipday="7">⏭️ ผ่านไป 7 วัน</button>
+          <button class="admin-chip" id="admin-finish-builds">🏗️ ก่อสร้างเสร็จทันที</button>
+          <button class="admin-chip" id="admin-fill-energy">⚡ เติมพลังงานเต็ม</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4004,6 +4086,16 @@ const UPDATE_HISTORY = [
       'ราคาขายในตลาดปรับตามคุณภาพ — เน่าเสียขายไม่ได้ (มูลค่า 0)',
       'คลังบันทึกเวลาเก็บเกี่ยว (freshAt) และเฉลี่ยอายุเมื่อรวมกอง · เมล็ด/ไม้/สินค้าแปรรูปไม่เน่าเสีย',
       'หน้าตลาดแสดงป้ายคุณภาพและราคาต่อชิ้น พร้อมรีเฟรชอัตโนมัติให้เห็นการเสื่อม',
+    ],
+  },
+  {
+    version: '0.19',
+    date: '15/06/2026',
+    title: 'เมนูสำหรับผู้ดูแลระบบ (Admin Tools)',
+    details: [
+      'เพิ่มเมนู "สำหรับผู้ดูแลระบบ" ในหมวดช่วยเหลือ',
+      'เพิ่มเงินได้ตามจำนวนที่ระบุ + ปุ่มลัด (+1k/+10k/+100k/+1M)',
+      'เร่งเวลา: ผ่านไป 1/7 วัน, ก่อสร้างเสร็จทันที, เติมพลังงานเต็ม',
     ],
   },
 ];
@@ -7020,6 +7112,42 @@ function closeMaterials(){
   document.getElementById('material-overlay').classList.remove('show');
 }
 
+// ===== ADMIN TOOLS (สำหรับผู้ดูแลระบบ) =====
+function adminAddMoney(amount){
+  amount = Math.floor(Number(amount));
+  if(!amount || amount <= 0){ toast('❌ ระบุจำนวนเงินให้ถูกต้อง'); return; }
+  gold += amount;
+  updateTopbar();
+  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
+}
+function adminSkipDays(n){
+  for(let k=0; k<n; k++){
+    gameMinute += 30; day++;
+    const wage = dailyWage();  // จ่ายค่าแรงรายวันตามปกติ (กฎ 14: คงตรรกะเปลี่ยนวัน)
+    if(wage > 0){
+      if(gold >= wage) gold -= wage;
+      else workers = workers.filter(w => w.mode !== 'day');
+    }
+    autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้
+  }
+  updateTopbar();
+  if(typeof currentTab !== 'undefined' && currentTab === 'farm') renderFarmSections();
+  toast(`⏩ เร่งเวลาผ่านไป ${n} วัน — ตอนนี้วันที่ ${day}`);
+}
+function adminFinishBuilds(){
+  if(constructions.length === 0){ toast('ไม่มีงานก่อสร้างที่กำลังทำอยู่'); return; }
+  constructions.forEach(c => { c.finishAt = Date.now() - 1; });
+  tickConstructions();  // ทำให้สิ่งปลูกสร้างเสร็จทันที (ผ่าน flow เดิม)
+  toast('🛠️ ก่อสร้างทั้งหมดเสร็จทันที');
+}
+function adminFillEnergy(){
+  energy = ENERGY_MAX;
+  renderEnergy();
+  toast('⚡ เติมพลังงานเต็มแล้ว');
+}
+function openAdmin(){ document.getElementById('admin-overlay').classList.add('show'); }
+function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
+
 </script>
 <script>
 // ============================================================
@@ -7056,6 +7184,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
     if(item.dataset.nav === 'workers'){ closeNav(); openWorkers(); return; }
     if(item.dataset.nav === 'materials'){ closeNav(); openMaterials(); return; }
+    if(item.dataset.nav === 'admin'){ closeNav(); openAdmin(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
@@ -7125,6 +7254,26 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(e.target === this){ closeMaterials(); return; }
     const btn = e.target.closest('[data-matid]');
     if(btn) buyMaterial(btn.dataset.matid, btn.dataset.matqty);
+  });
+})();
+
+// ─────────────────────────── ADMIN (สำหรับผู้ดูแลระบบ) ───────────────────────────
+(function(){
+  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-money-btn').addEventListener('click', function(){
+    const inp = document.getElementById('admin-money-input');
+    adminAddMoney(inp.value);
+    inp.value = '';
+  });
+  document.getElementById('admin-finish-builds').addEventListener('click', adminFinishBuilds);
+  document.getElementById('admin-fill-energy').addEventListener('click', adminFillEnergy);
+  const ao = document.getElementById('admin-overlay');
+  ao.addEventListener('click', function(e){
+    if(e.target === this){ closeAdmin(); return; }
+    const moneyChip = e.target.closest('[data-money]');
+    if(moneyChip){ adminAddMoney(moneyChip.dataset.money); return; }
+    const dayChip = e.target.closest('[data-skipday]');
+    if(dayChip){ adminSkipDays(Number(dayChip.dataset.skipday)); return; }
   });
 })();
 
