@@ -4272,6 +4272,15 @@ const UPDATE_HISTORY = [
       'พื้นที่และมูลค่าจะเพิ่มขึ้นอัตโนมัติเมื่อซื้อที่ดินเพิ่ม',
     ],
   },
+  {
+    version: '0.28',
+    date: '15/06/2026',
+    title: 'ย้ายระบบตั้งขายที่ดินไปหน้าพื้นที่เกษตร',
+    details: [
+      'เพิ่มปุ่ม "ตั้งขาย" ในการ์ดที่ดินบนหน้าต่างพื้นที่เกษตร (ใช้ flow ขายเดิม)',
+      'ลบหมวด "ที่ดิน" ออกจากหน้าทรัพย์สินของฉัน (ย้ายมารวมที่เดียว)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5974,6 +5983,7 @@ function renderAssetsList(){
   const container = document.getElementById('assets-list-container');
   let html = '';
   ASSET_SECTIONS.forEach(sec => {
+    if(sec.key === 'lands') return;  // ที่ดินย้ายไปแสดง/ตั้งขายในหน้าพื้นที่เกษตรแล้ว
     html += `<div class="assets-section-title">${sec.label}</div>`;
     assetsState[sec.key].forEach(asset => {
       const fmtVal = '฿' + asset.marketValue.toLocaleString('th-TH');
@@ -7105,6 +7115,7 @@ function openFarmland(){
               <div class="fl-desc">${desc}</div>
               <div class="fl-tags">${tags}</div>
               <div class="fl-value">💰 มูลค่า ฿${(l.marketValue||0).toLocaleString('th-TH')}</div>
+              <button class="btn-sell-asset" data-assetid="${l.id}" data-catkey="lands" style="margin-top:8px;">🏷️ ตั้งขาย</button>
             </div>
           </div>`;
         }).join('');
@@ -7477,7 +7488,13 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('farm-space-bar').addEventListener('click', openFarmland);
   document.getElementById('farmland-close').addEventListener('click', closeFarmland);
   document.getElementById('farmland-overlay').addEventListener('click', function(e){
-    if(e.target === this) closeFarmland();
+    if(e.target === this){ closeFarmland(); return; }
+    // ปุ่มตั้งขายที่ดิน (ย้ายมาจากหน้าทรัพย์สิน) — ใช้ flow เดิม
+    const sellBtn = e.target.closest('.btn-sell-asset');
+    if(sellBtn && sellBtn.dataset.assetid){
+      closeFarmland();
+      openSellModal(sellBtn.dataset.assetid, sellBtn.dataset.catkey);
+    }
   });
 })();
 
