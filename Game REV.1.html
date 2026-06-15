@@ -2193,6 +2193,111 @@ body { padding-bottom: 72px; }
 }
 .chat-send:active { transform: scale(0.92); }
 
+/* ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== */
+#nav-toggle {
+  position: fixed;
+  right: 0; top: 50%; transform: translateY(-50%);
+  z-index: 1500;
+  background: linear-gradient(135deg,#f5c518,#e0a010);
+  color: #6b3500; border: none;
+  border-radius: 16px 0 0 16px;
+  padding: 14px 8px;
+  font-size: 1.3rem; cursor: pointer;
+  box-shadow: -2px 2px 10px rgba(120,80,20,0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+#nav-toggle:active { transform: translateY(-50%) scale(0.94); }
+
+#nav-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.5);
+  z-index: 2600;
+  backdrop-filter: blur(2px);
+}
+#nav-overlay.show { display: block; }
+
+#nav-drawer {
+  position: fixed;
+  right: 0; top: 0; bottom: 0;
+  width: 82%; max-width: 320px;
+  background: linear-gradient(180deg,#fffaf0,#fbf2e2);
+  box-shadow: -4px 0 24px rgba(120,80,20,0.28);
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.34,1.1,0.64,1);
+  z-index: 2700;
+  display: flex; flex-direction: column;
+}
+#nav-drawer.show { transform: translateX(0); }
+
+.navd-header {
+  background: linear-gradient(135deg,#e0a010,#b87810);
+  padding: 16px 16px 14px;
+  flex-shrink: 0;
+}
+.navd-profile-row { display: flex; align-items: center; gap: 12px; }
+.navd-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+}
+.navd-pname { color: #fffaf0; font-size: 0.95rem; font-weight: 800; }
+.navd-psub { color: rgba(255,250,240,0.8); font-size: 0.66rem; margin-top: 2px; }
+.navd-res-row { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.navd-res {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.2); color: #fffaf0;
+  border-radius: 99px; padding: 3px 10px;
+  font-size: 0.68rem; font-weight: 700;
+}
+.navd-close {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(255,255,255,0.2); border: none; color: #fffaf0;
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  font-size: 1rem; font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.navd-scroll { flex: 1; overflow-y: auto; padding: 8px 0; }
+.navd-section {
+  font-size: 0.6rem; font-weight: 800; color: #b08030;
+  letter-spacing: 0.06em; padding: 12px 16px 5px;
+}
+.navd-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; cursor: pointer;
+  transition: background 0.12s;
+}
+.navd-item:hover { background: rgba(200,150,40,0.1); }
+.navd-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+  background: rgba(200,150,40,0.12);
+}
+.navd-label { flex: 1; font-size: 0.84rem; color: #5a3a10; font-weight: 600; }
+.navd-badge {
+  font-size: 0.6rem; font-weight: 800;
+  border-radius: 99px; padding: 2px 8px;
+  background: #fce2e2; color: #a32d2d;
+}
+.navd-badge.nb-green { background: #e6f3da; color: #27500a; }
+.navd-badge.nb-amber { background: #faeeda; color: #7a5000; }
+.navd-chevron { font-size: 0.9rem; color: #b08030; }
+
+.navd-footer {
+  flex-shrink: 0;
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(200,160,80,0.3);
+}
+.navd-logout {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; padding: 6px 0;
+  color: #a32d2d; font-size: 0.84rem; font-weight: 700;
+}
+.navd-version { font-size: 0.6rem; color: #b08030; margin-top: 6px; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2427,6 +2532,106 @@ body { padding-bottom: 72px; }
   <div class="chat-input-row">
     <input type="text" class="chat-input" id="chat-input" placeholder="พิมพ์ข้อความ..." maxlength="200">
     <button class="chat-send" id="chat-send">➤</button>
+  </div>
+</div>
+
+<!-- ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== -->
+<button id="nav-toggle" aria-label="เปิดเมนู">☰</button>
+<div id="nav-overlay"></div>
+<div id="nav-drawer">
+  <div class="navd-header">
+    <button class="navd-close" id="nav-close">✕</button>
+    <div class="navd-profile-row">
+      <div class="navd-avatar">นท</div>
+      <div>
+        <div class="navd-pname">ชาวนามือใหม่</div>
+        <div class="navd-psub">Lv.1 · งานฟาร์ม</div>
+      </div>
+    </div>
+    <div class="navd-res-row">
+      <div class="navd-res">💎 0</div>
+      <div class="navd-res">💵 0 บาท</div>
+      <div class="navd-res">⚡ 0/100</div>
+    </div>
+  </div>
+
+  <div class="navd-scroll">
+    <div class="navd-section">เกม</div>
+    <div class="navd-item" data-nav="myfarm">
+      <div class="navd-icon">🌾</div>
+      <span class="navd-label">ฟาร์มของฉัน</span>
+    </div>
+    <div class="navd-item" data-nav="market">
+      <div class="navd-icon">🛒</div>
+      <span class="navd-label">ตลาด</span>
+      <span class="navd-badge">ใหม่</span>
+    </div>
+    <div class="navd-item" data-nav="quests">
+      <div class="navd-icon">🏆</div>
+      <span class="navd-label">ภารกิจ</span>
+      <span class="navd-badge nb-amber">3</span>
+    </div>
+    <div class="navd-item" data-nav="leaderboard">
+      <div class="navd-icon">👑</div>
+      <span class="navd-label">อันดับ Leaderboard</span>
+    </div>
+    <div class="navd-item" data-nav="events">
+      <div class="navd-icon">🎉</div>
+      <span class="navd-label">อีเวนต์พิเศษ</span>
+      <span class="navd-badge">HOT</span>
+    </div>
+
+    <div class="navd-section">สังคม</div>
+    <div class="navd-item" data-nav="friends">
+      <div class="navd-icon">👥</div>
+      <span class="navd-label">เพื่อนและกิลด์</span>
+      <span class="navd-badge nb-green">ออนไลน์</span>
+    </div>
+    <div class="navd-item" data-nav="gifts">
+      <div class="navd-icon">🎁</div>
+      <span class="navd-label">ของขวัญที่รอรับ</span>
+      <span class="navd-badge nb-amber">0</span>
+    </div>
+    <div class="navd-item" data-nav="guildchat">
+      <div class="navd-icon">💬</div>
+      <span class="navd-label">แชทกิลด์</span>
+    </div>
+
+    <div class="navd-section">บัญชี</div>
+    <div class="navd-item" data-nav="topup">
+      <div class="navd-icon">💎</div>
+      <span class="navd-label">เติม Gem</span>
+      <i class="navd-chevron">›</i>
+    </div>
+    <div class="navd-item" data-nav="cloudsave">
+      <div class="navd-icon">☁️</div>
+      <span class="navd-label">Cloud Save</span>
+      <i class="navd-chevron">›</i>
+    </div>
+
+    <div class="navd-section">การตั้งค่า</div>
+    <div class="navd-item" data-nav="settings">
+      <div class="navd-icon">⚙️</div>
+      <span class="navd-label">ตั้งค่าทั้งหมด</span>
+      <i class="navd-chevron">›</i>
+    </div>
+
+    <div class="navd-section">ช่วยเหลือ</div>
+    <div class="navd-item" data-nav="support">
+      <div class="navd-icon">🎧</div>
+      <span class="navd-label">ติดต่อซัพพอร์ต</span>
+      <i class="navd-chevron">›</i>
+    </div>
+    <div class="navd-item" data-nav="guide">
+      <div class="navd-icon">📖</div>
+      <span class="navd-label">คู่มือการเล่น</span>
+      <i class="navd-chevron">›</i>
+    </div>
+  </div>
+
+  <div class="navd-footer">
+    <div class="navd-logout" data-nav="logout">🚪 ออกจากระบบ</div>
+    <div class="navd-version">v1.0 · งานฟาร์ม</div>
   </div>
 </div>
 
@@ -5539,6 +5744,23 @@ document.getElementById('chat-send').addEventListener('click', sendChat);
 document.getElementById('chat-input').addEventListener('keydown', function(e){
   if(e.key === 'Enter') sendChat();
 });
+
+// ─────────────────────────── NAV DRAWER (เมนูแฮมเบอร์เกอร์ ฝั่งขวา) ───────────────────────────
+(function(){
+  var navDrawer  = document.getElementById('nav-drawer');
+  var navOverlay = document.getElementById('nav-overlay');
+  function openNav(){ navDrawer.classList.add('show'); navOverlay.classList.add('show'); }
+  function closeNav(){ navDrawer.classList.remove('show'); navOverlay.classList.remove('show'); }
+  document.getElementById('nav-toggle').addEventListener('click', openNav);
+  document.getElementById('nav-close').addEventListener('click', closeNav);
+  navOverlay.addEventListener('click', closeNav);
+  // ปุ่มเมนูภายใน — รอการพัฒนา (ยังไม่ผูกการทำงาน) ใช้ event delegation บน container
+  document.querySelector('#nav-drawer .navd-scroll').addEventListener('click', function(e){
+    var item = e.target.closest('.navd-item');
+    if(!item) return;
+    // TODO: ใส่การทำงานของแต่ละปุ่มตาม data-nav ในภายหลัง
+  });
+})();
 
 // ─────────────────────────── TABS (topbar) ───────────────────────────
 document.querySelectorAll('#topbar-row2 .tab').forEach(function (el) {
