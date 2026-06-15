@@ -2363,6 +2363,9 @@ body { padding-bottom: 72px; }
   background: #faeeda; border-radius: 99px; padding: 2px 10px;
 }
 .vh-date { font-size: 0.66rem; color: #b08030; font-weight: 700; }
+.vh-date-head { font-size: 0.78rem; font-weight: 800; color: #9a6000; margin-bottom: 10px; }
+.vh-ver-block { margin-bottom: 12px; }
+.vh-ver-block:last-child { margin-bottom: 0; }
 .vh-title { font-size: 0.88rem; font-weight: 800; color: #5a3a10; margin: 6px 0 6px; }
 .vh-list { list-style: none; padding: 0; margin: 0; }
 .vh-list li {
@@ -4163,6 +4166,15 @@ const UPDATE_HISTORY = [
     details: [
       'ประกาศตัวแปร gameMinute ที่เดิมไม่ถูกประกาศ ทำให้ openAdmin เกิด ReferenceError ครั้งแรก',
       'ตอนนี้กดเมนูผู้ดูแลระบบครั้งเดียวแผงเด้งทันที + แก้ความเสี่ยงนาฬิกาเกมพร้อมกัน',
+    ],
+  },
+  {
+    version: '0.24',
+    date: '15/06/2026',
+    title: 'จัดกลุ่มประวัติการอัพเดตตามวันที่',
+    details: [
+      'เวอร์ชันที่อยู่วันเดียวกันถูกรวมไว้ในกล่องเดียว แสดงวันที่ครั้งเดียว',
+      'ไล่เวอร์ชันย่อยภายในกล่องวันนั้น อ่านง่ายขึ้น',
     ],
   },
 ];
@@ -6936,14 +6948,23 @@ function openVersionHistory(){
   if(cur) cur.textContent = 'เวอร์ชันปัจจุบัน v' + GAME_VERSION;
   const body = document.getElementById('version-body');
   if(body){
-    body.innerHTML = UPDATE_HISTORY.slice().reverse().map(function(u){
-      const lis = u.details.map(function(d){ return '<li>' + d + '</li>'; }).join('');
-      return '<div class="vh-entry">'
-        + '<div class="vh-top"><span class="vh-ver">v' + u.version + '</span>'
-        + '<span class="vh-date">📅 ' + u.date + '</span></div>'
-        + '<div class="vh-title">' + u.title + '</div>'
-        + '<ul class="vh-list">' + lis + '</ul>'
-        + '</div>';
+    // จัดกลุ่มเวอร์ชันที่อยู่วันเดียวกันให้อยู่กล่องเดียว (ใหม่สุดอยู่บน)
+    const groups = [];
+    UPDATE_HISTORY.slice().reverse().forEach(function(u){
+      let g = groups.length && groups[groups.length-1].date === u.date ? groups[groups.length-1] : null;
+      if(!g){ g = { date: u.date, items: [] }; groups.push(g); }
+      g.items.push(u);
+    });
+    body.innerHTML = groups.map(function(g){
+      const vers = g.items.map(function(u){
+        const lis = u.details.map(function(d){ return '<li>' + d + '</li>'; }).join('');
+        return '<div class="vh-ver-block">'
+          + '<span class="vh-ver">v' + u.version + '</span>'
+          + '<div class="vh-title">' + u.title + '</div>'
+          + '<ul class="vh-list">' + lis + '</ul>'
+          + '</div>';
+      }).join('');
+      return '<div class="vh-entry"><div class="vh-date-head">📅 ' + g.date + '</div>' + vers + '</div>';
     }).join('');
   }
   document.getElementById('version-overlay').classList.add('show');
