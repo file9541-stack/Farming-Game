@@ -118,6 +118,12 @@ body{
   border-color:rgba(30,130,200,0.25);
   color:#1050a0;
 }
+.topstat-energy {
+  background:rgba(245,180,20,0.15);
+  border-color:rgba(220,160,20,0.35);
+  color:#9a6000; cursor:pointer;
+}
+.topstat-energy:hover { filter:brightness(1.05); }
 #btn-nextday{
   margin-left:auto; flex-shrink:0;
   background:linear-gradient(135deg,#f5c518,#e0a010);
@@ -304,6 +310,7 @@ body{
 .market-card .mkt-emoji{font-size:1.8rem;}
 .market-card .mkt-name{font-size:0.72rem;font-weight:700;color:#6b3500;}
 .market-card .mkt-qty{font-size:0.68rem;color:#888;}
+.market-card .mkt-quality{font-size:0.64rem;font-weight:800;color:#7a4a00;background:rgba(245,197,24,0.18);border-radius:99px;padding:1px 8px;margin:2px 0;}
 .btn-sell-mkt{
   background:linear-gradient(135deg,#f5a020,#d08010);
   color:white;border:2px solid #a06000;
@@ -1040,6 +1047,12 @@ body{
   border-color:rgba(30,130,200,0.25);
   color:#1050a0;
 }
+.topstat-energy {
+  background:rgba(245,180,20,0.15);
+  border-color:rgba(220,160,20,0.35);
+  color:#9a6000; cursor:pointer;
+}
+.topstat-energy:hover { filter:brightness(1.05); }
 #btn-nextday{
   margin-left:auto; flex-shrink:0;
   background:linear-gradient(135deg,#f5c518,#e0a010);
@@ -1213,6 +1226,7 @@ body{
 .market-card .mkt-emoji{font-size:1.8rem;}
 .market-card .mkt-name{font-size:0.72rem;font-weight:700;color:#6b3500;}
 .market-card .mkt-qty{font-size:0.68rem;color:#888;}
+.market-card .mkt-quality{font-size:0.64rem;font-weight:800;color:#7a4a00;background:rgba(245,197,24,0.18);border-radius:99px;padding:1px 8px;margin:2px 0;}
 .btn-sell-mkt{
   background:linear-gradient(135deg,#f5a020,#d08010);
   color:white;border:2px solid #a06000;
@@ -2383,6 +2397,178 @@ body { padding-bottom: 72px; }
 }
 .gd-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
 
+/* ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) — ใช้โครงเดียวกับ version modal ===== */
+#food-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#food-overlay.show { display: flex; }
+.food-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 12px; padding: 8px 10px; margin-bottom: 8px;
+}
+.food-emoji { font-size: 1.5rem; flex-shrink: 0; }
+.food-info { flex: 1; min-width: 0; }
+.food-name { font-size: 0.84rem; font-weight: 700; color: #5a3a10; }
+.food-sub { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.food-eat-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#4abf4a,#2a8030); color: #fff;
+  border-radius: 10px; padding: 7px 12px; font-family: inherit;
+  font-size: 0.76rem; font-weight: 800;
+}
+.food-eat-btn:active { transform: scale(0.94); }
+.food-empty { text-align: center; color: #b08030; font-size: 0.8rem; padding: 24px 12px; line-height: 1.6; }
+
+/* ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร) ===== */
+#equip-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#equip-overlay.show { display: flex; }
+.equip-cat-title {
+  font-size: 0.78rem; font-weight: 800; color: #7a4a00;
+  margin: 4px 2px 8px; display: flex; align-items: center; gap: 6px;
+}
+.equip-cat-title:not(:first-child) { margin-top: 14px; }
+.equip-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 12px; padding: 8px 10px; margin-bottom: 8px;
+}
+.equip-row.owned { background: rgba(74,191,74,0.12); border-color: rgba(42,128,48,0.35); }
+.equip-emoji { font-size: 1.5rem; flex-shrink: 0; }
+.equip-info { flex: 1; min-width: 0; }
+.equip-name { font-size: 0.84rem; font-weight: 700; color: #5a3a10; }
+.equip-desc { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.equip-buy-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#f5c518,#e0a010); color: #6b3500;
+  border-radius: 10px; padding: 7px 12px; font-family: inherit;
+  font-size: 0.74rem; font-weight: 800; white-space: nowrap;
+}
+.equip-buy-btn:active { transform: scale(0.94); }
+.equip-owned-tag {
+  flex-shrink: 0; font-size: 0.72rem; font-weight: 800; color: #27500a;
+  background: #e6f3da; border-radius: 99px; padding: 5px 11px; white-space: nowrap;
+}
+
+/* ===== WORKER MODAL (จ้างแรงงาน) ===== */
+#worker-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#worker-overlay.show { display: flex; }
+.worker-card {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px; padding: 10px 12px; margin-bottom: 10px;
+}
+.worker-top { display: flex; align-items: center; gap: 10px; }
+.worker-emoji { font-size: 1.6rem; flex-shrink: 0; }
+.worker-name { font-size: 0.86rem; font-weight: 800; color: #5a3a10; }
+.worker-desc { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.worker-have {
+  font-size: 0.66rem; font-weight: 700; color: #27500a;
+  background: #e6f3da; border-radius: 99px; padding: 3px 9px;
+  margin-top: 8px; display: inline-block;
+}
+.worker-hire-row { display: flex; gap: 6px; margin-top: 8px; }
+.worker-hire-btn {
+  flex: 1; border: none; cursor: pointer;
+  background: rgba(245,197,24,0.18); border: 1px solid rgba(220,160,20,0.4);
+  color: #7a4a00; border-radius: 10px; padding: 7px 4px;
+  font-family: inherit; font-size: 0.7rem; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.worker-hire-btn:active { transform: scale(0.95); }
+.worker-hire-btn b { font-size: 0.66rem; color: #9a6000; }
+
+/* ===== MATERIAL MODAL (วัสดุก่อสร้าง) ===== */
+#material-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#material-overlay.show { display: flex; }
+
+/* ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== */
+#admin-fab {
+  position: fixed; right: 0; top: 72%; transform: translateY(-50%);
+  z-index: 1500;
+  background: linear-gradient(135deg,#6b7280,#3f4654); color: #fff; border: none;
+  border-radius: 14px 0 0 14px; padding: 11px 8px; font-size: 1.2rem; cursor: pointer;
+  box-shadow: -2px 2px 10px rgba(0,0,0,0.28);
+}
+#admin-fab:active { transform: translateY(-50%) scale(0.93); }
+#admin-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#admin-overlay.show { display: flex; }
+.admin-block {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px; padding: 12px; margin-bottom: 10px;
+}
+.admin-title { font-size: 0.84rem; font-weight: 800; color: #5a3a10; margin-bottom: 8px; }
+.admin-row { display: flex; gap: 8px; }
+.admin-input {
+  flex: 1; min-width: 0; border: 1.5px solid #d4b878; border-radius: 10px;
+  padding: 8px 12px; font-family: inherit; font-size: 0.85rem; color: #5a3a10;
+  outline: none; background: #fffdf7;
+}
+.admin-input:focus { border-color: #e0a010; }
+.admin-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#4abf4a,#2a8030); color: #fff;
+  border-radius: 10px; padding: 8px 14px; font-family: inherit;
+  font-size: 0.8rem; font-weight: 800;
+}
+.admin-btn:active { transform: scale(0.95); }
+.admin-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.admin-chip {
+  border: 1px solid rgba(220,160,20,0.4); cursor: pointer;
+  background: rgba(245,197,24,0.18); color: #7a4a00;
+  border-radius: 99px; padding: 6px 12px; font-family: inherit;
+  font-size: 0.74rem; font-weight: 700;
+}
+.admin-chip:active { transform: scale(0.95); }
+.admin-exit-btn {
+  width: 100%; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#e8623a,#c23a1d); color: #fff;
+  border-radius: 12px; padding: 11px; font-family: inherit;
+  font-size: 0.82rem; font-weight: 800; margin-top: 4px;
+}
+.admin-exit-btn:active { transform: scale(0.97); }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2659,7 +2845,7 @@ body { padding-bottom: 72px; }
     <div class="navd-res-row">
       <div class="navd-res">💎 0</div>
       <div class="navd-res">💵 0 บาท</div>
-      <div class="navd-res">⚡ 0/100</div>
+      <div class="navd-res" id="navd-energy">⚡ 100/100</div>
     </div>
   </div>
 
@@ -2668,6 +2854,21 @@ body { padding-bottom: 72px; }
     <div class="navd-item" data-nav="myfarm">
       <div class="navd-icon">🌾</div>
       <span class="navd-label">ฟาร์มของฉัน</span>
+    </div>
+    <div class="navd-item" data-nav="equipment">
+      <div class="navd-icon">🔨</div>
+      <span class="navd-label">เครื่องมือ &amp; เครื่องจักร</span>
+      <i class="navd-chevron">›</i>
+    </div>
+    <div class="navd-item" data-nav="workers">
+      <div class="navd-icon">👷</div>
+      <span class="navd-label">จ้างแรงงาน</span>
+      <i class="navd-chevron">›</i>
+    </div>
+    <div class="navd-item" data-nav="materials">
+      <div class="navd-icon">🪵</div>
+      <span class="navd-label">วัสดุก่อสร้าง</span>
+      <i class="navd-chevron">›</i>
     </div>
     <div class="navd-item" data-nav="market">
       <div class="navd-icon">🛒</div>
@@ -2741,6 +2942,11 @@ body { padding-bottom: 72px; }
       <span class="navd-badge nb-amber" id="navd-version-badge">v0.00</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="admin">
+      <div class="navd-icon">🛠️</div>
+      <span class="navd-label">สำหรับผู้ดูแลระบบ</span>
+      <i class="navd-chevron">›</i>
+    </div>
   </div>
 
   <div class="navd-footer">
@@ -2777,10 +2983,106 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
+<!-- ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) ===== -->
+<div id="food-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🍽️ กินอาหารฟื้นพลังงาน</h2>
+        <div class="version-current" id="food-energy">⚡ 100/100</div>
+      </div>
+      <button class="version-close" id="food-close">✕</button>
+    </div>
+    <div class="version-body" id="food-body"></div>
+  </div>
+</div>
+
+<!-- ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร) ===== -->
+<div id="equip-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🔨 เครื่องมือ &amp; เครื่องจักร</h2>
+        <div class="version-current">ซื้อครั้งเดียว ลดพลังงานและเวลาก่อสร้าง</div>
+      </div>
+      <button class="version-close" id="equip-close">✕</button>
+    </div>
+    <div class="version-body" id="equip-body"></div>
+  </div>
+</div>
+
+<!-- ===== WORKER MODAL (จ้างแรงงาน) ===== -->
+<div id="worker-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>👷 ศูนย์จ้างแรงงาน</h2>
+        <div class="version-current">ทำเอง vs จ้าง — รายครั้ง / รายวัน / ประจำ</div>
+      </div>
+      <button class="version-close" id="worker-close">✕</button>
+    </div>
+    <div class="version-body" id="worker-body"></div>
+  </div>
+</div>
+
+<!-- ===== MATERIAL MODAL (วัสดุก่อสร้าง) ===== -->
+<div id="material-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🪵 ร้านวัสดุก่อสร้าง</h2>
+        <div class="version-current">ซื้อไม้และวัสดุไว้ใช้ตอนก่อสร้าง</div>
+      </div>
+      <button class="version-close" id="material-close">✕</button>
+    </div>
+    <div class="version-body" id="material-body"></div>
+  </div>
+</div>
+
+<!-- ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== -->
+<button id="admin-fab" title="เครื่องมือผู้ดูแลระบบ">🛠️</button>
+<div id="admin-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🛠️ สำหรับผู้ดูแลระบบ</h2>
+        <div class="version-current">เครื่องมือทดสอบ — เพิ่มเงิน / เร่งเวลา</div>
+      </div>
+      <button class="version-close" id="admin-close">✕</button>
+    </div>
+    <div class="version-body">
+      <div class="admin-block">
+        <div class="admin-title">💵 เพิ่มจำนวนเงิน</div>
+        <div class="admin-row">
+          <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
+          <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
+        </div>
+        <div class="admin-quick">
+          <button class="admin-chip" data-money="1000">+1,000</button>
+          <button class="admin-chip" data-money="10000">+10,000</button>
+          <button class="admin-chip" data-money="100000">+100,000</button>
+          <button class="admin-chip" data-money="1000000">+1,000,000</button>
+        </div>
+      </div>
+      <div class="admin-block">
+        <div class="admin-title">⏩ เร่งเวลา</div>
+        <div class="admin-quick">
+          <button class="admin-chip" data-skipday="1">⏭️ ผ่านไป 1 วัน</button>
+          <button class="admin-chip" data-skipday="7">⏭️ ผ่านไป 7 วัน</button>
+          <button class="admin-chip" id="admin-finish-builds">🏗️ ก่อสร้างเสร็จทันที</button>
+          <button class="admin-chip" id="admin-fill-energy">⚡ เติมพลังงานเต็ม</button>
+        </div>
+      </div>
+      <button class="admin-exit-btn" id="admin-exit-btn">🚪 ออกจากผู้ดูแลระบบ (คืนค่าเงิน/เวลาเดิม)</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
     <div class="topstat topstat-cash">💵 <span id="t-gold">80</span> <span style="font-size:0.65rem;opacity:0.75;">บาท</span></div>
+    <div class="topstat topstat-energy" id="t-energy" title="กดเพื่อกินอาหารฟื้นพลังงาน">⚡ 100/100</div>
     <div class="topstat topstat-day" id="t-datetime" style="font-size:0.7rem;">📅 --</div>
   </div>
   <div id="topbar-row2">
@@ -3383,13 +3685,78 @@ const SLOT_INFO = {
 };
 // ===== ระบบก่อสร้าง (เฟส 1) — ต้นทุนเงิน + เวลาก่อสร้างจริง (วินาที) ต่อสิ่งปลูกสร้าง =====
 // ก่อนได้แปลง/บ่อ/คอก/สวน ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ขุดบ่อ/สร้างคอก/ทำสวน)
+// เฟส 5: เพิ่มวัสดุก่อสร้าง (wood = ไม้) เป็นต้นทุนอีกประเภท
 const BUILD_INFO = {
-  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30 },
-  trees: { verb:'ทำสวน',        money:1500, seconds:60 },
-  small: { verb:'สร้างคอก',     money:1000, seconds:45 },
-  big:   { verb:'สร้างคอก',     money:3000, seconds:90 },
-  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75 },
+  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30, wood:5  },
+  trees: { verb:'ทำสวน',        money:1500, seconds:60, wood:15 },
+  small: { verb:'สร้างคอก',     money:1000, seconds:45, wood:20 },
+  big:   { verb:'สร้างคอก',     money:3000, seconds:90, wood:35 },
+  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75, wood:10 },
 };
+// ===== ระบบอาหาร (เฟส 2) — กินเพื่อฟื้นฟูพลังงาน =====
+// ใช้ของในคลัง (id ตรงกับผลผลิต) มากินเพื่อเติมพลังงาน
+const FOOD_RESTORE = {
+  corn:   { emoji:'🌽', name:'ข้าวโพด',          restore:8  },
+  mango:  { emoji:'🥭', name:'มะม่วง',           restore:12 },
+  egg:    { emoji:'🥚', name:'ไข่ไก่',           restore:6  },
+  milk:   { emoji:'🥛', name:'นมสด',             restore:10 },
+  apple:  { emoji:'🍎', name:'แอปเปิ้ล',         restore:8  },
+  rice:   { emoji:'🌾', name:'ข้าว',             restore:5  },
+  bread:  { emoji:'🍞', name:'ขนมปัง (อาหารสำเร็จรูป)', restore:20 },
+};
+// ===== ระบบเครื่องมือ (เฟส 3) — ซื้อครั้งเดียว ใช้ลดพลังงานทุกงาน =====
+const TOOLS = [
+  { id:'hoe',     name:'จอบ',       emoji:'⛏️', cost:800,  energyReduce:1, desc:'พรวนดิน — ลดพลังงานทุกงาน −1' },
+  { id:'watering',name:'บัวรดน้ำ',  emoji:'🪣', cost:600,  energyReduce:1, desc:'รดน้ำง่ายขึ้น — ลดพลังงาน −1' },
+  { id:'sickle',  name:'เคียว',     emoji:'🌿', cost:1000, energyReduce:1, desc:'เก็บเกี่ยวไว — ลดพลังงาน −1' },
+  { id:'axe',     name:'ขวาน',      emoji:'🪓', cost:1200, energyReduce:1, desc:'ตัดไม้สะดวก — ลดพลังงาน −1' },
+  { id:'hammer',  name:'ค้อน',      emoji:'🔨', cost:1500, energyReduce:1, desc:'ก่อสร้างคล่อง — ลดพลังงาน −1' },
+  { id:'saw',     name:'เลื่อย',    emoji:'🪚', cost:1800, energyReduce:1, desc:'แปรรูปไม้ — ลดพลังงาน −1' },
+];
+// ===== ระบบเครื่องจักร (เฟส 3) — ซื้อครั้งเดียว ลดเวลาก่อสร้าง + ลดพลังงาน =====
+const MACHINES = [
+  { id:'pump',      name:'เครื่องสูบน้ำ', emoji:'💧', cost:15000, timeReduce:0.15, energyReduce:1, desc:'ลดเวลาก่อสร้าง 15% · พลังงาน −1' },
+  { id:'plow',      name:'รถไถ',         emoji:'🚜', cost:25000, timeReduce:0.20, energyReduce:2, desc:'ลดเวลาก่อสร้าง 20% · พลังงาน −2' },
+  { id:'truck',     name:'รถบรรทุก',     emoji:'🚛', cost:30000, timeReduce:0.10, energyReduce:1, desc:'ขนส่งไว ลดเวลาก่อสร้าง 10% · พลังงาน −1' },
+  { id:'excavator', name:'รถขุดดิน',     emoji:'🚧', cost:50000, timeReduce:0.30, energyReduce:3, desc:'ลดเวลาก่อสร้าง 30% · พลังงาน −3' },
+];
+const MACHINE_TIME_CAP = 0.7;  // เพดานลดเวลาก่อสร้างรวม
+// ===== ระบบจ้างแรงงาน (เฟส 4) =====
+// 3 รูปแบบ: รายครั้ง (perTask) · รายวัน (perDay) · ประจำ (permanent)
+// จ้างรายวัน/ประจำ = ทำงานแทนเรา (ไม่ใช้พลังงาน) + เก็บผลผลิตอัตโนมัติ (คนงานเกษตร)
+const WORKER_TYPES = [
+  { id:'agri',    name:'คนงานเกษตร',     emoji:'👨‍🌾', perTask:50,  perDay:300, permanent:8000,
+    desc:'ปลูก/รดน้ำ/เก็บเกี่ยว/ดูแลสวน · รายวัน-ประจำ เก็บผลผลิตอัตโนมัติ' },
+  { id:'builder', name:'ช่างก่อสร้าง',    emoji:'👷', perTask:80,  perDay:400, permanent:12000,
+    desc:'สร้างคอก/โรงเรือน/คลัง/ห้องเย็น/โรงงาน' },
+  { id:'driver',  name:'คนขับเครื่องจักร', emoji:'🚜', perTask:100, perDay:500, permanent:15000,
+    desc:'ขับเครื่องจักร ก่อสร้าง เก็บเกี่ยว ดูแลสัตว์-สวน' },
+];
+// งานแต่ละหมวด คนงานประเภทไหนทำได้บ้าง
+const TASK_WORKER = { agri:['agri','driver'], builder:['builder','driver'] };
+// ===== วัสดุก่อสร้าง (เฟส 5) — ซื้อเก็บไว้ในคลัง ใช้ตอนก่อสร้าง =====
+const MATERIALS = [
+  { id:'wood', emoji:'🪵', name:'ไม้', price:50, packs:[10,50,100] },
+];
+// ===== ที่พักคนงาน (เฟส 5) — เพิ่มจำนวนคนงานสูงสุด =====
+const BASE_WORKER_CAP = 2;  // จ้างประจำ/รายวันได้สูงสุดเริ่มต้น
+const WORKER_HOUSES = [
+  { id:'wh1', name:'บ้านพักคนงาน Lv.1', emoji:'🏠', cost:20000, capAdd:5,  desc:'เพิ่มคนงานสูงสุด +5' },
+  { id:'wh2', name:'บ้านพักคนงาน Lv.2', emoji:'🏡', cost:45000, capAdd:10, desc:'เพิ่มคนงานสูงสุด +10' },
+];
+// ===== ระบบคุณภาพผลผลิต + การเน่าเสีย (เฟส A) =====
+// คุณภาพลดตามอายุจริง (วินาที) เทียบกับอายุการเก็บรักษาของผลผลิตนั้น
+// ตัวคูณราคา: สดใหม่ ×1.0 / ดี ×0.85 / ปานกลาง ×0.6 / ต่ำ ×0.3 / เน่าเสีย ×0
+const QUALITY_TIERS = [
+  { key:'fresh',   name:'สดใหม่',   emoji:'🟢', mult:1.0,  maxFrac:0.25 },
+  { key:'good',    name:'คุณภาพดี', emoji:'🟡', mult:0.85, maxFrac:0.50 },
+  { key:'normal',  name:'ปานกลาง',  emoji:'🟠', mult:0.6,  maxFrac:0.75 },
+  { key:'poor',    name:'คุณภาพต่ำ', emoji:'🔴', mult:0.3,  maxFrac:1.0  },
+  { key:'spoiled', name:'เน่าเสีย',  emoji:'❌', mult:0,    maxFrac:Infinity },
+];
+// อายุการเก็บรักษา (วินาทีจริง) — ตามชนิดผลผลิต (ค่าเริ่มต้น + override เฉพาะตัว)
+const SHELF_DEFAULT  = { crop:150, tree:300, animal:180, fish:120 };
+const SHELF_OVERRIDE = { lettuce:90, corn:240, mango:360, coconut:600 };
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3667,6 +4034,97 @@ const UPDATE_HISTORY = [
       'พื้นที่ถูกจองระหว่างก่อสร้าง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
     ],
   },
+  {
+    version: '0.12',
+    date: '15/06/2026',
+    title: 'ระบบพลังงาน + อาหาร เฟส 2',
+    details: [
+      'เพิ่มค่าพลังงาน (สูงสุด 100) แสดงบนแถบบนและในเมนู',
+      'การปลูก/เก็บเกี่ยว/ดูแลสัตว์-ปลา/ก่อสร้าง ใช้พลังงาน — หมดแล้วทำงานไม่ได้',
+      'เพิ่มระบบอาหาร: กดป้าย ⚡ เพื่อกินของในคลัง (ข้าวโพด/ไข่/นม/ผลไม้/ขนมปัง) ฟื้นพลังงาน',
+    ],
+  },
+  {
+    version: '0.13',
+    date: '15/06/2026',
+    title: 'ระบบเครื่องมือ + เครื่องจักร เฟส 3',
+    details: [
+      'เพิ่มเมนู "เครื่องมือ & เครื่องจักร" ซื้อครั้งเดียวใช้ได้ถาวร',
+      'เครื่องมือ (จอบ/เคียว/ค้อน ฯลฯ) ลดพลังงานที่ใช้ในทุกงาน',
+      'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
+    ],
+  },
+  {
+    version: '0.14',
+    date: '15/06/2026',
+    title: 'ระบบจ้างแรงงาน เฟส 4',
+    details: [
+      'เพิ่มเมนู "จ้างแรงงาน" — เลือกทำเอง หรือจ้างคนงาน 3 ประเภท',
+      'จ้างได้ 3 แบบ: รายครั้ง (เครดิตงาน) / รายวัน / ประจำ',
+      'จ้างรายวัน-ประจำ ทำงานแทนเรา (ไม่ใช้พลังงาน) + เก็บผลผลิตอัตโนมัติ',
+      'ค่าแรงรายวันหักเมื่อขึ้นวันใหม่ เงินไม่พอคนงานรายวันลาออก',
+    ],
+  },
+  {
+    version: '0.15',
+    date: '15/06/2026',
+    title: 'ที่พักคนงาน + วัสดุก่อสร้าง เฟส 5',
+    details: [
+      'การก่อสร้างต้องใช้วัสดุไม้ 🪵 เพิ่มจากเงิน/พลังงาน/เวลา',
+      'เพิ่มเมนู "วัสดุก่อสร้าง" สำหรับซื้อไม้เก็บไว้ใช้',
+      'จ้างคนงานประจำ/รายวันจำกัดตามจำนวนสูงสุด',
+      'เพิ่ม "ที่พักคนงาน" (Lv.1/Lv.2) เพิ่มจำนวนคนงานสูงสุด',
+    ],
+  },
+  {
+    version: '0.16',
+    date: '15/06/2026',
+    title: 'เพิ่มวิธีเล่นระบบก่อสร้างในคู่มือ',
+    details: [
+      'ขยายหัวข้อ "ระบบก่อสร้าง" ในคู่มือการเล่นเป็นขั้นตอนทีละขั้น',
+      'อธิบายครบ: เตรียมพื้นที่/ต้นทุน เงิน-ไม้-พลังงาน, ซื้อไม้, สั่งก่อสร้าง, รอเวลา, เครื่องมือ/เครื่องจักร/แรงงานช่วย',
+    ],
+  },
+  {
+    version: '0.17',
+    date: '15/06/2026',
+    title: 'เพิ่มกฎข้อ 14 (ความเชื่อมโยงระหว่างระบบ)',
+    details: [
+      'เพิ่มกฎข้อบังคับข้อ 14: แก้/เพิ่มระบบใด ต้องพิจารณาผลกระทบและตามไปปรับระบบที่เชื่อมโยงให้สอดคล้อง',
+      'ครอบคลุมทั้งการแก้ไขและการเพิ่มเติมสิ่งใหม่ เพื่อให้ทุกระบบรันต่อเนื่องสอดคล้องกัน',
+    ],
+  },
+  {
+    version: '0.18',
+    date: '15/06/2026',
+    title: 'ระบบคุณภาพผลผลิต + การเน่าเสีย (หลังเก็บเกี่ยว เฟส A)',
+    details: [
+      'ผลผลิตสดมีคุณภาพ 5 ระดับ (สดใหม่/ดี/ปานกลาง/ต่ำ/เน่าเสีย) เสื่อมตามเวลาจริง',
+      'ราคาขายในตลาดปรับตามคุณภาพ — เน่าเสียขายไม่ได้ (มูลค่า 0)',
+      'คลังบันทึกเวลาเก็บเกี่ยว (freshAt) และเฉลี่ยอายุเมื่อรวมกอง · เมล็ด/ไม้/สินค้าแปรรูปไม่เน่าเสีย',
+      'หน้าตลาดแสดงป้ายคุณภาพและราคาต่อชิ้น พร้อมรีเฟรชอัตโนมัติให้เห็นการเสื่อม',
+    ],
+  },
+  {
+    version: '0.19',
+    date: '15/06/2026',
+    title: 'เมนูสำหรับผู้ดูแลระบบ (Admin Tools)',
+    details: [
+      'เพิ่มเมนู "สำหรับผู้ดูแลระบบ" ในหมวดช่วยเหลือ',
+      'เพิ่มเงินได้ตามจำนวนที่ระบุ + ปุ่มลัด (+1k/+10k/+100k/+1M)',
+      'เร่งเวลา: ผ่านไป 1/7 วัน, ก่อสร้างเสร็จทันที, เติมพลังงานเต็ม',
+    ],
+  },
+  {
+    version: '0.20',
+    date: '15/06/2026',
+    title: 'ปุ่มลอยผู้ดูแลระบบ + โหมดทดสอบ',
+    details: [
+      'เพิ่มปุ่มลอย 🛠️ ติดขอบขวา กดแล้วเด้งแผงแอดมินขึ้นกลางจอ ปิดแล้วหุบกลับ',
+      'เพิ่มปุ่ม "ออกจากผู้ดูแลระบบ" — คืนค่าเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด',
+      'ปิดแผง (✕) จะเก็บการเปลี่ยนแปลงไว้ทดสอบต่อ จนกว่าจะกดออกจากโหมด',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3675,12 +4133,54 @@ const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
 // อธิบายภาพรวมการทำงานของแต่ละระบบในเกมแบบคร่าว ๆ
 const GAME_GUIDE = [
   {
-    icon: '🏗️', title: 'ระบบก่อสร้าง (ต้องสร้างก่อนใช้)',
+    icon: '🏗️', title: 'ระบบก่อสร้าง — วิธีเล่นทีละขั้น',
     lines: [
-      'แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ จะใช้เลยไม่ได้ — ต้องก่อสร้างก่อน',
-      'กดปุ่ม ➕ ในแต่ละหมวด เพื่อสั่งก่อสร้าง (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
-      'ก่อสร้างใช้ทั้งพื้นที่ว่างและเงินทุน และต้องรอเวลาก่อสร้างจริง',
-      'เมื่อครบเวลา สิ่งปลูกสร้างจะพร้อมใช้งานทันที',
+      'หลักการ: แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ ใช้เลยไม่ได้ ต้องก่อสร้างก่อนเสมอ',
+      'ขั้น 1 — เตรียมที่ดิน: ต้องมีพื้นที่ว่างพอ (ดูแถบ 🌾 พื้นที่เกษตรด้านบน) ถ้าไม่พอให้ซื้อที่ดินเพิ่ม',
+      'ขั้น 2 — เตรียมต้นทุน: ก่อสร้างใช้ "เงิน 💵 + ไม้ 🪵 + พลังงาน ⚡" — ดูตัวเลขที่ป้ายใต้หัวข้อแต่ละหมวด',
+      'ขั้น 3 — ซื้อไม้: ถ้าไม้ไม่พอ เปิดเมนู ☰ → "วัสดุก่อสร้าง" ซื้อไม้เก็บไว้ก่อน',
+      'ขั้น 4 — สั่งก่อสร้าง: กดปุ่ม ➕ ในหมวดที่ต้องการ (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก) ระบบจะหักเงิน+ไม้+พลังงาน และจองพื้นที่ไว้',
+      'ขั้น 5 — รอเวลา: จะขึ้นแถบ "กำลังก่อสร้าง ⏳" นับถอยหลังจริง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
+      'ลดเวลา/พลังงาน: ซื้อ 🔨 เครื่องมือ และ 🚜 เครื่องจักร (เมนูเครื่องมือ) ช่วยลดพลังงานและเวลาก่อสร้าง',
+      'ให้คนอื่นสร้างแทน: จ้าง 👷 ช่างก่อสร้าง/คนขับเครื่องจักร (เมนูจ้างแรงงาน) แล้วก่อสร้างจะไม่กินพลังงานเรา',
+      'พลังงานหมดทำต่อไม่ได้: กดป้าย ⚡ ด้านบนเพื่อกินอาหารฟื้นพลังงาน',
+    ],
+  },
+  {
+    icon: '⚡', title: 'พลังงานและอาหาร',
+    lines: [
+      'การทำงานด้วยตนเอง (ปลูก/เก็บเกี่ยว/ดูแลสัตว์/ก่อสร้าง) ใช้พลังงาน',
+      'พลังงานสูงสุด 100 — ดูได้ที่ป้าย ⚡ บนแถบบนและในเมนู',
+      'พลังงานหมดจะทำงานไม่ได้ ต้องกินอาหารเพื่อฟื้นฟู',
+      'กดป้าย ⚡ บนแถบบน เพื่อเปิดหน้ากินอาหาร (เช่น ข้าวโพด ไข่ไก่ นม ผลไม้ ขนมปัง)',
+    ],
+  },
+  {
+    icon: '🔨', title: 'เครื่องมือและเครื่องจักร',
+    lines: [
+      'เปิดจากเมนู ☰ → "เครื่องมือ & เครื่องจักร" ซื้อครั้งเดียวใช้ได้ตลอด',
+      'เครื่องมือ (จอบ/เคียว/ค้อน ฯลฯ) ช่วยลดพลังงานที่ใช้ในทุกงาน',
+      'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
+      'ยิ่งมีอุปกรณ์มาก ยิ่งทำงานประหยัดพลังงานและเร็วขึ้น',
+    ],
+  },
+  {
+    icon: '👷', title: 'จ้างแรงงาน',
+    lines: [
+      'เปิดจากเมนู ☰ → "จ้างแรงงาน" เลือกทำเองหรือจ้างคนงาน',
+      'มี 3 ประเภท: คนงานเกษตร 👨‍🌾 · ช่างก่อสร้าง 👷 · คนขับเครื่องจักร 🚜',
+      'จ้างได้ 3 แบบ: รายครั้ง (เครดิตงาน) · รายวัน (จ่ายทุกวัน) · ประจำ (จ่ายครั้งเดียว)',
+      'จ้างรายวัน/ประจำ = คนงานทำงานแทน ไม่ใช้พลังงานเรา และเก็บผลผลิตอัตโนมัติ',
+      'ค่าแรงรายวันถูกหักเมื่อขึ้นวันใหม่ — เงินไม่พอคนงานรายวันจะลาออก',
+    ],
+  },
+  {
+    icon: '🪵', title: 'วัสดุก่อสร้าง & ที่พักคนงาน',
+    lines: [
+      'การก่อสร้างต้องใช้ "ไม้ 🪵" เป็นวัสดุ นอกเหนือจากเงินและเวลา',
+      'ซื้อไม้ได้จากเมนู ☰ → "วัสดุก่อสร้าง" (ซื้อเป็นแพ็ก)',
+      'จ้างคนงานประจำ/รายวันได้จำกัดตามจำนวนสูงสุด',
+      'สร้าง "ที่พักคนงาน" จากเมนูจ้างแรงงาน เพื่อเพิ่มจำนวนคนงานสูงสุด',
     ],
   },
   {
@@ -3717,6 +4217,15 @@ const GAME_GUIDE = [
     lines: [
       'ตลาด: ซื้อ–ขายผลผลิตและสินค้าตามราคาตลาดที่เปลี่ยนแปลง',
       'ร้านค้า: ซื้อเมล็ด ต้นไม้ สัตว์ และปลา เพื่อขยายฟาร์ม',
+    ],
+  },
+  {
+    icon: '📈', title: 'คุณภาพผลผลิต & การเน่าเสีย',
+    lines: [
+      'ผลผลิตสด (พืช/ผลไม้/ไข่/นม/ปลา) มีคุณภาพ 5 ระดับ: สดใหม่→ดี→ปานกลาง→ต่ำ→เน่าเสีย',
+      'คุณภาพลดลงตามเวลาจริงหลังเก็บเกี่ยว และส่งผลโดยตรงต่อราคาขาย (เน่าเสีย = ขายไม่ได้)',
+      'ของแต่ละชนิดเก็บได้นานไม่เท่ากัน (เช่น ผักกาดเสียไว มะพร้าวอยู่ได้นาน)',
+      'รีบขายตอนสดเพื่อราคาดีที่สุด — สินค้าแปรรูป/เมล็ด/ไม้ ไม่เน่าเสีย',
     ],
   },
   {
@@ -3777,6 +4286,60 @@ const GAME_GUIDE = [
 // ============================================================
 let gold = 500, exp = 0, level = 1;
 let day  = 1;
+// ===== ระบบพลังงาน (เฟส 2) — ทำงานด้วยตนเองใช้พลังงาน =====
+const ENERGY_MAX = 100;
+let energy = ENERGY_MAX;
+// พลังงานที่ใช้ต่อการกระทำแต่ละอย่าง
+const ENERGY_COST = {
+  plant: 3, harvest: 2,        // ปลูกพืช / เก็บเกี่ยว
+  treePlant: 3, treeHarvest: 2, // ปลูกไม้ผล / เก็บไม้ผล
+  animalCollect: 2, fishCollect: 2, // ดูแล/เก็บผลผลิตสัตว์-ปลา
+  build: 10,                   // ก่อสร้าง (ทำเอง)
+};
+// ===== การครอบครองเครื่องมือ/เครื่องจักร (เฟส 3) =====
+let ownedTools    = [];  // id ของเครื่องมือที่ซื้อแล้ว
+let ownedMachines = [];  // id ของเครื่องจักรที่ซื้อแล้ว
+// ส่วนลดพลังงานรวมจากเครื่องมือ + เครื่องจักรที่มี
+function energyDiscount(){
+  let d = 0;
+  TOOLS.forEach(t => { if(ownedTools.includes(t.id)) d += t.energyReduce; });
+  MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) d += m.energyReduce; });
+  return d;
+}
+// อัตราลดเวลาก่อสร้างรวมจากเครื่องจักร (เพดานตาม MACHINE_TIME_CAP)
+function buildTimeReduce(){
+  let r = 0;
+  MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) r += m.timeReduce; });
+  return Math.min(MACHINE_TIME_CAP, r);
+}
+// ===== แรงงานที่จ้าง (เฟส 4) =====
+let workers = [];  // จ้างรายวัน/ประจำ — {type, mode:'day'|'permanent'}
+let workerCredits = { agri:0, builder:0, driver:0 };  // จ้างรายครั้ง — เครดิตงานคงเหลือ
+// มีคนงานประจำ/รายวันที่ทำงานหมวดนี้ได้ไหม
+function hasContinuousWorker(category){
+  const types = TASK_WORKER[category] || [];
+  return workers.some(w => types.includes(w.type));
+}
+// ใช้เครดิตจ้างรายครั้งของงานหมวดนี้ (ถ้ามี) → คืน true
+function useWorkerCredit(category){
+  const types = TASK_WORKER[category] || [];
+  for(const t of types){ if(workerCredits[t] > 0){ workerCredits[t]--; return true; } }
+  return false;
+}
+// ค่าแรงรายวันรวม (เฉพาะคนงานแบบรายวัน)
+function dailyWage(){
+  return workers.filter(w => w.mode==='day').reduce((s,w)=>{
+    const wt = WORKER_TYPES.find(x=>x.id===w.type); return s + (wt ? wt.perDay : 0);
+  }, 0);
+}
+// ===== ที่พักคนงาน (เฟส 5) =====
+let ownedHouses = [];  // id ของบ้านพักคนงานที่สร้างแล้ว
+// จำนวนคนงานประจำ/รายวันสูงสุด = ฐาน + ที่พักที่มี
+function workerCap(){
+  let cap = BASE_WORKER_CAP;
+  WORKER_HOUSES.forEach(h => { if(ownedHouses.includes(h.id)) cap += h.capAdd; });
+  return cap;
+}
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
 let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
@@ -3867,10 +4430,24 @@ function startConstruction(type){
     toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
     return;
   }
+  // เฟส 5: ต้องมีวัสดุไม้พอ
+  const woodNeed = b.wood || 0;
+  const woodInv  = getInv('wood');
+  if(woodNeed > 0 && (!woodInv || woodInv.qty < woodNeed)){
+    toast(`❌ ไม้ไม่พอ! ${b.verb} ${info.label} ใช้ 🪵 ${woodNeed} (มี ${woodInv?woodInv.qty:0})<br>ซื้อไม้ที่เมนู "วัสดุก่อสร้าง"`, true);
+    return;
+  }
+  if(!spendEnergy(ENERGY_COST.build,'builder')) return;  // ทำเองใช้พลังงาน (เฟส 2)
+  if(woodNeed > 0) removeInv('wood', woodNeed);  // หักวัสดุไม้
   gold -= b.money;
-  constructions.push({ type, finishAt: Date.now() + b.seconds * 1000 });
+  // เครื่องจักรช่วยลดเวลาก่อสร้าง (เฟส 3)
+  const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce())));
+  constructions.push({ type, finishAt: Date.now() + secs * 1000, total: secs });
   updateTopbar();
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${b.seconds} วินาที)`, true);
+  const saved = b.seconds - secs;
+  const savedTxt = saved > 0 ? ` · ⚡เครื่องจักรลดเวลา −${saved} วิ` : '';
+  const woodTxt = woodNeed > 0 ? ` · 🪵 −${woodNeed}` : '';
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -3922,9 +4499,10 @@ function renderConstructions(){
     const info = SLOT_INFO[type];
     box.innerHTML = list.map(c => {
       const left = Math.max(0, Math.ceil((c.finishAt - now) / 1000));
+      const dur  = c.total || b.seconds;  // ระยะเวลาจริงหลังหักเครื่องจักร
       const mm = String(Math.floor(left / 60)).padStart(2,'0');
       const ss = String(left % 60).padStart(2,'0');
-      const pct = Math.min(100, Math.round((1 - left / b.seconds) * 100));
+      const pct = Math.min(100, Math.round((1 - left / dur) * 100));
       return `<div class="build-card">
         <div class="build-card-top">🏗️ กำลัง${b.verb} ${info.emoji} ${info.label}
           <span class="build-timer">⏳ ${mm}:${ss}</span></div>
@@ -3973,8 +4551,9 @@ function updateSpaceLabels(){
     const usedArea = count * info.cost;
     const pctOfFarm = total > 0 ? Math.round((usedArea/total)*100) : 0;
     const b = BUILD_INFO[type];
+    const woodTxt = b.wood ? ` + 🪵 ${b.wood}` : '';
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -4113,10 +4692,40 @@ const SECTION_META = {
 // ============================================================
 function getInv(id){ return inventory.find(i => i.id === id); }
 
+// อายุการเก็บรักษาของผลผลิต (วินาที) — คืน null ถ้าเป็นของไม่เน่าเสีย (เมล็ด/ไม้/แปรรูป)
+function produceShelf(id){
+  if(SHELF_OVERRIDE[id] != null) return SHELF_OVERRIDE[id];
+  if(typeof CROPS   !== 'undefined' && CROPS.some(c=>c.id===id))   return SHELF_DEFAULT.crop;
+  if(typeof TREES   !== 'undefined' && TREES.some(t=>t.id===id))   return SHELF_DEFAULT.tree;
+  if(typeof ANIMALS !== 'undefined' && ANIMALS.some(a=>a.product===id)) return SHELF_DEFAULT.animal;
+  if(typeof FISH    !== 'undefined' && FISH.some(f=>f.product===id))    return SHELF_DEFAULT.fish;
+  return null;
+}
+// คุณภาพปัจจุบันของรายการคลัง (ตามอายุจริง)
+function itemQuality(item){
+  const shelf = produceShelf(item.id);
+  if(!shelf || !item.freshAt) return QUALITY_TIERS[0];  // ของไม่เน่าเสีย = สดใหม่เสมอ
+  const frac = (Date.now() - item.freshAt) / (shelf * 1000);
+  return QUALITY_TIERS.find(t => frac < t.maxFrac) || QUALITY_TIERS[QUALITY_TIERS.length-1];
+}
+// ราคาขายต่อชิ้นหลังปรับตามคุณภาพ
+function itemSellPrice(item){ return Math.round(item.sell * itemQuality(item).mult); }
+
 function addInv(id, name, emoji, qty, sell){
   const ex = getInv(id);
-  if(ex){ ex.qty += qty; }
-  else   { inventory.push({id, name, emoji, qty, sell}); }
+  const perish = produceShelf(id) != null;
+  if(ex){
+    if(perish){
+      // เฉลี่ยอายุแบบถ่วงน้ำหนักตามจำนวน (ของใหม่อายุ 0)
+      const now = Date.now();
+      const exAge = now - (ex.freshAt || now);
+      const blendedAge = (exAge * ex.qty) / (ex.qty + qty);
+      ex.freshAt = now - blendedAge;
+    }
+    ex.qty += qty;
+  } else {
+    inventory.push({id, name, emoji, qty, sell, freshAt: perish ? Date.now() : null});
+  }
   updateTopbar();
 }
 
@@ -4166,6 +4775,45 @@ function updateTopbar(){
     rankEl.firstChild.textContent = rank.emoji + ' ';
     rankEl.style.color = rank.color;
   }
+}
+
+// ===== ระบบพลังงาน + อาหาร (เฟส 2) =====
+// อัปเดตป้ายพลังงานทั้ง topbar และเมนู drawer
+function renderEnergy(){
+  const txt = `⚡ ${energy}/${ENERGY_MAX}`;
+  const tEl = document.getElementById('t-energy');
+  if(tEl) tEl.textContent = txt;
+  const dEl = document.getElementById('navd-energy');
+  if(dEl) dEl.textContent = txt;
+}
+// ใช้พลังงาน n หน่วย — หักส่วนลดจากเครื่องมือ/เครื่องจักร (ขั้นต่ำ 1)
+// เฟส 4: ถ้ามีแรงงานทำแทน (เครดิตรายครั้ง / ประจำ-รายวัน) → ไม่ใช้พลังงานเรา
+// ไม่พอ → คืน false พร้อมแจ้งเตือน (ชวนกินอาหาร)
+function spendEnergy(n, category){
+  if(category){
+    if(useWorkerCredit(category)) return true;   // จ้างรายครั้ง: ใช้เครดิตงาน
+    if(hasContinuousWorker(category)) return true; // จ้างประจำ/รายวัน: คนงานทำให้ฟรีพลังงาน
+  }
+  const eff = Math.max(1, n - energyDiscount());
+  if(energy < eff){
+    toast(`❌ พลังงานไม่พอ! ต้องใช้ ⚡ ${eff} (เหลือ ${energy})<br>กินอาหารเพื่อฟื้นฟูพลังงาน 🍽️`, true);
+    return false;
+  }
+  energy -= eff;
+  renderEnergy();
+  return true;
+}
+// กินอาหาร 1 ชิ้นจากคลัง → ฟื้นพลังงาน (ไม่เกินค่าสูงสุด)
+function eatFood(id){
+  const f = FOOD_RESTORE[id];
+  if(!f) return;
+  if(energy >= ENERGY_MAX){ toast('⚡ พลังงานเต็มแล้ว ไม่ต้องกินเพิ่ม'); return; }
+  if(!removeInv(id, 1)){ toast(`❌ ไม่มี ${f.emoji} ${f.name} ในคลัง`); return; }
+  const before = energy;
+  energy = Math.min(ENERGY_MAX, energy + f.restore);
+  renderEnergy();
+  toast(`🍽️ กิน ${f.emoji} ${f.name} — ฟื้นพลังงาน +${energy - before} (⚡ ${energy}/${ENERGY_MAX})`);
+  renderFoodList();
 }
 
 function setLog(msg){ document.getElementById('log-box').textContent = msg; }
@@ -4484,6 +5132,7 @@ function renderFarm(){
 function clickPlot(i){
   const p = plots[i];
   if(p.crop){
+    if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
     const c = CROPS.find(x=>x.id===p.crop);
     addInv(c.id, c.name, c.emoji, 1, c.sell);
     addExp(c.exp);
@@ -4496,6 +5145,7 @@ function clickPlot(i){
   if(!cropDef){ setLog('เลือกพืชก่อน — ซื้อเมล็ดพันธุ์ที่ร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีเมล็ด ${cropDef.emoji} ${cropDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
+  if(!spendEnergy(ENERGY_COST.plant,'agri')) return;  // ปลูกพืชใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   plots[i] = {crop:cropDef.id};
   setLog(`ปลูก ${cropDef.emoji} ${cropDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บเกี่ยว`);
@@ -4532,6 +5182,7 @@ function renderTrees(){
 function clickTree(i){
   const p = treePlots[i];
   if(p.tree){
+    if(!spendEnergy(ENERGY_COST.treeHarvest,'agri')) return;  // เก็บไม้ผลใช้พลังงาน
     const t = TREES.find(x=>x.id===p.tree);
     addInv(t.id, t.name, t.emoji, t.harvestQty, t.sell);
     addExp(t.exp*t.harvestQty);
@@ -4543,6 +5194,7 @@ function clickTree(i){
   if(!treeDef){ setLog('เลือกต้นไม้ — ซื้อกล้าไม้จากร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีกล้า ${treeDef.emoji} ${treeDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
+  if(!spendEnergy(ENERGY_COST.treePlant,'agri')) return;  // ปลูกไม้ผลใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   treePlots[i] = {tree:treeDef.id};
   setLog(`ปลูก ${treeDef.emoji} ${treeDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บ`);
@@ -4600,6 +5252,7 @@ function clickPen(size, idx){
   if(!pen) return;
   if(pen.animal){
     // เก็บผลผลิต
+    if(!spendEnergy(ENERGY_COST.animalCollect,'agri')) return;  // ดูแลสัตว์ใช้พลังงาน
     const a = ANIMALS.find(x=>x.id===pen.animal);
     addInv(a.product, a.productName, a.productEmoji, 1, a.sell);
     addExp(a.exp);
@@ -4643,6 +5296,7 @@ function renderFish(){
 function collectFish(i){
   const p = fishPonds[i];
   if(!p.fish) return;
+  if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
   addExp(f.exp);
@@ -4650,7 +5304,29 @@ function collectFish(i){
   renderFish();
 }
 
-
+// ============================================================
+//  เก็บเกี่ยวอัตโนมัติ (เฟส 4) — มีคนงานเกษตรประจำ/รายวันจึงทำงานเอง
+// ============================================================
+function autoHarvest(){
+  if(!hasContinuousWorker('agri')) return;
+  let n = 0;
+  plots.forEach((p,i)=>{
+    if(p.crop){ const c=CROPS.find(x=>x.id===p.crop); addInv(c.id,c.name,c.emoji,1,c.sell); addExp(c.exp); plots[i]={crop:null,plantedAt:null,ready:false}; n++; }
+  });
+  treePlots.forEach(p=>{
+    if(p.tree){ const t=TREES.find(x=>x.id===p.tree); addInv(t.id,t.name,t.emoji,t.harvestQty,t.sell); addExp(t.exp*t.harvestQty); n++; }
+  });
+  smallPens.concat(bigPens).forEach(pen=>{
+    if(pen.animal){ const a=ANIMALS.find(x=>x.id===pen.animal); addInv(a.product,a.productName,a.productEmoji,1,a.sell); addExp(a.exp); n++; }
+  });
+  fishPonds.forEach(p=>{
+    if(p.fish){ const f=FISH.find(x=>x.id===p.fish); addInv(f.product,f.productName,f.productEmoji,1,f.sell); addExp(f.exp); n++; }
+  });
+  if(n > 0){
+    toast(`👨‍🌾 คนงานเก็บผลผลิตอัตโนมัติ ${n} รายการ`);
+    if(currentTab==='farm') rerenderFarmArea();
+  }
+}
 
 
 
@@ -4999,23 +5675,34 @@ function renderMarket(){
     grid.innerHTML='<div style="color:#aaa;font-size:0.85rem;grid-column:1/-1;">คลังว่าง — ปลูกพืชหรือผลิตสินค้าก่อน</div>';
     return;
   }
-  grid.innerHTML = inventory.map((item,i)=>`
+  grid.innerHTML = inventory.map((item,i)=>{
+    const q = itemQuality(item);
+    const unit = itemSellPrice(item);
+    const perish = produceShelf(item.id) != null;
+    const qBadge = perish ? `<div class="mkt-quality">${q.emoji} ${q.name}</div>` : '';
+    return `
     <div class="market-card">
       <div class="mkt-emoji">${item.emoji}</div>
       <div class="mkt-name">${item.name}</div>
-      <div class="mkt-qty">มี ${item.qty} ชิ้น</div>
-      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(item.sell*item.qty).toLocaleString('th-TH')} บาท</button>
-    </div>
-  `).join('');
+      ${qBadge}
+      <div class="mkt-qty">มี ${item.qty} ชิ้น${perish?` · ${unit}/ชิ้น`:''}</div>
+      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(unit*item.qty).toLocaleString('th-TH')} บาท</button>
+    </div>`;
+  }).join('');
 }
 
 function sellAll(id){
   const item = getInv(id);
   if(!item){ return; }
-  const earned = item.sell * item.qty;
-  gold += earned;
-  addExp(item.qty);
-  toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+  const unit = itemSellPrice(item);
+  const earned = unit * item.qty;
+  if(earned <= 0){
+    toast(`❌ ${item.emoji} ${item.name} เน่าเสียแล้ว ขายไม่ได้ — ทิ้งทั้งหมด`);
+  } else {
+    gold += earned;
+    addExp(item.qty);
+    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+  }
   removeInv(id, item.qty);
   updateTopbar();
   renderMarket();
@@ -5024,7 +5711,16 @@ function sellAll(id){
 // ============================================================
 function nextDay(){
   gameMinute++;
-  if(gameMinute % 30 === 0){ day++; toast(`🌅 วันใหม่! วันที่ ${day}`); }
+  if(gameMinute % 30 === 0){
+    day++; toast(`🌅 วันใหม่! วันที่ ${day}`);
+    // เฟส 4: จ่ายค่าแรงคนงานรายวัน — เงินไม่พอ คนงานรายวันลาออก
+    const wage = dailyWage();
+    if(wage > 0){
+      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} บาท`); }
+      else { workers = workers.filter(w => w.mode !== 'day'); toast('⚠️ เงินไม่พอจ่ายค่าแรง — คนงานรายวันลาออกทั้งหมด'); }
+    }
+    autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้เมื่อขึ้นวันใหม่
+  }
   updateTopbar();
   // re-render current tab
   if(currentTab==='farm'){ renderFarm(); renderTrees(); renderAnimals(); renderFish(); }
@@ -6233,6 +6929,281 @@ function closeGuide(){
   document.getElementById('guide-overlay').classList.remove('show');
 }
 
+// ===== FOOD MODAL (กินอาหารฟื้นพลังงาน) =====
+function renderFoodList(){
+  const enEl = document.getElementById('food-energy');
+  if(enEl) enEl.textContent = `⚡ ${energy}/${ENERGY_MAX}`;
+  const body = document.getElementById('food-body');
+  if(!body) return;
+  const rows = Object.keys(FOOD_RESTORE).map(function(id){
+    const inv = getInv(id);
+    if(!inv || inv.qty < 1) return '';
+    const f = FOOD_RESTORE[id];
+    return `<div class="food-row">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-info">
+        <div class="food-name">${f.name}</div>
+        <div class="food-sub">ฟื้นพลังงาน +${f.restore} · มีในคลัง ${inv.qty}</div>
+      </div>
+      <button class="food-eat-btn" data-foodid="${id}">กิน</button>
+    </div>`;
+  }).filter(Boolean).join('');
+  body.innerHTML = rows || '<div class="food-empty">🍽️ ยังไม่มีอาหารในคลัง<br>เก็บเกี่ยวผลผลิต เช่น ข้าวโพด ไข่ไก่ นม ผลไม้<br>แล้วนำมากินเพื่อฟื้นพลังงาน</div>';
+}
+function openFood(){
+  renderFoodList();
+  document.getElementById('food-overlay').classList.add('show');
+}
+function closeFood(){
+  document.getElementById('food-overlay').classList.remove('show');
+}
+
+// ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร — เฟส 3) =====
+function equipRowHtml(item, kind, owned){
+  if(owned){
+    return `<div class="equip-row owned">
+      <span class="equip-emoji">${item.emoji}</span>
+      <div class="equip-info">
+        <div class="equip-name">${item.name}</div>
+        <div class="equip-desc">${item.desc}</div>
+      </div>
+      <span class="equip-owned-tag">✅ มีแล้ว</span>
+    </div>`;
+  }
+  return `<div class="equip-row">
+    <span class="equip-emoji">${item.emoji}</span>
+    <div class="equip-info">
+      <div class="equip-name">${item.name}</div>
+      <div class="equip-desc">${item.desc}</div>
+    </div>
+    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">💵 ${item.cost.toLocaleString('th-TH')}</button>
+  </div>`;
+}
+function renderEquipment(){
+  const body = document.getElementById('equip-body');
+  if(!body) return;
+  const tools = TOOLS.map(t => equipRowHtml(t, 'tool', ownedTools.includes(t.id))).join('');
+  const machines = MACHINES.map(m => equipRowHtml(m, 'machine', ownedMachines.includes(m.id))).join('');
+  body.innerHTML =
+    `<div class="equip-cat-title">🔨 เครื่องมือ — ลดพลังงานทุกงาน</div>${tools}` +
+    `<div class="equip-cat-title">🚜 เครื่องจักร — ลดเวลาก่อสร้าง + พลังงาน</div>${machines}`;
+}
+function buyEquip(kind, id){
+  const list  = kind === 'tool' ? TOOLS : MACHINES;
+  const owned = kind === 'tool' ? ownedTools : ownedMachines;
+  const item  = list.find(x => x.id === id);
+  if(!item || owned.includes(id)) return;
+  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= item.cost;
+  owned.push(id);
+  updateTopbar();
+  toast(`✅ ซื้อ ${item.emoji} ${item.name} แล้ว! (${item.desc})`);
+  renderEquipment();
+}
+function openEquipment(){
+  renderEquipment();
+  document.getElementById('equip-overlay').classList.add('show');
+}
+function closeEquipment(){
+  document.getElementById('equip-overlay').classList.remove('show');
+}
+
+// ===== WORKER MODAL (จ้างแรงงาน — เฟส 4) =====
+function renderWorkers(){
+  const body = document.getElementById('worker-body');
+  if(!body) return;
+  // ส่วนที่พักคนงาน (เฟส 5) — แสดงความจุ + ปุ่มสร้าง
+  const houseRows = WORKER_HOUSES.map(function(h){
+    const owned = ownedHouses.includes(h.id);
+    if(owned){
+      return `<div class="equip-row owned">
+        <span class="equip-emoji">${h.emoji}</span>
+        <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
+        <span class="equip-owned-tag">✅ สร้างแล้ว</span>
+      </div>`;
+    }
+    return `<div class="equip-row">
+      <span class="equip-emoji">${h.emoji}</span>
+      <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
+      <button class="equip-buy-btn" data-houseid="${h.id}">💵 ${h.cost.toLocaleString('th-TH')}</button>
+    </div>`;
+  }).join('');
+  const houseBlock =
+    `<div class="equip-cat-title">🏠 ที่พักคนงาน — คนงานประจำ/รายวัน ${workers.length}/${workerCap()} คน</div>` +
+    houseRows +
+    `<div class="equip-cat-title">👷 จ้างคนงาน</div>`;
+  body.innerHTML = houseBlock + WORKER_TYPES.map(function(w){
+    const perm = workers.filter(x=>x.type===w.id && x.mode==='permanent').length;
+    const day  = workers.filter(x=>x.type===w.id && x.mode==='day').length;
+    const cred = workerCredits[w.id] || 0;
+    let have = [];
+    if(perm) have.push(`ประจำ ${perm}`);
+    if(day)  have.push(`รายวัน ${day}`);
+    if(cred) have.push(`เครดิตงาน ${cred}`);
+    const haveTxt = have.length ? `<div class="worker-have">มีอยู่: ${have.join(' · ')}</div>` : '';
+    return `<div class="worker-card">
+      <div class="worker-top">
+        <span class="worker-emoji">${w.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="worker-name">${w.name}</div>
+          <div class="worker-desc">${w.desc}</div>
+        </div>
+      </div>
+      ${haveTxt}
+      <div class="worker-hire-row">
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="task">รายครั้ง<b>${w.perTask.toLocaleString('th-TH')} ฿</b></button>
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="day">รายวัน<b>${w.perDay.toLocaleString('th-TH')} ฿/วัน</b></button>
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="permanent">ประจำ<b>${w.permanent.toLocaleString('th-TH')} ฿</b></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function hireWorker(type, mode){
+  const wt = WORKER_TYPES.find(x=>x.id===type);
+  if(!wt) return;
+  const cost = mode==='task' ? wt.perTask : mode==='day' ? wt.perDay : wt.permanent;
+  // เฟส 5: จ้างประจำ/รายวันจำกัดตามที่พักคนงาน
+  if(mode !== 'task' && workers.length >= workerCap()){
+    toast(`❌ คนงานเต็มแล้ว (${workers.length}/${workerCap()})<br>สร้าง "ที่พักคนงาน" เพื่อเพิ่มจำนวนสูงสุด 🏠`, true);
+    return;
+  }
+  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= cost;
+  updateTopbar();
+  if(mode==='task'){
+    workerCredits[type] = (workerCredits[type]||0) + 1;
+    toast(`✅ จ้าง ${wt.emoji} ${wt.name} รายครั้ง (+1 เครดิตงาน)`);
+  } else {
+    workers.push({ type, mode });
+    toast(`✅ จ้าง ${wt.emoji} ${wt.name} แบบ${mode==='day'?'รายวัน':'ประจำ'}แล้ว`);
+  }
+  renderWorkers();
+}
+function buyHouse(id){
+  const h = WORKER_HOUSES.find(x=>x.id===id);
+  if(!h || ownedHouses.includes(id)) return;
+  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= h.cost;
+  ownedHouses.push(id);
+  updateTopbar();
+  toast(`✅ สร้าง ${h.emoji} ${h.name} แล้ว! (${h.desc})`);
+  renderWorkers();
+}
+function openWorkers(){
+  renderWorkers();
+  document.getElementById('worker-overlay').classList.add('show');
+}
+function closeWorkers(){
+  document.getElementById('worker-overlay').classList.remove('show');
+}
+
+// ===== MATERIAL MODAL (วัสดุก่อสร้าง — เฟส 5) =====
+function renderMaterials(){
+  const body = document.getElementById('material-body');
+  if(!body) return;
+  body.innerHTML = MATERIALS.map(function(m){
+    const have = getInv(m.id);
+    const packs = m.packs.map(function(q){
+      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>💵 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
+    }).join('');
+    return `<div class="worker-card">
+      <div class="worker-top">
+        <span class="worker-emoji">${m.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="worker-name">${m.name}</div>
+          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} บาท/หน่วย</div>
+        </div>
+      </div>
+      <div class="worker-have">มีในคลัง: ${have?have.qty:0} หน่วย</div>
+      <div class="worker-hire-row">${packs}</div>
+    </div>`;
+  }).join('');
+}
+function buyMaterial(id, qty){
+  const m = MATERIALS.find(x=>x.id===id);
+  if(!m) return;
+  qty = Number(qty);
+  const cost = m.price * qty;
+  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= cost;
+  addInv(m.id, m.name, m.emoji, qty, Math.round(m.price*0.5));
+  updateTopbar();
+  toast(`✅ ซื้อ ${m.emoji} ${m.name} x${qty} แล้ว`);
+  renderMaterials();
+}
+function openMaterials(){
+  renderMaterials();
+  document.getElementById('material-overlay').classList.add('show');
+}
+function closeMaterials(){
+  document.getElementById('material-overlay').classList.remove('show');
+}
+
+// ===== ADMIN TOOLS (สำหรับผู้ดูแลระบบ) =====
+function adminAddMoney(amount){
+  amount = Math.floor(Number(amount));
+  if(!amount || amount <= 0){ toast('❌ ระบุจำนวนเงินให้ถูกต้อง'); return; }
+  gold += amount;
+  updateTopbar();
+  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
+}
+function adminSkipDays(n){
+  for(let k=0; k<n; k++){
+    gameMinute += 30; day++;
+    const wage = dailyWage();  // จ่ายค่าแรงรายวันตามปกติ (กฎ 14: คงตรรกะเปลี่ยนวัน)
+    if(wage > 0){
+      if(gold >= wage) gold -= wage;
+      else workers = workers.filter(w => w.mode !== 'day');
+    }
+    autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้
+  }
+  updateTopbar();
+  if(typeof currentTab !== 'undefined' && currentTab === 'farm') renderFarmSections();
+  toast(`⏩ เร่งเวลาผ่านไป ${n} วัน — ตอนนี้วันที่ ${day}`);
+}
+function adminFinishBuilds(){
+  if(constructions.length === 0){ toast('ไม่มีงานก่อสร้างที่กำลังทำอยู่'); return; }
+  constructions.forEach(c => { c.finishAt = Date.now() - 1; });
+  tickConstructions();  // ทำให้สิ่งปลูกสร้างเสร็จทันที (ผ่าน flow เดิม)
+  toast('🛠️ ก่อสร้างทั้งหมดเสร็จทันที');
+}
+function adminFillEnergy(){
+  energy = ENERGY_MAX;
+  renderEnergy();
+  toast('⚡ เติมพลังงานเต็มแล้ว');
+}
+// โหมดผู้ดูแลระบบ — เก็บ snapshot ตอนเข้า เพื่อคืนค่าเงิน/เวลาตอนออก
+let adminActive = false;
+let adminSnapshot = null;
+function openAdmin(){
+  if(!adminActive){
+    adminActive = true;
+    adminSnapshot = { gold: gold, day: day, gameMinute: gameMinute, energy: energy };
+  }
+  document.getElementById('admin-overlay').classList.add('show');
+}
+// ปิดแผง (ยังอยู่ในโหมดแอดมิน — เก็บการเปลี่ยนแปลงไว้ทดสอบต่อ)
+function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
+// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด
+function exitAdmin(){
+  if(adminSnapshot){
+    gold       = adminSnapshot.gold;
+    day        = adminSnapshot.day;
+    gameMinute = adminSnapshot.gameMinute;
+    energy     = adminSnapshot.energy;
+  }
+  adminActive = false;
+  adminSnapshot = null;
+  updateTopbar();
+  renderEnergy();
+  if(typeof currentTab !== 'undefined'){
+    if(currentTab === 'farm')   renderFarmSections();
+    if(currentTab === 'market') renderMarket();
+  }
+  document.getElementById('admin-overlay').classList.remove('show');
+  toast('🚪 ออกจากผู้ดูแลระบบ — คืนค่าเงิน/เวลาเดิมแล้ว');
+}
+
 </script>
 <script>
 // ============================================================
@@ -6266,6 +7237,10 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(!item) return;
     if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
     if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
+    if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
+    if(item.dataset.nav === 'workers'){ closeNav(); openWorkers(); return; }
+    if(item.dataset.nav === 'materials'){ closeNav(); openMaterials(); return; }
+    if(item.dataset.nav === 'admin'){ closeNav(); openAdmin(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
@@ -6277,6 +7252,86 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('guide-close').addEventListener('click', closeGuide);
   document.getElementById('guide-overlay').addEventListener('click', function(e){
     if(e.target === this) closeGuide();
+  });
+})();
+
+// ─────────────────────────── ENERGY / FOOD (พลังงาน + อาหาร) ───────────────────────────
+(function(){
+  const tEnergy = document.getElementById('t-energy');
+  if(tEnergy) tEnergy.addEventListener('click', openFood);
+  document.getElementById('food-close').addEventListener('click', closeFood);
+  const fo = document.getElementById('food-overlay');
+  fo.addEventListener('click', function(e){
+    if(e.target === this){ closeFood(); return; }
+    const btn = e.target.closest('.food-eat-btn');
+    if(btn) eatFood(btn.dataset.foodid);
+  });
+})();
+
+// ─────────────────────────── EQUIPMENT (เครื่องมือ + เครื่องจักร) ───────────────────────────
+(function(){
+  document.getElementById('equip-close').addEventListener('click', closeEquipment);
+  const eo = document.getElementById('equip-overlay');
+  eo.addEventListener('click', function(e){
+    if(e.target === this){ closeEquipment(); return; }
+    const btn = e.target.closest('.equip-buy-btn');
+    if(btn) buyEquip(btn.dataset.equipkind, btn.dataset.equipid);
+  });
+})();
+
+// ─────────────────────────── WORKERS (จ้างแรงงาน) ───────────────────────────
+(function(){
+  document.getElementById('worker-close').addEventListener('click', closeWorkers);
+  const wo = document.getElementById('worker-overlay');
+  wo.addEventListener('click', function(e){
+    if(e.target === this){ closeWorkers(); return; }
+    const hireBtn = e.target.closest('.worker-hire-btn');
+    if(hireBtn){ hireWorker(hireBtn.dataset.wtype, hireBtn.dataset.wmode); return; }
+    const houseBtn = e.target.closest('[data-houseid]');
+    if(houseBtn) buyHouse(houseBtn.dataset.houseid);
+  });
+  // เก็บเกี่ยวอัตโนมัติเป็นระยะ เมื่อมีคนงานเกษตรประจำ/รายวัน
+  setInterval(autoHarvest, 8000);
+})();
+
+// ─────────────────────────── PRODUCT QUALITY (คุณภาพ/เน่าเสีย เฟส A) ───────────────────────────
+(function(){
+  // รีเฟรชหน้าตลาดเป็นระยะ เพื่อให้คุณภาพ/ราคาที่เสื่อมตามเวลาแสดงผลแบบเรียลไทม์
+  setInterval(function(){
+    if(typeof currentTab !== 'undefined' && currentTab === 'market') renderMarket();
+  }, 3000);
+})();
+
+// ─────────────────────────── MATERIALS (วัสดุก่อสร้าง) ───────────────────────────
+(function(){
+  document.getElementById('material-close').addEventListener('click', closeMaterials);
+  const mo = document.getElementById('material-overlay');
+  mo.addEventListener('click', function(e){
+    if(e.target === this){ closeMaterials(); return; }
+    const btn = e.target.closest('[data-matid]');
+    if(btn) buyMaterial(btn.dataset.matid, btn.dataset.matqty);
+  });
+})();
+
+// ─────────────────────────── ADMIN (สำหรับผู้ดูแลระบบ) ───────────────────────────
+(function(){
+  document.getElementById('admin-fab').addEventListener('click', openAdmin);
+  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-exit-btn').addEventListener('click', exitAdmin);
+  document.getElementById('admin-money-btn').addEventListener('click', function(){
+    const inp = document.getElementById('admin-money-input');
+    adminAddMoney(inp.value);
+    inp.value = '';
+  });
+  document.getElementById('admin-finish-builds').addEventListener('click', adminFinishBuilds);
+  document.getElementById('admin-fill-energy').addEventListener('click', adminFillEnergy);
+  const ao = document.getElementById('admin-overlay');
+  ao.addEventListener('click', function(e){
+    if(e.target === this){ closeAdmin(); return; }
+    const moneyChip = e.target.closest('[data-money]');
+    if(moneyChip){ adminAddMoney(moneyChip.dataset.money); return; }
+    const dayChip = e.target.closest('[data-skipday]');
+    if(dayChip){ adminSkipDays(Number(dayChip.dataset.skipday)); return; }
   });
 })();
 
@@ -6625,6 +7680,16 @@ openFlirt(btn.dataset.npcid);
 //     แล้วทำเสร็จ → ต้องเพิ่มรายการใหม่ลงใน UPDATE_HISTORY (Section [data])
 //     ต่อท้ายรายการเดิม โดยเพิ่มเวอร์ชัน +0.01 จากรายการล่าสุด
 //     พร้อมระบุ วันที่ / หัวข้ออัพเดต / รายละเอียดสรุปสิ่งที่เปลี่ยน
+//
+// 14. พิจารณาความเชื่อมโยงระหว่างระบบ + แก้ให้สอดคล้องทั้งสายเสมอ
+//     - ทุกระบบในเกมเชื่อมโยงกัน (พื้นที่/ก่อสร้าง/พลังงาน/อาหาร/เครื่องมือ/
+//       เครื่องจักร/แรงงาน/ที่พัก/วัสดุ/คลัง/ตลาด/คำสั่งซื้อ/โรงงาน/เปลี่ยนวัน/ฐานะ)
+//     - กฎนี้ใช้กับทั้ง "การแก้ไข" และ "การเพิ่มเติม" สิ่งใหม่เข้าไปในระบบ
+//     - ก่อนแก้/เพิ่มระบบใด → ต้องไล่ดูก่อนว่าสิ่งนั้นส่งผลกระทบไปยังระบบอื่นใดบ้าง
+//     - ถ้ากระทบระบบอื่น → ต้องตามไปแก้/ปรับระบบที่ได้รับผลกระทบนั้นให้สอดคล้องด้วย
+//       (ไม่ใช่ทำเฉพาะจุดที่สั่งแล้วปล่อยให้ระบบอื่นพังหรือไม่ตรงกัน)
+//     - เป้าหมาย: หลังทำเสร็จ ทุกระบบต้องยังรันต่อเนื่องและตรรกะสอดคล้องกันทั้งหมด
+//     - หากผลกระทบใหญ่/กำกวม → อธิบายผลกระทบที่พบและถามยืนยันก่อนลงมือ
 // ============================================================
 // ============================================================
 //  DATA — ย้ายไป data.js แล้ว (Phase 2)
@@ -6651,6 +7716,7 @@ window.onload = function(){
   updateTopbar();
   updateSpaceLabels();
   renderVersionLabels();
+  renderEnergy();
   startConstructionTimer();
   genOrder(); genOrder(); genOrder();
   renderOrders();
