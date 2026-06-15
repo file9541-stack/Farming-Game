@@ -2464,6 +2464,42 @@ body { padding-bottom: 72px; }
   background: #e6f3da; border-radius: 99px; padding: 5px 11px; white-space: nowrap;
 }
 
+/* ===== WORKER MODAL (จ้างแรงงาน) ===== */
+#worker-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#worker-overlay.show { display: flex; }
+.worker-card {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px; padding: 10px 12px; margin-bottom: 10px;
+}
+.worker-top { display: flex; align-items: center; gap: 10px; }
+.worker-emoji { font-size: 1.6rem; flex-shrink: 0; }
+.worker-name { font-size: 0.86rem; font-weight: 800; color: #5a3a10; }
+.worker-desc { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.worker-have {
+  font-size: 0.66rem; font-weight: 700; color: #27500a;
+  background: #e6f3da; border-radius: 99px; padding: 3px 9px;
+  margin-top: 8px; display: inline-block;
+}
+.worker-hire-row { display: flex; gap: 6px; margin-top: 8px; }
+.worker-hire-btn {
+  flex: 1; border: none; cursor: pointer;
+  background: rgba(245,197,24,0.18); border: 1px solid rgba(220,160,20,0.4);
+  color: #7a4a00; border-radius: 10px; padding: 7px 4px;
+  font-family: inherit; font-size: 0.7rem; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.worker-hire-btn:active { transform: scale(0.95); }
+.worker-hire-btn b { font-size: 0.66rem; color: #9a6000; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2755,6 +2791,11 @@ body { padding-bottom: 72px; }
       <span class="navd-label">เครื่องมือ &amp; เครื่องจักร</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="workers">
+      <div class="navd-icon">👷</div>
+      <span class="navd-label">จ้างแรงงาน</span>
+      <i class="navd-chevron">›</i>
+    </div>
     <div class="navd-item" data-nav="market">
       <div class="navd-icon">🛒</div>
       <span class="navd-label">ตลาด</span>
@@ -2888,6 +2929,20 @@ body { padding-bottom: 72px; }
       <button class="version-close" id="equip-close">✕</button>
     </div>
     <div class="version-body" id="equip-body"></div>
+  </div>
+</div>
+
+<!-- ===== WORKER MODAL (จ้างแรงงาน) ===== -->
+<div id="worker-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>👷 ศูนย์จ้างแรงงาน</h2>
+        <div class="version-current">ทำเอง vs จ้าง — รายครั้ง / รายวัน / ประจำ</div>
+      </div>
+      <button class="version-close" id="worker-close">✕</button>
+    </div>
+    <div class="version-body" id="worker-body"></div>
   </div>
 </div>
 
@@ -3533,6 +3588,19 @@ const MACHINES = [
   { id:'excavator', name:'รถขุดดิน',     emoji:'🚧', cost:50000, timeReduce:0.30, energyReduce:3, desc:'ลดเวลาก่อสร้าง 30% · พลังงาน −3' },
 ];
 const MACHINE_TIME_CAP = 0.7;  // เพดานลดเวลาก่อสร้างรวม
+// ===== ระบบจ้างแรงงาน (เฟส 4) =====
+// 3 รูปแบบ: รายครั้ง (perTask) · รายวัน (perDay) · ประจำ (permanent)
+// จ้างรายวัน/ประจำ = ทำงานแทนเรา (ไม่ใช้พลังงาน) + เก็บผลผลิตอัตโนมัติ (คนงานเกษตร)
+const WORKER_TYPES = [
+  { id:'agri',    name:'คนงานเกษตร',     emoji:'👨‍🌾', perTask:50,  perDay:300, permanent:8000,
+    desc:'ปลูก/รดน้ำ/เก็บเกี่ยว/ดูแลสวน · รายวัน-ประจำ เก็บผลผลิตอัตโนมัติ' },
+  { id:'builder', name:'ช่างก่อสร้าง',    emoji:'👷', perTask:80,  perDay:400, permanent:12000,
+    desc:'สร้างคอก/โรงเรือน/คลัง/ห้องเย็น/โรงงาน' },
+  { id:'driver',  name:'คนขับเครื่องจักร', emoji:'🚜', perTask:100, perDay:500, permanent:15000,
+    desc:'ขับเครื่องจักร ก่อสร้าง เก็บเกี่ยว ดูแลสัตว์-สวน' },
+];
+// งานแต่ละหมวด คนงานประเภทไหนทำได้บ้าง
+const TASK_WORKER = { agri:['agri','driver'], builder:['builder','driver'] };
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3830,6 +3898,17 @@ const UPDATE_HISTORY = [
       'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
     ],
   },
+  {
+    version: '0.14',
+    date: '15/06/2026',
+    title: 'ระบบจ้างแรงงาน เฟส 4',
+    details: [
+      'เพิ่มเมนู "จ้างแรงงาน" — เลือกทำเอง หรือจ้างคนงาน 3 ประเภท',
+      'จ้างได้ 3 แบบ: รายครั้ง (เครดิตงาน) / รายวัน / ประจำ',
+      'จ้างรายวัน-ประจำ ทำงานแทนเรา (ไม่ใช้พลังงาน) + เก็บผลผลิตอัตโนมัติ',
+      'ค่าแรงรายวันหักเมื่อขึ้นวันใหม่ เงินไม่พอคนงานรายวันลาออก',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3862,6 +3941,16 @@ const GAME_GUIDE = [
       'เครื่องมือ (จอบ/เคียว/ค้อน ฯลฯ) ช่วยลดพลังงานที่ใช้ในทุกงาน',
       'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
       'ยิ่งมีอุปกรณ์มาก ยิ่งทำงานประหยัดพลังงานและเร็วขึ้น',
+    ],
+  },
+  {
+    icon: '👷', title: 'จ้างแรงงาน',
+    lines: [
+      'เปิดจากเมนู ☰ → "จ้างแรงงาน" เลือกทำเองหรือจ้างคนงาน',
+      'มี 3 ประเภท: คนงานเกษตร 👨‍🌾 · ช่างก่อสร้าง 👷 · คนขับเครื่องจักร 🚜',
+      'จ้างได้ 3 แบบ: รายครั้ง (เครดิตงาน) · รายวัน (จ่ายทุกวัน) · ประจำ (จ่ายครั้งเดียว)',
+      'จ้างรายวัน/ประจำ = คนงานทำงานแทน ไม่ใช้พลังงานเรา และเก็บผลผลิตอัตโนมัติ',
+      'ค่าแรงรายวันถูกหักเมื่อขึ้นวันใหม่ — เงินไม่พอคนงานรายวันจะลาออก',
     ],
   },
   {
@@ -3984,6 +4073,26 @@ function buildTimeReduce(){
   MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) r += m.timeReduce; });
   return Math.min(MACHINE_TIME_CAP, r);
 }
+// ===== แรงงานที่จ้าง (เฟส 4) =====
+let workers = [];  // จ้างรายวัน/ประจำ — {type, mode:'day'|'permanent'}
+let workerCredits = { agri:0, builder:0, driver:0 };  // จ้างรายครั้ง — เครดิตงานคงเหลือ
+// มีคนงานประจำ/รายวันที่ทำงานหมวดนี้ได้ไหม
+function hasContinuousWorker(category){
+  const types = TASK_WORKER[category] || [];
+  return workers.some(w => types.includes(w.type));
+}
+// ใช้เครดิตจ้างรายครั้งของงานหมวดนี้ (ถ้ามี) → คืน true
+function useWorkerCredit(category){
+  const types = TASK_WORKER[category] || [];
+  for(const t of types){ if(workerCredits[t] > 0){ workerCredits[t]--; return true; } }
+  return false;
+}
+// ค่าแรงรายวันรวม (เฉพาะคนงานแบบรายวัน)
+function dailyWage(){
+  return workers.filter(w => w.mode==='day').reduce((s,w)=>{
+    const wt = WORKER_TYPES.find(x=>x.id===w.type); return s + (wt ? wt.perDay : 0);
+  }, 0);
+}
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
 let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
@@ -4074,7 +4183,7 @@ function startConstruction(type){
     toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
     return;
   }
-  if(!spendEnergy(ENERGY_COST.build)) return;  // ทำเองใช้พลังงาน (เฟส 2)
+  if(!spendEnergy(ENERGY_COST.build,'builder')) return;  // ทำเองใช้พลังงาน (เฟส 2)
   gold -= b.money;
   // เครื่องจักรช่วยลดเวลาก่อสร้าง (เฟส 3)
   const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce())));
@@ -4391,8 +4500,13 @@ function renderEnergy(){
   if(dEl) dEl.textContent = txt;
 }
 // ใช้พลังงาน n หน่วย — หักส่วนลดจากเครื่องมือ/เครื่องจักร (ขั้นต่ำ 1)
+// เฟส 4: ถ้ามีแรงงานทำแทน (เครดิตรายครั้ง / ประจำ-รายวัน) → ไม่ใช้พลังงานเรา
 // ไม่พอ → คืน false พร้อมแจ้งเตือน (ชวนกินอาหาร)
-function spendEnergy(n){
+function spendEnergy(n, category){
+  if(category){
+    if(useWorkerCredit(category)) return true;   // จ้างรายครั้ง: ใช้เครดิตงาน
+    if(hasContinuousWorker(category)) return true; // จ้างประจำ/รายวัน: คนงานทำให้ฟรีพลังงาน
+  }
   const eff = Math.max(1, n - energyDiscount());
   if(energy < eff){
     toast(`❌ พลังงานไม่พอ! ต้องใช้ ⚡ ${eff} (เหลือ ${energy})<br>กินอาหารเพื่อฟื้นฟูพลังงาน 🍽️`, true);
@@ -4731,7 +4845,7 @@ function renderFarm(){
 function clickPlot(i){
   const p = plots[i];
   if(p.crop){
-    if(!spendEnergy(ENERGY_COST.harvest)) return;  // เก็บเกี่ยวใช้พลังงาน
+    if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
     const c = CROPS.find(x=>x.id===p.crop);
     addInv(c.id, c.name, c.emoji, 1, c.sell);
     addExp(c.exp);
@@ -4744,7 +4858,7 @@ function clickPlot(i){
   if(!cropDef){ setLog('เลือกพืชก่อน — ซื้อเมล็ดพันธุ์ที่ร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีเมล็ด ${cropDef.emoji} ${cropDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
-  if(!spendEnergy(ENERGY_COST.plant)) return;  // ปลูกพืชใช้พลังงาน
+  if(!spendEnergy(ENERGY_COST.plant,'agri')) return;  // ปลูกพืชใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   plots[i] = {crop:cropDef.id};
   setLog(`ปลูก ${cropDef.emoji} ${cropDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บเกี่ยว`);
@@ -4781,7 +4895,7 @@ function renderTrees(){
 function clickTree(i){
   const p = treePlots[i];
   if(p.tree){
-    if(!spendEnergy(ENERGY_COST.treeHarvest)) return;  // เก็บไม้ผลใช้พลังงาน
+    if(!spendEnergy(ENERGY_COST.treeHarvest,'agri')) return;  // เก็บไม้ผลใช้พลังงาน
     const t = TREES.find(x=>x.id===p.tree);
     addInv(t.id, t.name, t.emoji, t.harvestQty, t.sell);
     addExp(t.exp*t.harvestQty);
@@ -4793,7 +4907,7 @@ function clickTree(i){
   if(!treeDef){ setLog('เลือกต้นไม้ — ซื้อกล้าไม้จากร้านค้าในเมือง 🏬'); return; }
   const seedInv = getInv('seed_'+selCropId);
   if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีกล้า ${treeDef.emoji} ${treeDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
-  if(!spendEnergy(ENERGY_COST.treePlant)) return;  // ปลูกไม้ผลใช้พลังงาน
+  if(!spendEnergy(ENERGY_COST.treePlant,'agri')) return;  // ปลูกไม้ผลใช้พลังงาน
   removeInv('seed_'+selCropId, 1);
   treePlots[i] = {tree:treeDef.id};
   setLog(`ปลูก ${treeDef.emoji} ${treeDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บ`);
@@ -4851,7 +4965,7 @@ function clickPen(size, idx){
   if(!pen) return;
   if(pen.animal){
     // เก็บผลผลิต
-    if(!spendEnergy(ENERGY_COST.animalCollect)) return;  // ดูแลสัตว์ใช้พลังงาน
+    if(!spendEnergy(ENERGY_COST.animalCollect,'agri')) return;  // ดูแลสัตว์ใช้พลังงาน
     const a = ANIMALS.find(x=>x.id===pen.animal);
     addInv(a.product, a.productName, a.productEmoji, 1, a.sell);
     addExp(a.exp);
@@ -4895,7 +5009,7 @@ function renderFish(){
 function collectFish(i){
   const p = fishPonds[i];
   if(!p.fish) return;
-  if(!spendEnergy(ENERGY_COST.fishCollect)) return;  // เก็บปลาใช้พลังงาน
+  if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
   addExp(f.exp);
@@ -4903,7 +5017,29 @@ function collectFish(i){
   renderFish();
 }
 
-
+// ============================================================
+//  เก็บเกี่ยวอัตโนมัติ (เฟส 4) — มีคนงานเกษตรประจำ/รายวันจึงทำงานเอง
+// ============================================================
+function autoHarvest(){
+  if(!hasContinuousWorker('agri')) return;
+  let n = 0;
+  plots.forEach((p,i)=>{
+    if(p.crop){ const c=CROPS.find(x=>x.id===p.crop); addInv(c.id,c.name,c.emoji,1,c.sell); addExp(c.exp); plots[i]={crop:null,plantedAt:null,ready:false}; n++; }
+  });
+  treePlots.forEach(p=>{
+    if(p.tree){ const t=TREES.find(x=>x.id===p.tree); addInv(t.id,t.name,t.emoji,t.harvestQty,t.sell); addExp(t.exp*t.harvestQty); n++; }
+  });
+  smallPens.concat(bigPens).forEach(pen=>{
+    if(pen.animal){ const a=ANIMALS.find(x=>x.id===pen.animal); addInv(a.product,a.productName,a.productEmoji,1,a.sell); addExp(a.exp); n++; }
+  });
+  fishPonds.forEach(p=>{
+    if(p.fish){ const f=FISH.find(x=>x.id===p.fish); addInv(f.product,f.productName,f.productEmoji,1,f.sell); addExp(f.exp); n++; }
+  });
+  if(n > 0){
+    toast(`👨‍🌾 คนงานเก็บผลผลิตอัตโนมัติ ${n} รายการ`);
+    if(currentTab==='farm') rerenderFarmArea();
+  }
+}
 
 
 
@@ -5277,7 +5413,16 @@ function sellAll(id){
 // ============================================================
 function nextDay(){
   gameMinute++;
-  if(gameMinute % 30 === 0){ day++; toast(`🌅 วันใหม่! วันที่ ${day}`); }
+  if(gameMinute % 30 === 0){
+    day++; toast(`🌅 วันใหม่! วันที่ ${day}`);
+    // เฟส 4: จ่ายค่าแรงคนงานรายวัน — เงินไม่พอ คนงานรายวันลาออก
+    const wage = dailyWage();
+    if(wage > 0){
+      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} บาท`); }
+      else { workers = workers.filter(w => w.mode !== 'day'); toast('⚠️ เงินไม่พอจ่ายค่าแรง — คนงานรายวันลาออกทั้งหมด'); }
+    }
+    autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้เมื่อขึ้นวันใหม่
+  }
   updateTopbar();
   // re-render current tab
   if(currentTab==='farm'){ renderFarm(); renderTrees(); renderAnimals(); renderFish(); }
@@ -6565,6 +6710,60 @@ function closeEquipment(){
   document.getElementById('equip-overlay').classList.remove('show');
 }
 
+// ===== WORKER MODAL (จ้างแรงงาน — เฟส 4) =====
+function renderWorkers(){
+  const body = document.getElementById('worker-body');
+  if(!body) return;
+  body.innerHTML = WORKER_TYPES.map(function(w){
+    const perm = workers.filter(x=>x.type===w.id && x.mode==='permanent').length;
+    const day  = workers.filter(x=>x.type===w.id && x.mode==='day').length;
+    const cred = workerCredits[w.id] || 0;
+    let have = [];
+    if(perm) have.push(`ประจำ ${perm}`);
+    if(day)  have.push(`รายวัน ${day}`);
+    if(cred) have.push(`เครดิตงาน ${cred}`);
+    const haveTxt = have.length ? `<div class="worker-have">มีอยู่: ${have.join(' · ')}</div>` : '';
+    return `<div class="worker-card">
+      <div class="worker-top">
+        <span class="worker-emoji">${w.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="worker-name">${w.name}</div>
+          <div class="worker-desc">${w.desc}</div>
+        </div>
+      </div>
+      ${haveTxt}
+      <div class="worker-hire-row">
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="task">รายครั้ง<b>${w.perTask.toLocaleString('th-TH')} ฿</b></button>
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="day">รายวัน<b>${w.perDay.toLocaleString('th-TH')} ฿/วัน</b></button>
+        <button class="worker-hire-btn" data-wtype="${w.id}" data-wmode="permanent">ประจำ<b>${w.permanent.toLocaleString('th-TH')} ฿</b></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function hireWorker(type, mode){
+  const wt = WORKER_TYPES.find(x=>x.id===type);
+  if(!wt) return;
+  const cost = mode==='task' ? wt.perTask : mode==='day' ? wt.perDay : wt.permanent;
+  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= cost;
+  updateTopbar();
+  if(mode==='task'){
+    workerCredits[type] = (workerCredits[type]||0) + 1;
+    toast(`✅ จ้าง ${wt.emoji} ${wt.name} รายครั้ง (+1 เครดิตงาน)`);
+  } else {
+    workers.push({ type, mode });
+    toast(`✅ จ้าง ${wt.emoji} ${wt.name} แบบ${mode==='day'?'รายวัน':'ประจำ'}แล้ว`);
+  }
+  renderWorkers();
+}
+function openWorkers(){
+  renderWorkers();
+  document.getElementById('worker-overlay').classList.add('show');
+}
+function closeWorkers(){
+  document.getElementById('worker-overlay').classList.remove('show');
+}
+
 </script>
 <script>
 // ============================================================
@@ -6599,6 +6798,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
     if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
     if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
+    if(item.dataset.nav === 'workers'){ closeNav(); openWorkers(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
@@ -6635,6 +6835,19 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     const btn = e.target.closest('.equip-buy-btn');
     if(btn) buyEquip(btn.dataset.equipkind, btn.dataset.equipid);
   });
+})();
+
+// ─────────────────────────── WORKERS (จ้างแรงงาน) ───────────────────────────
+(function(){
+  document.getElementById('worker-close').addEventListener('click', closeWorkers);
+  const wo = document.getElementById('worker-overlay');
+  wo.addEventListener('click', function(e){
+    if(e.target === this){ closeWorkers(); return; }
+    const btn = e.target.closest('.worker-hire-btn');
+    if(btn) hireWorker(btn.dataset.wtype, btn.dataset.wmode);
+  });
+  // เก็บเกี่ยวอัตโนมัติเป็นระยะ เมื่อมีคนงานเกษตรประจำ/รายวัน
+  setInterval(autoHarvest, 8000);
 })();
 
 // ─────────────────────────── TABS (topbar) ───────────────────────────
