@@ -2518,11 +2518,22 @@ body { padding-bottom: 72px; }
 #admin-fab {
   position: fixed; right: 0; top: 72%; transform: translateY(-50%);
   z-index: 1500;
+  display: none; align-items: center; justify-content: center;
   background: linear-gradient(135deg,#6b7280,#3f4654); color: #fff; border: none;
   border-radius: 14px 0 0 14px; padding: 11px 8px; font-size: 1.2rem; cursor: pointer;
   box-shadow: -2px 2px 10px rgba(0,0,0,0.28);
 }
+#admin-fab.show { display: flex; }
 #admin-fab:active { transform: translateY(-50%) scale(0.93); }
+.admin-hide-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.22); color: #fff;
+  border-radius: 99px; padding: 6px 14px; font-family: inherit;
+  font-size: 0.78rem; font-weight: 800;
+}
+.admin-hide-btn:active { transform: scale(0.95); }
+.admin-money-current { font-size: 0.68rem; font-weight: 600; color: #2a8030; margin-left: 4px; }
+.admin-money-current b { font-weight: 800; }
 #admin-overlay {
   display: none;
   position: fixed; inset: 0;
@@ -3048,11 +3059,11 @@ body { padding-bottom: 72px; }
         <h2>🛠️ สำหรับผู้ดูแลระบบ</h2>
         <div class="version-current">เครื่องมือทดสอบ — เพิ่มเงิน / เร่งเวลา</div>
       </div>
-      <button class="version-close" id="admin-close">✕</button>
+      <button class="admin-hide-btn" id="admin-hide-btn">ซ่อน ⤵</button>
     </div>
     <div class="version-body">
       <div class="admin-block">
-        <div class="admin-title">💵 เพิ่มจำนวนเงิน</div>
+        <div class="admin-title">💵 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> บาท</span></div>
         <div class="admin-row">
           <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
           <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
@@ -4123,6 +4134,17 @@ const UPDATE_HISTORY = [
       'เพิ่มปุ่มลอย 🛠️ ติดขอบขวา กดแล้วเด้งแผงแอดมินขึ้นกลางจอ ปิดแล้วหุบกลับ',
       'เพิ่มปุ่ม "ออกจากผู้ดูแลระบบ" — คืนค่าเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด',
       'ปิดแผง (✕) จะเก็บการเปลี่ยนแปลงไว้ทดสอบต่อ จนกว่าจะกดออกจากโหมด',
+    ],
+  },
+  {
+    version: '0.21',
+    date: '15/06/2026',
+    title: 'ปรับ flow แผงผู้ดูแลระบบ',
+    details: [
+      'แถบลอย 🛠️ ไม่แสดงตอนเริ่ม — เข้าผ่านเมนู "สำหรับผู้ดูแลระบบ" เท่านั้น',
+      'เปลี่ยนปุ่ม ✕ เป็น "ซ่อน" — กดแล้วหุบแผงเป็นแถบลอยขอบขวา',
+      'กดออกจากผู้ดูแลระบบ แถบลอยหายทั้งหมด (ไม่เหลือแถบซ่อน)',
+      'กดปุ่มยอดเงินสำเร็จรูปจะเด้งใส่ช่องกรอก + แสดงยอดเงินปัจจุบันข้างหัวข้อ',
     ],
   },
 ];
@@ -7145,6 +7167,7 @@ function adminAddMoney(amount){
   if(!amount || amount <= 0){ toast('❌ ระบุจำนวนเงินให้ถูกต้อง'); return; }
   gold += amount;
   updateTopbar();
+  updateAdminMoneyDisplay();
   toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
 }
 function adminSkipDays(n){
@@ -7175,16 +7198,27 @@ function adminFillEnergy(){
 // โหมดผู้ดูแลระบบ — เก็บ snapshot ตอนเข้า เพื่อคืนค่าเงิน/เวลาตอนออก
 let adminActive = false;
 let adminSnapshot = null;
+// อัปเดตยอดเงินปัจจุบันข้างหัวข้อ "เพิ่มจำนวนเงิน"
+function updateAdminMoneyDisplay(){
+  const el = document.getElementById('admin-money-current');
+  if(el) el.textContent = gold.toLocaleString('th-TH');
+}
+// เปิด/เด้งแผงแอดมินขึ้นกลางจอ (เข้าโหมดถ้ายังไม่เข้า + เก็บ snapshot)
 function openAdmin(){
   if(!adminActive){
     adminActive = true;
     adminSnapshot = { gold: gold, day: day, gameMinute: gameMinute, energy: energy };
   }
   document.getElementById('admin-overlay').classList.add('show');
+  document.getElementById('admin-fab').classList.remove('show');  // ซ่อนแถบลอยขณะเปิดแผง
+  updateAdminMoneyDisplay();
 }
-// ปิดแผง (ยังอยู่ในโหมดแอดมิน — เก็บการเปลี่ยนแปลงไว้ทดสอบต่อ)
-function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
-// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด
+// ซ่อนแผง → หุบเป็นแถบลอยขอบขวา (ยังอยู่ในโหมดแอดมิน)
+function hideAdmin(){
+  document.getElementById('admin-overlay').classList.remove('show');
+  if(adminActive) document.getElementById('admin-fab').classList.add('show');
+}
+// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิม + เก็บแถบลอยหายทั้งหมด
 function exitAdmin(){
   if(adminSnapshot){
     gold       = adminSnapshot.gold;
@@ -7201,6 +7235,7 @@ function exitAdmin(){
     if(currentTab === 'market') renderMarket();
   }
   document.getElementById('admin-overlay').classList.remove('show');
+  document.getElementById('admin-fab').classList.remove('show');
   toast('🚪 ออกจากผู้ดูแลระบบ — คืนค่าเงิน/เวลาเดิมแล้ว');
 }
 
@@ -7316,7 +7351,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
 // ─────────────────────────── ADMIN (สำหรับผู้ดูแลระบบ) ───────────────────────────
 (function(){
   document.getElementById('admin-fab').addEventListener('click', openAdmin);
-  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-hide-btn').addEventListener('click', hideAdmin);
   document.getElementById('admin-exit-btn').addEventListener('click', exitAdmin);
   document.getElementById('admin-money-btn').addEventListener('click', function(){
     const inp = document.getElementById('admin-money-input');
@@ -7327,9 +7362,14 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('admin-fill-energy').addEventListener('click', adminFillEnergy);
   const ao = document.getElementById('admin-overlay');
   ao.addEventListener('click', function(e){
-    if(e.target === this){ closeAdmin(); return; }
+    if(e.target === this){ hideAdmin(); return; }  // คลิกพื้นหลัง = ซ่อน (หุบเป็นแถบลอย)
     const moneyChip = e.target.closest('[data-money]');
-    if(moneyChip){ adminAddMoney(moneyChip.dataset.money); return; }
+    if(moneyChip){
+      // เด้งยอดที่เลือกใส่ช่องกรอกด้วย แล้วเพิ่มเงิน
+      document.getElementById('admin-money-input').value = moneyChip.dataset.money;
+      adminAddMoney(moneyChip.dataset.money);
+      return;
+    }
     const dayChip = e.target.closest('[data-skipday]');
     if(dayChip){ adminSkipDays(Number(dayChip.dataset.skipday)); return; }
   });
