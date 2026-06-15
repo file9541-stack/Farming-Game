@@ -2401,6 +2401,29 @@ body { padding-bottom: 72px; }
 .slot-remove { background: linear-gradient(135deg,#e8a040,#d07010); color: #fff; }
 .slot-add:hover, .slot-remove:hover { filter: brightness(1.1); }
 
+/* ===== ระบบก่อสร้าง — การ์ดกำลังก่อสร้าง (เฟส 1) ===== */
+.sec-build-list { display: flex; flex-direction: column; gap: 6px; }
+.sec-build-list:not(:empty) { margin-bottom: 8px; }
+.build-card {
+  background: linear-gradient(135deg,#fff3da,#ffe9c4);
+  border: 1.5px dashed #e0a010;
+  border-radius: 12px; padding: 8px 10px;
+}
+.build-card-top {
+  font-size: 0.74rem; font-weight: 700; color: #7a4a00;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.build-timer { margin-left: auto; font-weight: 800; color: #b05000; white-space: nowrap; }
+.build-bar {
+  height: 6px; border-radius: 99px; background: rgba(200,160,80,0.25);
+  margin-top: 6px; overflow: hidden;
+}
+.build-bar-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg,#f5c518,#e0a010);
+  transition: width 0.4s linear;
+}
+
 /* ===== แถบพื้นที่ว่างรวม ===== */
 /* ===== แถบพื้นที่ว่างรวม (ใต้ topbar) ===== */
 /* ===== แถบพื้นที่ว่าง (ฟิกซ์บนสุดในกล่องฟาร์ม — สั้น ชิดซ้าย) ===== */
@@ -3358,6 +3381,15 @@ const SLOT_INFO = {
   big:   { label:'คอกสัตว์ใหญ่', emoji:'🐄', cost:300, unit:'คอก' },
   ponds: { label:'บ่อปลา',      emoji:'🐟', cost:400, unit:'บ่อ' },
 };
+// ===== ระบบก่อสร้าง (เฟส 1) — ต้นทุนเงิน + เวลาก่อสร้างจริง (วินาที) ต่อสิ่งปลูกสร้าง =====
+// ก่อนได้แปลง/บ่อ/คอก/สวน ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ขุดบ่อ/สร้างคอก/ทำสวน)
+const BUILD_INFO = {
+  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30 },
+  trees: { verb:'ทำสวน',        money:1500, seconds:60 },
+  small: { verb:'สร้างคอก',     money:1000, seconds:45 },
+  big:   { verb:'สร้างคอก',     money:3000, seconds:90 },
+  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75 },
+};
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3625,6 +3657,16 @@ const UPDATE_HISTORY = [
       'คลิกเข้าไปแสดงคู่มืออธิบายภาพรวมแต่ละระบบในเกมแบบย่อ',
     ],
   },
+  {
+    version: '0.11',
+    date: '15/06/2026',
+    title: 'ระบบก่อสร้าง เฟส 1',
+    details: [
+      'เพิ่มผัก/สวน/บ่อ/คอก เลยไม่ได้ ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
+      'ก่อสร้างตรวจพื้นที่ว่าง + เงินทุน แล้วเข้าสถานะ "กำลังก่อสร้าง" จับเวลาจริงพร้อมแถบความคืบหน้า',
+      'พื้นที่ถูกจองระหว่างก่อสร้าง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3632,6 +3674,15 @@ const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
 // ===== คู่มือการเล่น (Game Guide) =====
 // อธิบายภาพรวมการทำงานของแต่ละระบบในเกมแบบคร่าว ๆ
 const GAME_GUIDE = [
+  {
+    icon: '🏗️', title: 'ระบบก่อสร้าง (ต้องสร้างก่อนใช้)',
+    lines: [
+      'แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ จะใช้เลยไม่ได้ — ต้องก่อสร้างก่อน',
+      'กดปุ่ม ➕ ในแต่ละหมวด เพื่อสั่งก่อสร้าง (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
+      'ก่อสร้างใช้ทั้งพื้นที่ว่างและเงินทุน และต้องรอเวลาก่อสร้างจริง',
+      'เมื่อครบเวลา สิ่งปลูกสร้างจะพร้อมใช้งานทันที',
+    ],
+  },
   {
     icon: '🌾', title: 'ฟาร์มและการเพาะปลูก',
     lines: [
@@ -3733,6 +3784,12 @@ let treePlots  = [];  // ไม้ยืนต้น  — {tree, plantedAt, read
 let fishPonds  = [];  // บ่อปลา     — {fish, stockedAt, ready}
 let smallPens  = [];  // คอกสัตว์เล็ก (ไก่/เป็ด)  — {animal:id}
 let bigPens    = [];  // คอกสัตว์ใหญ่ (วัว/ควาย) — {animal:id}
+let constructions = [];  // งานก่อสร้างที่กำลังดำเนินอยู่ — {type, finishAt} (เฟส 1)
+
+// ─── พื้นที่ที่ถูกจองโดยงานก่อสร้างที่กำลังทำอยู่ ───
+function calcBuildingSpace(){
+  return constructions.reduce((s, c) => s + (SLOT_COST[c.type] || 0), 0);
+}
 
 // ─── พื้นที่ว่างรวม (จากที่ดินทุกแปลงที่ยังไม่ขาย) ───
 function calcTotalSpace(){
@@ -3753,8 +3810,8 @@ function calcUsedSpace(){
        + fishPonds.length * SLOT_COST.ponds;
 }
 
-// ─── พื้นที่ว่างที่เหลือ ───
-function freeSpace(){ return calcTotalSpace() - calcUsedSpace(); }
+// ─── พื้นที่ว่างที่เหลือ (หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย) ───
+function freeSpace(){ return calcTotalSpace() - calcUsedSpace() - calcBuildingSpace(); }
 
 // ─── เพิ่มช่องประเภทหนึ่ง (หักพื้นที่ว่าง) ───
 function addSlot(type){
@@ -3793,6 +3850,90 @@ function removeSlot(type){
   rerenderFarmArea();
 }
 
+// ============================================================
+//  ระบบก่อสร้าง (เฟส 1) — ต้องก่อสร้างก่อนจึงจะได้แปลง/บ่อ/คอก/สวน
+// ============================================================
+// ─── สั่งเริ่มก่อสร้าง: ตรวจพื้นที่ + เงิน → หักเงิน → เข้าคิวก่อสร้าง (จับเวลาจริง) ───
+function startConstruction(type){
+  const cost = SLOT_COST[type];
+  const info = SLOT_INFO[type];
+  const b    = BUILD_INFO[type];
+  if(!b) return;
+  if(freeSpace() < cost){
+    toast(`❌ พื้นที่เกษตรไม่พอ! ${info.emoji} ${info.label} ใช้ ${cost} ตร.ม.`);
+    return;
+  }
+  if(gold < b.money){
+    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
+    return;
+  }
+  gold -= b.money;
+  constructions.push({ type, finishAt: Date.now() + b.seconds * 1000 });
+  updateTopbar();
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${b.seconds} วินาที)`, true);
+  rerenderFarmArea();
+  startConstructionTimer();
+}
+
+// ─── สร้างช่องจริงเมื่อก่อสร้างเสร็จ (พื้นที่ถูกจองไว้แล้ว ไม่ต้องเช็คซ้ำ) ───
+function materializeSlot(type){
+  if(type==='plots') plots.push({crop:null, plantedAt:null, ready:false});
+  if(type==='trees') treePlots.push({tree:null, plantedAt:null, ready:false});
+  if(type==='small') smallPens.push({animal:null});
+  if(type==='big')   bigPens.push({animal:null});
+  if(type==='ponds') fishPonds.push({fish:null, stockedAt:null, ready:false});
+}
+
+// ─── ตรวจงานก่อสร้างที่ครบเวลา → สร้างช่องจริง ───
+let _constructionTimer = null;
+function tickConstructions(){
+  const now = Date.now();
+  let finished = false;
+  for(let i = constructions.length - 1; i >= 0; i--){
+    if(constructions[i].finishAt <= now){
+      const type = constructions[i].type;
+      constructions.splice(i, 1);
+      materializeSlot(type);
+      const info = SLOT_INFO[type];
+      toast(`✅ ${info.emoji} ${info.label} ก่อสร้างเสร็จแล้ว — พร้อมใช้งาน!`, true);
+      finished = true;
+    }
+  }
+  if(finished) rerenderFarmArea();
+  else renderConstructions();
+  if(constructions.length === 0 && _constructionTimer){
+    clearInterval(_constructionTimer);
+    _constructionTimer = null;
+  }
+}
+function startConstructionTimer(){
+  if(_constructionTimer || constructions.length === 0) return;
+  _constructionTimer = setInterval(tickConstructions, 1000);
+}
+
+// ─── แสดงสถานะ "กำลังก่อสร้าง" + นับถอยหลังในแต่ละหมวด ───
+function renderConstructions(){
+  const now = Date.now();
+  document.querySelectorAll('.sec-build-list').forEach(box => {
+    const type = box.dataset.slottype;
+    const list = constructions.filter(c => c.type === type);
+    if(list.length === 0){ box.innerHTML = ''; return; }
+    const b    = BUILD_INFO[type];
+    const info = SLOT_INFO[type];
+    box.innerHTML = list.map(c => {
+      const left = Math.max(0, Math.ceil((c.finishAt - now) / 1000));
+      const mm = String(Math.floor(left / 60)).padStart(2,'0');
+      const ss = String(left % 60).padStart(2,'0');
+      const pct = Math.min(100, Math.round((1 - left / b.seconds) * 100));
+      return `<div class="build-card">
+        <div class="build-card-top">🏗️ กำลัง${b.verb} ${info.emoji} ${info.label}
+          <span class="build-timer">⏳ ${mm}:${ss}</span></div>
+        <div class="build-bar"><div class="build-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  });
+}
+
 // ─── re-render พื้นที่ฟาร์มทั้งหมด + อัปเดตหัวข้อพื้นที่ว่าง ───
 function rerenderFarmArea(){
   renderFarmSections();
@@ -3802,7 +3943,7 @@ function rerenderFarmArea(){
 function updateSpaceLabels(){
   const used  = calcUsedSpace();
   const total = calcTotalSpace();
-  const free  = total - used;
+  const free  = freeSpace();  // หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย
   const pct   = total > 0 ? Math.round((used/total)*100) : 0;
   // แถบพื้นที่เกษตร
   document.querySelectorAll('.space-free-label').forEach(el => {
@@ -3831,8 +3972,9 @@ function updateSpaceLabels(){
     if(type==='ponds') count = fishPonds.length;
     const usedArea = count * info.cost;
     const pctOfFarm = total > 0 ? Math.round((usedArea/total)*100) : 0;
+    const b = BUILD_INFO[type];
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · สร้างได้อีก ${canAdd} ${info.unit}` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -4139,13 +4281,14 @@ function renderFarmSections(){
         </div>
       </div>
       <div class="sec-area-info" data-slottype="${m.slottype}"></div>
+      <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       ${gridTag}
     </div>`;
   }).join('');
   // ผูก slot-btn delegation ใหม่ (เพราะ rebuild HTML)
   container.querySelectorAll('[data-slotaction]').forEach(btn => {
     btn.addEventListener('click', function(){
-      if(btn.dataset.slotaction==='add') addSlot(btn.dataset.slottype);
+      if(btn.dataset.slotaction==='add') startConstruction(btn.dataset.slottype);
       else removeSlot(btn.dataset.slottype);
     });
   });
@@ -4158,6 +4301,7 @@ function renderFarmSections(){
   });
   // render เนื้อหาในแต่ละหมวด
   renderFarm(); renderTrees(); renderAnimals(); renderFish();
+  renderConstructions();
   updateSpaceLabels();
 }
 
@@ -6507,6 +6651,7 @@ window.onload = function(){
   updateTopbar();
   updateSpaceLabels();
   renderVersionLabels();
+  startConstructionTimer();
   genOrder(); genOrder(); genOrder();
   renderOrders();
   (function(){
