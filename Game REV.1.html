@@ -2425,6 +2425,45 @@ body { padding-bottom: 72px; }
 .food-eat-btn:active { transform: scale(0.94); }
 .food-empty { text-align: center; color: #b08030; font-size: 0.8rem; padding: 24px 12px; line-height: 1.6; }
 
+/* ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร) ===== */
+#equip-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#equip-overlay.show { display: flex; }
+.equip-cat-title {
+  font-size: 0.78rem; font-weight: 800; color: #7a4a00;
+  margin: 4px 2px 8px; display: flex; align-items: center; gap: 6px;
+}
+.equip-cat-title:not(:first-child) { margin-top: 14px; }
+.equip-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 12px; padding: 8px 10px; margin-bottom: 8px;
+}
+.equip-row.owned { background: rgba(74,191,74,0.12); border-color: rgba(42,128,48,0.35); }
+.equip-emoji { font-size: 1.5rem; flex-shrink: 0; }
+.equip-info { flex: 1; min-width: 0; }
+.equip-name { font-size: 0.84rem; font-weight: 700; color: #5a3a10; }
+.equip-desc { font-size: 0.68rem; color: #b08030; margin-top: 1px; }
+.equip-buy-btn {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#f5c518,#e0a010); color: #6b3500;
+  border-radius: 10px; padding: 7px 12px; font-family: inherit;
+  font-size: 0.74rem; font-weight: 800; white-space: nowrap;
+}
+.equip-buy-btn:active { transform: scale(0.94); }
+.equip-owned-tag {
+  flex-shrink: 0; font-size: 0.72rem; font-weight: 800; color: #27500a;
+  background: #e6f3da; border-radius: 99px; padding: 5px 11px; white-space: nowrap;
+}
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2711,6 +2750,11 @@ body { padding-bottom: 72px; }
       <div class="navd-icon">🌾</div>
       <span class="navd-label">ฟาร์มของฉัน</span>
     </div>
+    <div class="navd-item" data-nav="equipment">
+      <div class="navd-icon">🔨</div>
+      <span class="navd-label">เครื่องมือ &amp; เครื่องจักร</span>
+      <i class="navd-chevron">›</i>
+    </div>
     <div class="navd-item" data-nav="market">
       <div class="navd-icon">🛒</div>
       <span class="navd-label">ตลาด</span>
@@ -2830,6 +2874,20 @@ body { padding-bottom: 72px; }
       <button class="version-close" id="food-close">✕</button>
     </div>
     <div class="version-body" id="food-body"></div>
+  </div>
+</div>
+
+<!-- ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร) ===== -->
+<div id="equip-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🔨 เครื่องมือ &amp; เครื่องจักร</h2>
+        <div class="version-current">ซื้อครั้งเดียว ลดพลังงานและเวลาก่อสร้าง</div>
+      </div>
+      <button class="version-close" id="equip-close">✕</button>
+    </div>
+    <div class="version-body" id="equip-body"></div>
   </div>
 </div>
 
@@ -3458,6 +3516,23 @@ const FOOD_RESTORE = {
   rice:   { emoji:'🌾', name:'ข้าว',             restore:5  },
   bread:  { emoji:'🍞', name:'ขนมปัง (อาหารสำเร็จรูป)', restore:20 },
 };
+// ===== ระบบเครื่องมือ (เฟส 3) — ซื้อครั้งเดียว ใช้ลดพลังงานทุกงาน =====
+const TOOLS = [
+  { id:'hoe',     name:'จอบ',       emoji:'⛏️', cost:800,  energyReduce:1, desc:'พรวนดิน — ลดพลังงานทุกงาน −1' },
+  { id:'watering',name:'บัวรดน้ำ',  emoji:'🪣', cost:600,  energyReduce:1, desc:'รดน้ำง่ายขึ้น — ลดพลังงาน −1' },
+  { id:'sickle',  name:'เคียว',     emoji:'🌿', cost:1000, energyReduce:1, desc:'เก็บเกี่ยวไว — ลดพลังงาน −1' },
+  { id:'axe',     name:'ขวาน',      emoji:'🪓', cost:1200, energyReduce:1, desc:'ตัดไม้สะดวก — ลดพลังงาน −1' },
+  { id:'hammer',  name:'ค้อน',      emoji:'🔨', cost:1500, energyReduce:1, desc:'ก่อสร้างคล่อง — ลดพลังงาน −1' },
+  { id:'saw',     name:'เลื่อย',    emoji:'🪚', cost:1800, energyReduce:1, desc:'แปรรูปไม้ — ลดพลังงาน −1' },
+];
+// ===== ระบบเครื่องจักร (เฟส 3) — ซื้อครั้งเดียว ลดเวลาก่อสร้าง + ลดพลังงาน =====
+const MACHINES = [
+  { id:'pump',      name:'เครื่องสูบน้ำ', emoji:'💧', cost:15000, timeReduce:0.15, energyReduce:1, desc:'ลดเวลาก่อสร้าง 15% · พลังงาน −1' },
+  { id:'plow',      name:'รถไถ',         emoji:'🚜', cost:25000, timeReduce:0.20, energyReduce:2, desc:'ลดเวลาก่อสร้าง 20% · พลังงาน −2' },
+  { id:'truck',     name:'รถบรรทุก',     emoji:'🚛', cost:30000, timeReduce:0.10, energyReduce:1, desc:'ขนส่งไว ลดเวลาก่อสร้าง 10% · พลังงาน −1' },
+  { id:'excavator', name:'รถขุดดิน',     emoji:'🚧', cost:50000, timeReduce:0.30, energyReduce:3, desc:'ลดเวลาก่อสร้าง 30% · พลังงาน −3' },
+];
+const MACHINE_TIME_CAP = 0.7;  // เพดานลดเวลาก่อสร้างรวม
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3745,6 +3820,16 @@ const UPDATE_HISTORY = [
       'เพิ่มระบบอาหาร: กดป้าย ⚡ เพื่อกินของในคลัง (ข้าวโพด/ไข่/นม/ผลไม้/ขนมปัง) ฟื้นพลังงาน',
     ],
   },
+  {
+    version: '0.13',
+    date: '15/06/2026',
+    title: 'ระบบเครื่องมือ + เครื่องจักร เฟส 3',
+    details: [
+      'เพิ่มเมนู "เครื่องมือ & เครื่องจักร" ซื้อครั้งเดียวใช้ได้ถาวร',
+      'เครื่องมือ (จอบ/เคียว/ค้อน ฯลฯ) ลดพลังงานที่ใช้ในทุกงาน',
+      'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3768,6 +3853,15 @@ const GAME_GUIDE = [
       'พลังงานสูงสุด 100 — ดูได้ที่ป้าย ⚡ บนแถบบนและในเมนู',
       'พลังงานหมดจะทำงานไม่ได้ ต้องกินอาหารเพื่อฟื้นฟู',
       'กดป้าย ⚡ บนแถบบน เพื่อเปิดหน้ากินอาหาร (เช่น ข้าวโพด ไข่ไก่ นม ผลไม้ ขนมปัง)',
+    ],
+  },
+  {
+    icon: '🔨', title: 'เครื่องมือและเครื่องจักร',
+    lines: [
+      'เปิดจากเมนู ☰ → "เครื่องมือ & เครื่องจักร" ซื้อครั้งเดียวใช้ได้ตลอด',
+      'เครื่องมือ (จอบ/เคียว/ค้อน ฯลฯ) ช่วยลดพลังงานที่ใช้ในทุกงาน',
+      'เครื่องจักร (รถไถ/รถขุด/เครื่องสูบน้ำ) ลดเวลาก่อสร้างและลดพลังงานเพิ่ม',
+      'ยิ่งมีอุปกรณ์มาก ยิ่งทำงานประหยัดพลังงานและเร็วขึ้น',
     ],
   },
   {
@@ -3874,6 +3968,22 @@ const ENERGY_COST = {
   animalCollect: 2, fishCollect: 2, // ดูแล/เก็บผลผลิตสัตว์-ปลา
   build: 10,                   // ก่อสร้าง (ทำเอง)
 };
+// ===== การครอบครองเครื่องมือ/เครื่องจักร (เฟส 3) =====
+let ownedTools    = [];  // id ของเครื่องมือที่ซื้อแล้ว
+let ownedMachines = [];  // id ของเครื่องจักรที่ซื้อแล้ว
+// ส่วนลดพลังงานรวมจากเครื่องมือ + เครื่องจักรที่มี
+function energyDiscount(){
+  let d = 0;
+  TOOLS.forEach(t => { if(ownedTools.includes(t.id)) d += t.energyReduce; });
+  MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) d += m.energyReduce; });
+  return d;
+}
+// อัตราลดเวลาก่อสร้างรวมจากเครื่องจักร (เพดานตาม MACHINE_TIME_CAP)
+function buildTimeReduce(){
+  let r = 0;
+  MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) r += m.timeReduce; });
+  return Math.min(MACHINE_TIME_CAP, r);
+}
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
 let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
@@ -3966,9 +4076,13 @@ function startConstruction(type){
   }
   if(!spendEnergy(ENERGY_COST.build)) return;  // ทำเองใช้พลังงาน (เฟส 2)
   gold -= b.money;
-  constructions.push({ type, finishAt: Date.now() + b.seconds * 1000 });
+  // เครื่องจักรช่วยลดเวลาก่อสร้าง (เฟส 3)
+  const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce())));
+  constructions.push({ type, finishAt: Date.now() + secs * 1000, total: secs });
   updateTopbar();
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${b.seconds} วินาที)`, true);
+  const saved = b.seconds - secs;
+  const savedTxt = saved > 0 ? ` · ⚡เครื่องจักรลดเวลา −${saved} วิ` : '';
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -4020,9 +4134,10 @@ function renderConstructions(){
     const info = SLOT_INFO[type];
     box.innerHTML = list.map(c => {
       const left = Math.max(0, Math.ceil((c.finishAt - now) / 1000));
+      const dur  = c.total || b.seconds;  // ระยะเวลาจริงหลังหักเครื่องจักร
       const mm = String(Math.floor(left / 60)).padStart(2,'0');
       const ss = String(left % 60).padStart(2,'0');
-      const pct = Math.min(100, Math.round((1 - left / b.seconds) * 100));
+      const pct = Math.min(100, Math.round((1 - left / dur) * 100));
       return `<div class="build-card">
         <div class="build-card-top">🏗️ กำลัง${b.verb} ${info.emoji} ${info.label}
           <span class="build-timer">⏳ ${mm}:${ss}</span></div>
@@ -4275,13 +4390,15 @@ function renderEnergy(){
   const dEl = document.getElementById('navd-energy');
   if(dEl) dEl.textContent = txt;
 }
-// ใช้พลังงาน n หน่วย — ไม่พอ → คืน false พร้อมแจ้งเตือน (ชวนกินอาหาร)
+// ใช้พลังงาน n หน่วย — หักส่วนลดจากเครื่องมือ/เครื่องจักร (ขั้นต่ำ 1)
+// ไม่พอ → คืน false พร้อมแจ้งเตือน (ชวนกินอาหาร)
 function spendEnergy(n){
-  if(energy < n){
-    toast(`❌ พลังงานไม่พอ! ต้องใช้ ⚡ ${n} (เหลือ ${energy})<br>กินอาหารเพื่อฟื้นฟูพลังงาน 🍽️`, true);
+  const eff = Math.max(1, n - energyDiscount());
+  if(energy < eff){
+    toast(`❌ พลังงานไม่พอ! ต้องใช้ ⚡ ${eff} (เหลือ ${energy})<br>กินอาหารเพื่อฟื้นฟูพลังงาน 🍽️`, true);
     return false;
   }
-  energy -= n;
+  energy -= eff;
   renderEnergy();
   return true;
 }
@@ -6398,6 +6515,56 @@ function closeFood(){
   document.getElementById('food-overlay').classList.remove('show');
 }
 
+// ===== EQUIPMENT MODAL (เครื่องมือ & เครื่องจักร — เฟส 3) =====
+function equipRowHtml(item, kind, owned){
+  if(owned){
+    return `<div class="equip-row owned">
+      <span class="equip-emoji">${item.emoji}</span>
+      <div class="equip-info">
+        <div class="equip-name">${item.name}</div>
+        <div class="equip-desc">${item.desc}</div>
+      </div>
+      <span class="equip-owned-tag">✅ มีแล้ว</span>
+    </div>`;
+  }
+  return `<div class="equip-row">
+    <span class="equip-emoji">${item.emoji}</span>
+    <div class="equip-info">
+      <div class="equip-name">${item.name}</div>
+      <div class="equip-desc">${item.desc}</div>
+    </div>
+    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">💵 ${item.cost.toLocaleString('th-TH')}</button>
+  </div>`;
+}
+function renderEquipment(){
+  const body = document.getElementById('equip-body');
+  if(!body) return;
+  const tools = TOOLS.map(t => equipRowHtml(t, 'tool', ownedTools.includes(t.id))).join('');
+  const machines = MACHINES.map(m => equipRowHtml(m, 'machine', ownedMachines.includes(m.id))).join('');
+  body.innerHTML =
+    `<div class="equip-cat-title">🔨 เครื่องมือ — ลดพลังงานทุกงาน</div>${tools}` +
+    `<div class="equip-cat-title">🚜 เครื่องจักร — ลดเวลาก่อสร้าง + พลังงาน</div>${machines}`;
+}
+function buyEquip(kind, id){
+  const list  = kind === 'tool' ? TOOLS : MACHINES;
+  const owned = kind === 'tool' ? ownedTools : ownedMachines;
+  const item  = list.find(x => x.id === id);
+  if(!item || owned.includes(id)) return;
+  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= item.cost;
+  owned.push(id);
+  updateTopbar();
+  toast(`✅ ซื้อ ${item.emoji} ${item.name} แล้ว! (${item.desc})`);
+  renderEquipment();
+}
+function openEquipment(){
+  renderEquipment();
+  document.getElementById('equip-overlay').classList.add('show');
+}
+function closeEquipment(){
+  document.getElementById('equip-overlay').classList.remove('show');
+}
+
 </script>
 <script>
 // ============================================================
@@ -6431,6 +6598,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(!item) return;
     if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
     if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
+    if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
@@ -6455,6 +6623,17 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(e.target === this){ closeFood(); return; }
     const btn = e.target.closest('.food-eat-btn');
     if(btn) eatFood(btn.dataset.foodid);
+  });
+})();
+
+// ─────────────────────────── EQUIPMENT (เครื่องมือ + เครื่องจักร) ───────────────────────────
+(function(){
+  document.getElementById('equip-close').addEventListener('click', closeEquipment);
+  const eo = document.getElementById('equip-overlay');
+  eo.addEventListener('click', function(e){
+    if(e.target === this){ closeEquipment(); return; }
+    const btn = e.target.closest('.equip-buy-btn');
+    if(btn) buyEquip(btn.dataset.equipkind, btn.dataset.equipid);
   });
 })();
 
