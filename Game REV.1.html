@@ -2515,6 +2515,14 @@ body { padding-bottom: 72px; }
 #material-overlay.show { display: flex; }
 
 /* ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== */
+#admin-fab {
+  position: fixed; right: 0; top: 72%; transform: translateY(-50%);
+  z-index: 1500;
+  background: linear-gradient(135deg,#6b7280,#3f4654); color: #fff; border: none;
+  border-radius: 14px 0 0 14px; padding: 11px 8px; font-size: 1.2rem; cursor: pointer;
+  box-shadow: -2px 2px 10px rgba(0,0,0,0.28);
+}
+#admin-fab:active { transform: translateY(-50%) scale(0.93); }
 #admin-overlay {
   display: none;
   position: fixed; inset: 0;
@@ -2553,6 +2561,13 @@ body { padding-bottom: 72px; }
   font-size: 0.74rem; font-weight: 700;
 }
 .admin-chip:active { transform: scale(0.95); }
+.admin-exit-btn {
+  width: 100%; border: none; cursor: pointer;
+  background: linear-gradient(135deg,#e8623a,#c23a1d); color: #fff;
+  border-radius: 12px; padding: 11px; font-family: inherit;
+  font-size: 0.82rem; font-weight: 800; margin-top: 4px;
+}
+.admin-exit-btn:active { transform: scale(0.97); }
 
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
@@ -3025,6 +3040,7 @@ body { padding-bottom: 72px; }
 </div>
 
 <!-- ===== ADMIN MODAL (สำหรับผู้ดูแลระบบ) ===== -->
+<button id="admin-fab" title="เครื่องมือผู้ดูแลระบบ">🛠️</button>
 <div id="admin-overlay">
   <div class="version-sheet">
     <div class="version-header">
@@ -3057,6 +3073,7 @@ body { padding-bottom: 72px; }
           <button class="admin-chip" id="admin-fill-energy">⚡ เติมพลังงานเต็ม</button>
         </div>
       </div>
+      <button class="admin-exit-btn" id="admin-exit-btn">🚪 ออกจากผู้ดูแลระบบ (คืนค่าเงิน/เวลาเดิม)</button>
     </div>
   </div>
 </div>
@@ -4096,6 +4113,16 @@ const UPDATE_HISTORY = [
       'เพิ่มเมนู "สำหรับผู้ดูแลระบบ" ในหมวดช่วยเหลือ',
       'เพิ่มเงินได้ตามจำนวนที่ระบุ + ปุ่มลัด (+1k/+10k/+100k/+1M)',
       'เร่งเวลา: ผ่านไป 1/7 วัน, ก่อสร้างเสร็จทันที, เติมพลังงานเต็ม',
+    ],
+  },
+  {
+    version: '0.20',
+    date: '15/06/2026',
+    title: 'ปุ่มลอยผู้ดูแลระบบ + โหมดทดสอบ',
+    details: [
+      'เพิ่มปุ่มลอย 🛠️ ติดขอบขวา กดแล้วเด้งแผงแอดมินขึ้นกลางจอ ปิดแล้วหุบกลับ',
+      'เพิ่มปุ่ม "ออกจากผู้ดูแลระบบ" — คืนค่าเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด',
+      'ปิดแผง (✕) จะเก็บการเปลี่ยนแปลงไว้ทดสอบต่อ จนกว่าจะกดออกจากโหมด',
     ],
   },
 ];
@@ -7145,8 +7172,37 @@ function adminFillEnergy(){
   renderEnergy();
   toast('⚡ เติมพลังงานเต็มแล้ว');
 }
-function openAdmin(){ document.getElementById('admin-overlay').classList.add('show'); }
+// โหมดผู้ดูแลระบบ — เก็บ snapshot ตอนเข้า เพื่อคืนค่าเงิน/เวลาตอนออก
+let adminActive = false;
+let adminSnapshot = null;
+function openAdmin(){
+  if(!adminActive){
+    adminActive = true;
+    adminSnapshot = { gold: gold, day: day, gameMinute: gameMinute, energy: energy };
+  }
+  document.getElementById('admin-overlay').classList.add('show');
+}
+// ปิดแผง (ยังอยู่ในโหมดแอดมิน — เก็บการเปลี่ยนแปลงไว้ทดสอบต่อ)
 function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
+// ออกจากผู้ดูแลระบบ — คืนเงิน/เวลา/พลังงานกลับสภาพเดิมก่อนเข้าโหมด
+function exitAdmin(){
+  if(adminSnapshot){
+    gold       = adminSnapshot.gold;
+    day        = adminSnapshot.day;
+    gameMinute = adminSnapshot.gameMinute;
+    energy     = adminSnapshot.energy;
+  }
+  adminActive = false;
+  adminSnapshot = null;
+  updateTopbar();
+  renderEnergy();
+  if(typeof currentTab !== 'undefined'){
+    if(currentTab === 'farm')   renderFarmSections();
+    if(currentTab === 'market') renderMarket();
+  }
+  document.getElementById('admin-overlay').classList.remove('show');
+  toast('🚪 ออกจากผู้ดูแลระบบ — คืนค่าเงิน/เวลาเดิมแล้ว');
+}
 
 </script>
 <script>
@@ -7259,7 +7315,9 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
 
 // ─────────────────────────── ADMIN (สำหรับผู้ดูแลระบบ) ───────────────────────────
 (function(){
+  document.getElementById('admin-fab').addEventListener('click', openAdmin);
   document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-exit-btn').addEventListener('click', exitAdmin);
   document.getElementById('admin-money-btn').addEventListener('click', function(){
     const inp = document.getElementById('admin-money-input');
     adminAddMoney(inp.value);
