@@ -2500,6 +2500,18 @@ body { padding-bottom: 72px; }
 .worker-hire-btn:active { transform: scale(0.95); }
 .worker-hire-btn b { font-size: 0.66rem; color: #9a6000; }
 
+/* ===== MATERIAL MODAL (วัสดุก่อสร้าง) ===== */
+#material-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#material-overlay.show { display: flex; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2796,6 +2808,11 @@ body { padding-bottom: 72px; }
       <span class="navd-label">จ้างแรงงาน</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="materials">
+      <div class="navd-icon">🪵</div>
+      <span class="navd-label">วัสดุก่อสร้าง</span>
+      <i class="navd-chevron">›</i>
+    </div>
     <div class="navd-item" data-nav="market">
       <div class="navd-icon">🛒</div>
       <span class="navd-label">ตลาด</span>
@@ -2943,6 +2960,20 @@ body { padding-bottom: 72px; }
       <button class="version-close" id="worker-close">✕</button>
     </div>
     <div class="version-body" id="worker-body"></div>
+  </div>
+</div>
+
+<!-- ===== MATERIAL MODAL (วัสดุก่อสร้าง) ===== -->
+<div id="material-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🪵 ร้านวัสดุก่อสร้าง</h2>
+        <div class="version-current">ซื้อไม้และวัสดุไว้ใช้ตอนก่อสร้าง</div>
+      </div>
+      <button class="version-close" id="material-close">✕</button>
+    </div>
+    <div class="version-body" id="material-body"></div>
   </div>
 </div>
 
@@ -3553,12 +3584,13 @@ const SLOT_INFO = {
 };
 // ===== ระบบก่อสร้าง (เฟส 1) — ต้นทุนเงิน + เวลาก่อสร้างจริง (วินาที) ต่อสิ่งปลูกสร้าง =====
 // ก่อนได้แปลง/บ่อ/คอก/สวน ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ขุดบ่อ/สร้างคอก/ทำสวน)
+// เฟส 5: เพิ่มวัสดุก่อสร้าง (wood = ไม้) เป็นต้นทุนอีกประเภท
 const BUILD_INFO = {
-  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30 },
-  trees: { verb:'ทำสวน',        money:1500, seconds:60 },
-  small: { verb:'สร้างคอก',     money:1000, seconds:45 },
-  big:   { verb:'สร้างคอก',     money:3000, seconds:90 },
-  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75 },
+  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30, wood:5  },
+  trees: { verb:'ทำสวน',        money:1500, seconds:60, wood:15 },
+  small: { verb:'สร้างคอก',     money:1000, seconds:45, wood:20 },
+  big:   { verb:'สร้างคอก',     money:3000, seconds:90, wood:35 },
+  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75, wood:10 },
 };
 // ===== ระบบอาหาร (เฟส 2) — กินเพื่อฟื้นฟูพลังงาน =====
 // ใช้ของในคลัง (id ตรงกับผลผลิต) มากินเพื่อเติมพลังงาน
@@ -3601,6 +3633,16 @@ const WORKER_TYPES = [
 ];
 // งานแต่ละหมวด คนงานประเภทไหนทำได้บ้าง
 const TASK_WORKER = { agri:['agri','driver'], builder:['builder','driver'] };
+// ===== วัสดุก่อสร้าง (เฟส 5) — ซื้อเก็บไว้ในคลัง ใช้ตอนก่อสร้าง =====
+const MATERIALS = [
+  { id:'wood', emoji:'🪵', name:'ไม้', price:50, packs:[10,50,100] },
+];
+// ===== ที่พักคนงาน (เฟส 5) — เพิ่มจำนวนคนงานสูงสุด =====
+const BASE_WORKER_CAP = 2;  // จ้างประจำ/รายวันได้สูงสุดเริ่มต้น
+const WORKER_HOUSES = [
+  { id:'wh1', name:'บ้านพักคนงาน Lv.1', emoji:'🏠', cost:20000, capAdd:5,  desc:'เพิ่มคนงานสูงสุด +5' },
+  { id:'wh2', name:'บ้านพักคนงาน Lv.2', emoji:'🏡', cost:45000, capAdd:10, desc:'เพิ่มคนงานสูงสุด +10' },
+];
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3909,6 +3951,17 @@ const UPDATE_HISTORY = [
       'ค่าแรงรายวันหักเมื่อขึ้นวันใหม่ เงินไม่พอคนงานรายวันลาออก',
     ],
   },
+  {
+    version: '0.15',
+    date: '15/06/2026',
+    title: 'ที่พักคนงาน + วัสดุก่อสร้าง เฟส 5',
+    details: [
+      'การก่อสร้างต้องใช้วัสดุไม้ 🪵 เพิ่มจากเงิน/พลังงาน/เวลา',
+      'เพิ่มเมนู "วัสดุก่อสร้าง" สำหรับซื้อไม้เก็บไว้ใช้',
+      'จ้างคนงานประจำ/รายวันจำกัดตามจำนวนสูงสุด',
+      'เพิ่ม "ที่พักคนงาน" (Lv.1/Lv.2) เพิ่มจำนวนคนงานสูงสุด',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -3951,6 +4004,15 @@ const GAME_GUIDE = [
       'จ้างได้ 3 แบบ: รายครั้ง (เครดิตงาน) · รายวัน (จ่ายทุกวัน) · ประจำ (จ่ายครั้งเดียว)',
       'จ้างรายวัน/ประจำ = คนงานทำงานแทน ไม่ใช้พลังงานเรา และเก็บผลผลิตอัตโนมัติ',
       'ค่าแรงรายวันถูกหักเมื่อขึ้นวันใหม่ — เงินไม่พอคนงานรายวันจะลาออก',
+    ],
+  },
+  {
+    icon: '🪵', title: 'วัสดุก่อสร้าง & ที่พักคนงาน',
+    lines: [
+      'การก่อสร้างต้องใช้ "ไม้ 🪵" เป็นวัสดุ นอกเหนือจากเงินและเวลา',
+      'ซื้อไม้ได้จากเมนู ☰ → "วัสดุก่อสร้าง" (ซื้อเป็นแพ็ก)',
+      'จ้างคนงานประจำ/รายวันได้จำกัดตามจำนวนสูงสุด',
+      'สร้าง "ที่พักคนงาน" จากเมนูจ้างแรงงาน เพื่อเพิ่มจำนวนคนงานสูงสุด',
     ],
   },
   {
@@ -4093,6 +4155,14 @@ function dailyWage(){
     const wt = WORKER_TYPES.find(x=>x.id===w.type); return s + (wt ? wt.perDay : 0);
   }, 0);
 }
+// ===== ที่พักคนงาน (เฟส 5) =====
+let ownedHouses = [];  // id ของบ้านพักคนงานที่สร้างแล้ว
+// จำนวนคนงานประจำ/รายวันสูงสุด = ฐาน + ที่พักที่มี
+function workerCap(){
+  let cap = BASE_WORKER_CAP;
+  WORKER_HOUSES.forEach(h => { if(ownedHouses.includes(h.id)) cap += h.capAdd; });
+  return cap;
+}
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
 let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
@@ -4183,7 +4253,15 @@ function startConstruction(type){
     toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
     return;
   }
+  // เฟส 5: ต้องมีวัสดุไม้พอ
+  const woodNeed = b.wood || 0;
+  const woodInv  = getInv('wood');
+  if(woodNeed > 0 && (!woodInv || woodInv.qty < woodNeed)){
+    toast(`❌ ไม้ไม่พอ! ${b.verb} ${info.label} ใช้ 🪵 ${woodNeed} (มี ${woodInv?woodInv.qty:0})<br>ซื้อไม้ที่เมนู "วัสดุก่อสร้าง"`, true);
+    return;
+  }
   if(!spendEnergy(ENERGY_COST.build,'builder')) return;  // ทำเองใช้พลังงาน (เฟส 2)
+  if(woodNeed > 0) removeInv('wood', woodNeed);  // หักวัสดุไม้
   gold -= b.money;
   // เครื่องจักรช่วยลดเวลาก่อสร้าง (เฟส 3)
   const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce())));
@@ -4191,7 +4269,8 @@ function startConstruction(type){
   updateTopbar();
   const saved = b.seconds - secs;
   const savedTxt = saved > 0 ? ` · ⚡เครื่องจักรลดเวลา −${saved} วิ` : '';
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
+  const woodTxt = woodNeed > 0 ? ` · 🪵 −${woodNeed}` : '';
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -4295,8 +4374,9 @@ function updateSpaceLabels(){
     const usedArea = count * info.cost;
     const pctOfFarm = total > 0 ? Math.round((usedArea/total)*100) : 0;
     const b = BUILD_INFO[type];
+    const woodTxt = b.wood ? ` + 🪵 ${b.wood}` : '';
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -6714,7 +6794,27 @@ function closeEquipment(){
 function renderWorkers(){
   const body = document.getElementById('worker-body');
   if(!body) return;
-  body.innerHTML = WORKER_TYPES.map(function(w){
+  // ส่วนที่พักคนงาน (เฟส 5) — แสดงความจุ + ปุ่มสร้าง
+  const houseRows = WORKER_HOUSES.map(function(h){
+    const owned = ownedHouses.includes(h.id);
+    if(owned){
+      return `<div class="equip-row owned">
+        <span class="equip-emoji">${h.emoji}</span>
+        <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
+        <span class="equip-owned-tag">✅ สร้างแล้ว</span>
+      </div>`;
+    }
+    return `<div class="equip-row">
+      <span class="equip-emoji">${h.emoji}</span>
+      <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
+      <button class="equip-buy-btn" data-houseid="${h.id}">💵 ${h.cost.toLocaleString('th-TH')}</button>
+    </div>`;
+  }).join('');
+  const houseBlock =
+    `<div class="equip-cat-title">🏠 ที่พักคนงาน — คนงานประจำ/รายวัน ${workers.length}/${workerCap()} คน</div>` +
+    houseRows +
+    `<div class="equip-cat-title">👷 จ้างคนงาน</div>`;
+  body.innerHTML = houseBlock + WORKER_TYPES.map(function(w){
     const perm = workers.filter(x=>x.type===w.id && x.mode==='permanent').length;
     const day  = workers.filter(x=>x.type===w.id && x.mode==='day').length;
     const cred = workerCredits[w.id] || 0;
@@ -6744,6 +6844,11 @@ function hireWorker(type, mode){
   const wt = WORKER_TYPES.find(x=>x.id===type);
   if(!wt) return;
   const cost = mode==='task' ? wt.perTask : mode==='day' ? wt.perDay : wt.permanent;
+  // เฟส 5: จ้างประจำ/รายวันจำกัดตามที่พักคนงาน
+  if(mode !== 'task' && workers.length >= workerCap()){
+    toast(`❌ คนงานเต็มแล้ว (${workers.length}/${workerCap()})<br>สร้าง "ที่พักคนงาน" เพื่อเพิ่มจำนวนสูงสุด 🏠`, true);
+    return;
+  }
   if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} บาท`); return; }
   gold -= cost;
   updateTopbar();
@@ -6756,12 +6861,64 @@ function hireWorker(type, mode){
   }
   renderWorkers();
 }
+function buyHouse(id){
+  const h = WORKER_HOUSES.find(x=>x.id===id);
+  if(!h || ownedHouses.includes(id)) return;
+  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= h.cost;
+  ownedHouses.push(id);
+  updateTopbar();
+  toast(`✅ สร้าง ${h.emoji} ${h.name} แล้ว! (${h.desc})`);
+  renderWorkers();
+}
 function openWorkers(){
   renderWorkers();
   document.getElementById('worker-overlay').classList.add('show');
 }
 function closeWorkers(){
   document.getElementById('worker-overlay').classList.remove('show');
+}
+
+// ===== MATERIAL MODAL (วัสดุก่อสร้าง — เฟส 5) =====
+function renderMaterials(){
+  const body = document.getElementById('material-body');
+  if(!body) return;
+  body.innerHTML = MATERIALS.map(function(m){
+    const have = getInv(m.id);
+    const packs = m.packs.map(function(q){
+      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>💵 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
+    }).join('');
+    return `<div class="worker-card">
+      <div class="worker-top">
+        <span class="worker-emoji">${m.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="worker-name">${m.name}</div>
+          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} บาท/หน่วย</div>
+        </div>
+      </div>
+      <div class="worker-have">มีในคลัง: ${have?have.qty:0} หน่วย</div>
+      <div class="worker-hire-row">${packs}</div>
+    </div>`;
+  }).join('');
+}
+function buyMaterial(id, qty){
+  const m = MATERIALS.find(x=>x.id===id);
+  if(!m) return;
+  qty = Number(qty);
+  const cost = m.price * qty;
+  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} บาท`); return; }
+  gold -= cost;
+  addInv(m.id, m.name, m.emoji, qty, Math.round(m.price*0.5));
+  updateTopbar();
+  toast(`✅ ซื้อ ${m.emoji} ${m.name} x${qty} แล้ว`);
+  renderMaterials();
+}
+function openMaterials(){
+  renderMaterials();
+  document.getElementById('material-overlay').classList.add('show');
+}
+function closeMaterials(){
+  document.getElementById('material-overlay').classList.remove('show');
 }
 
 </script>
@@ -6799,6 +6956,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
     if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
     if(item.dataset.nav === 'workers'){ closeNav(); openWorkers(); return; }
+    if(item.dataset.nav === 'materials'){ closeNav(); openMaterials(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
@@ -6843,11 +7001,24 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   const wo = document.getElementById('worker-overlay');
   wo.addEventListener('click', function(e){
     if(e.target === this){ closeWorkers(); return; }
-    const btn = e.target.closest('.worker-hire-btn');
-    if(btn) hireWorker(btn.dataset.wtype, btn.dataset.wmode);
+    const hireBtn = e.target.closest('.worker-hire-btn');
+    if(hireBtn){ hireWorker(hireBtn.dataset.wtype, hireBtn.dataset.wmode); return; }
+    const houseBtn = e.target.closest('[data-houseid]');
+    if(houseBtn) buyHouse(houseBtn.dataset.houseid);
   });
   // เก็บเกี่ยวอัตโนมัติเป็นระยะ เมื่อมีคนงานเกษตรประจำ/รายวัน
   setInterval(autoHarvest, 8000);
+})();
+
+// ─────────────────────────── MATERIALS (วัสดุก่อสร้าง) ───────────────────────────
+(function(){
+  document.getElementById('material-close').addEventListener('click', closeMaterials);
+  const mo = document.getElementById('material-overlay');
+  mo.addEventListener('click', function(e){
+    if(e.target === this){ closeMaterials(); return; }
+    const btn = e.target.closest('[data-matid]');
+    if(btn) buyMaterial(btn.dataset.matid, btn.dataset.matqty);
+  });
 })();
 
 // ─────────────────────────── TABS (topbar) ───────────────────────────
