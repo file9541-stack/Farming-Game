@@ -2944,6 +2944,11 @@ body { padding-bottom: 72px; }
       <span class="navd-label">วัสดุก่อสร้าง</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="marriage">
+      <div class="navd-icon">💒</div>
+      <span class="navd-label">ระบบแต่งงาน</span>
+      <i class="navd-chevron">›</i>
+    </div>
     <div class="navd-item" data-nav="market">
       <div class="navd-icon">🛒</div>
       <span class="navd-label">ตลาด</span>
@@ -3498,13 +3503,6 @@ body { padding-bottom: 72px; }
 
     <!-- dynamic asset list -->
     <div id="assets-list-container"></div>
-
-    <!-- ปุ่มระบบแต่งงาน -->
-    <div style="padding:0 16px 8px;">
-      <button class="assets-marriage-btn" style="width:100%;background:linear-gradient(135deg,#e84080,#c02060);color:white;border:none;border-radius:16px;padding:14px;font-family:inherit;font-weight:800;font-size:0.9rem;cursor:pointer;box-shadow:0 4px 14px rgba(200,40,80,0.3);margin-top:8px;">
-        💒 ระบบแต่งงาน
-      </button>
-    </div>
 
     <div class="assets-footer-note">
       💡 <strong>ต้นทุนชีวิตเริ่มต้น</strong><br>
@@ -4295,6 +4293,15 @@ const UPDATE_HISTORY = [
     details: [
       'เพิ่มปุ่ม "🌍 ที่ดิน" ข้างแถบพื้นที่เกษตร กดแล้วเปิดหน้าต่างรายละเอียด/ตั้งขายที่ดิน',
       'แถบพื้นที่เกษตรกดแล้วไม่ทำอะไร (ย้ายการเปิดมาที่ปุ่มแทน ให้ผู้เล่นเห็นชัดขึ้น)',
+    ],
+  },
+  {
+    version: '0.30',
+    date: '15/06/2026',
+    title: 'ย้ายระบบแต่งงานเข้าเมนูแถบซ่อน',
+    details: [
+      'ย้ายปุ่ม "ระบบแต่งงาน" จากหน้าทรัพย์สิน ไปไว้ในเมนูแถบซ่อนหมวดเกม',
+      'กดเมนู 💒 ระบบแต่งงาน เปิดหน้าต่างเดิม (ใช้ flow แต่งงานเดิมทั้งหมด)',
     ],
   },
 ];
@@ -7487,6 +7494,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
     if(item.dataset.nav === 'workers'){ closeNav(); openWorkers(); return; }
     if(item.dataset.nav === 'materials'){ closeNav(); openMaterials(); return; }
+    if(item.dataset.nav === 'marriage'){ closeNav(); openMarriage(); return; }
     if(item.dataset.nav === 'admin'){ closeNav(); openAdmin(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
@@ -7671,11 +7679,10 @@ if (subshopCloseBtn) subshopCloseBtn.addEventListener('click', closeSubShop);
 const assetsOverlay = document.getElementById('assets-overlay');
 const assetsSheet   = assetsOverlay && assetsOverlay.querySelector('.assets-sheet');
 const assetsClose   = assetsOverlay && assetsOverlay.querySelector('.assets-close');
-const btnMarriage   = assetsOverlay && assetsOverlay.querySelector('.assets-marriage-btn');
 if (assetsOverlay) assetsOverlay.addEventListener('click', closeAssets);
 if (assetsSheet)   assetsSheet.addEventListener('click', function (e) { e.stopPropagation(); });
 if (assetsClose)   assetsClose.addEventListener('click', closeAssets);
-if (btnMarriage)   btnMarriage.addEventListener('click', openMarriage);
+// ปุ่มระบบแต่งงานย้ายไปเมนูแถบซ่อนหมวดเกมแล้ว (ผูกใน nav delegation)
 
 // ─────────────────────────── WEALTH RANK (ระบบฐานะ) ───────────────────────────
 const wealthCard = document.getElementById('wealth-rank-card');
