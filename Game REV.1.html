@@ -3714,14 +3714,22 @@ const NPC_NAMES = ['🧑‍🌾 นายสมชาย','👩‍🌾 น้อ
 // ─────────────────────────── ระดับฐานะ (วัดจากมูลค่าทรัพย์สินสุทธิ) ───────────────────────────
 // เรียงจากน้อยไปมาก — ระบบจะเลือกระดับสูงสุดที่ min <= netWorth
 const WEALTH_RANKS = [
-  { id:'beggar',     name:'ยาจก',          emoji:'🪙', min:0,         color:'#8a7a6a', desc:'เริ่มต้นจากศูนย์ สู้ต่อไป!' },
-  { id:'poor',       name:'ผู้ยากไร้',     emoji:'🧺', min:50000,     color:'#9a8050', desc:'พอมีพอกิน เริ่มตั้งตัว' },
-  { id:'commoner',   name:'สามัญชน',       emoji:'🏠', min:300000,    color:'#7aa040', desc:'มีบ้านมีที่ดิน ชีวิตมั่นคง' },
-  { id:'welloff',    name:'ผู้มีอันจะกิน', emoji:'💰', min:1000000,   color:'#4aa060', desc:'ฐานะดี เงินทองไหลมา' },
-  { id:'rich',       name:'คนรวย',         emoji:'💎', min:5000000,   color:'#3a9bd4', desc:'ร่ำรวย มีทรัพย์สินมากมาย' },
-  { id:'millionaire',name:'เศรษฐี',        emoji:'🏆', min:20000000,  color:'#9a6ad4', desc:'เศรษฐีเงินล้าน ชื่อเสียงโด่งดัง' },
-  { id:'tycoon',     name:'มหาเศรษฐี',     emoji:'👑', min:100000000, color:'#e0a010', desc:'มหาเศรษฐีระดับประเทศ' },
-  { id:'legend',     name:'เจ้าสัวตำนาน',  emoji:'🌟', min:500000000, color:'#e84080', desc:'ตำนานแห่งความมั่งคั่ง สูงสุดของแผ่นดิน' },
+  { id:'beggar',     name:'ยาจก',          emoji:'🪙', min:0,         color:'#8a7a6a', desc:'เริ่มต้นจากศูนย์ สู้ต่อไป!',
+    perks:{ sell:0,    wage:0,    build:0,    time:0,    order:0,    cap:0 } },
+  { id:'poor',       name:'ผู้ยากไร้',     emoji:'🧺', min:50000,     color:'#9a8050', desc:'พอมีพอกิน เริ่มตั้งตัว',
+    perks:{ sell:0.02, wage:0,    build:0,    time:0,    order:0,    cap:0 } },
+  { id:'commoner',   name:'สามัญชน',       emoji:'🏠', min:300000,    color:'#7aa040', desc:'มีบ้านมีที่ดิน ชีวิตมั่นคง',
+    perks:{ sell:0.04, wage:0.03, build:0,    time:0,    order:0,    cap:0 } },
+  { id:'welloff',    name:'ผู้มีอันจะกิน', emoji:'💰', min:1000000,   color:'#4aa060', desc:'ฐานะดี เงินทองไหลมา',
+    perks:{ sell:0.06, wage:0.05, build:0,    time:0,    order:0,    cap:1 } },
+  { id:'rich',       name:'คนรวย',         emoji:'💎', min:5000000,   color:'#3a9bd4', desc:'ร่ำรวย มีทรัพย์สินมากมาย',
+    perks:{ sell:0.08, wage:0.05, build:0.08, time:0,    order:0,    cap:1 } },
+  { id:'millionaire',name:'เศรษฐี',        emoji:'🏆', min:20000000,  color:'#9a6ad4', desc:'เศรษฐีเงินล้าน ชื่อเสียงโด่งดัง',
+    perks:{ sell:0.10, wage:0.08, build:0.12, time:0.08, order:0.10, cap:2 } },
+  { id:'tycoon',     name:'มหาเศรษฐี',     emoji:'👑', min:100000000, color:'#e0a010', desc:'มหาเศรษฐีระดับประเทศ',
+    perks:{ sell:0.13, wage:0.10, build:0.12, time:0.10, order:0.12, cap:3 } },
+  { id:'legend',     name:'เจ้าสัวตำนาน',  emoji:'🌟', min:500000000, color:'#e84080', desc:'ตำนานแห่งความมั่งคั่ง สูงสุดของแผ่นดิน',
+    perks:{ sell:0.16, wage:0.12, build:0.15, time:0.12, order:0.15, cap:5 } },
 ];
 
 
@@ -4304,6 +4312,17 @@ const UPDATE_HISTORY = [
       'กดเมนู 💒 ระบบแต่งงาน เปิดหน้าต่างเดิม (ใช้ flow แต่งงานเดิมทั้งหมด)',
     ],
   },
+  {
+    version: '0.31',
+    date: '15/06/2026',
+    title: 'ยกระดับระบบฐานะให้มีผลต่อเกม',
+    details: [
+      'Net Worth คิดรวม: เงินสด + ทรัพย์สิน + ของในคลัง + เครื่องมือ/เครื่องจักร',
+      'แต่ละขั้นฐานะให้สิทธิประโยชน์: ขาย +%, ค่าจ้าง −%, ค่าก่อสร้าง −%, เวลาสร้าง −%, รางวัลออเดอร์ +%, เพดานคนงาน +',
+      'เสียบผลเข้าตลาด/แรงงาน/ก่อสร้าง/คำสั่งซื้อ + แจ้งเตือนเมื่อเลื่อนขั้น',
+      'หน้า "ระดับฐานะทั้งหมด" แสดงสิทธิประโยชน์ของแต่ละขั้น',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4418,8 +4437,9 @@ const GAME_GUIDE = [
   {
     icon: '🏅', title: 'ระดับฐานะ (Wealth Rank)',
     lines: [
-      'ป้ายฐานะคำนวณจากมูลค่าทรัพย์สินรวม + เงินสด',
-      'ยิ่งสะสมความมั่งคั่งมาก ระดับฐานะยิ่งสูงขึ้น',
+      'ฐานะคำนวณจากความมั่งคั่งรวม: เงินสด + ทรัพย์สิน + ของในคลัง + เครื่องมือ/เครื่องจักร',
+      'ยิ่งฐานะสูง ยิ่งได้สิทธิประโยชน์: ขายผลผลิตแพงขึ้น, ค่าจ้าง/ค่าก่อสร้างถูกลง, เวลาก่อสร้างเร็วขึ้น, รางวัลออเดอร์มากขึ้น, เพิ่มเพดานคนงาน',
+      'ดูสิทธิประโยชน์แต่ละขั้นได้ที่หน้า "ระดับฐานะทั้งหมด"',
     ],
   },
   {
@@ -4508,9 +4528,11 @@ function useWorkerCredit(category){
 }
 // ค่าแรงรายวันรวม (เฉพาะคนงานแบบรายวัน)
 function dailyWage(){
-  return workers.filter(w => w.mode==='day').reduce((s,w)=>{
+  const base = workers.filter(w => w.mode==='day').reduce((s,w)=>{
     const wt = WORKER_TYPES.find(x=>x.id===w.type); return s + (wt ? wt.perDay : 0);
   }, 0);
+  const disc = (typeof rankPerks === 'function') ? rankPerks().wage : 0;  // ส่วนลดค่าจ้างจากฐานะ
+  return Math.round(base * (1 - disc));
 }
 // ===== ที่พักคนงาน (เฟส 5) =====
 let ownedHouses = [];  // id ของบ้านพักคนงานที่สร้างแล้ว
@@ -4518,6 +4540,7 @@ let ownedHouses = [];  // id ของบ้านพักคนงานที
 function workerCap(){
   let cap = BASE_WORKER_CAP;
   WORKER_HOUSES.forEach(h => { if(ownedHouses.includes(h.id)) cap += h.capAdd; });
+  if(typeof rankPerks === 'function') cap += rankPerks().cap;  // โบนัสจากฐานะ
   return cap;
 }
 
@@ -4606,8 +4629,11 @@ function startConstruction(type){
     toast(`❌ พื้นที่เกษตรไม่พอ! ${info.emoji} ${info.label} ใช้ ${cost} ตร.ม.`);
     return;
   }
-  if(gold < b.money){
-    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
+  // ฐานะ: ส่วนลดค่าก่อสร้าง (เงิน) + ลดเวลา
+  const bp = (typeof rankPerks === 'function') ? rankPerks() : { build:0, time:0 };
+  const money = Math.round(b.money * (1 - bp.build));
+  if(gold < money){
+    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${money.toLocaleString('th-TH')} บาท`);
     return;
   }
   // เฟส 5: ต้องมีวัสดุไม้พอ
@@ -4619,15 +4645,15 @@ function startConstruction(type){
   }
   if(!spendEnergy(ENERGY_COST.build,'builder')) return;  // ทำเองใช้พลังงาน (เฟส 2)
   if(woodNeed > 0) removeInv('wood', woodNeed);  // หักวัสดุไม้
-  gold -= b.money;
-  // เครื่องจักรช่วยลดเวลาก่อสร้าง (เฟส 3)
-  const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce())));
+  gold -= money;
+  // เครื่องจักร (เฟส 3) + ฐานะ ช่วยลดเวลาก่อสร้าง
+  const secs = Math.max(1, Math.round(b.seconds * (1 - buildTimeReduce()) * (1 - bp.time)));
   constructions.push({ type, finishAt: Date.now() + secs * 1000, total: secs });
   updateTopbar();
   const saved = b.seconds - secs;
-  const savedTxt = saved > 0 ? ` · ⚡เครื่องจักรลดเวลา −${saved} วิ` : '';
+  const savedTxt = saved > 0 ? ` · ⏱️ ลดเวลา −${saved} วิ` : '';
   const woodTxt = woodNeed > 0 ? ` · 🪵 −${woodNeed}` : '';
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -4900,6 +4926,11 @@ function itemQuality(item){
 }
 // ราคาขายต่อชิ้นหลังปรับตามคุณภาพ
 function itemSellPrice(item){ return Math.round(item.sell * itemQuality(item).mult); }
+// ราคาขายในตลาดต่อชิ้น (คุณภาพ × โบนัสราคาขายจากฐานะ)
+function marketUnitPrice(item){
+  const bonus = (typeof rankPerks === 'function') ? rankPerks().sell : 0;
+  return Math.round(itemSellPrice(item) * (1 + bonus));
+}
 
 function addInv(id, name, emoji, qty, sell){
   const ex = getInv(id);
@@ -4965,6 +4996,7 @@ function updateTopbar(){
     rankEl.firstChild.textContent = rank.emoji + ' ';
     rankEl.style.color = rank.color;
   }
+  if(typeof checkRankUp === 'function') checkRankUp();  // ตรวจเลื่อนขั้นฐานะ
 }
 
 // ===== ระบบพลังงาน + อาหาร (เฟส 2) =====
@@ -5848,10 +5880,12 @@ function fulfillOrder(oi){
   for(const it of o.items){
     if(!removeInv(it.id, it.qty)){ toast('❌ สินค้าไม่พอ!'); return; }
   }
-  gold += o.reward;
-  addExp(15 + Math.floor(o.reward/10));
+  const orderBonus = (typeof rankPerks === 'function') ? rankPerks().order : 0;  // โบนัสรางวัลจากฐานะ
+  const reward = Math.round(o.reward * (1 + orderBonus));
+  gold += reward;
+  addExp(15 + Math.floor(reward/10));
   orders.splice(oi,1);
-  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${o.reward.toLocaleString('th-TH')} บาท`);
+  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${reward.toLocaleString('th-TH')} บาท`);
   updateTopbar();
   renderOrders();
 }
@@ -5867,7 +5901,7 @@ function renderMarket(){
   }
   grid.innerHTML = inventory.map((item,i)=>{
     const q = itemQuality(item);
-    const unit = itemSellPrice(item);
+    const unit = marketUnitPrice(item);  // คุณภาพ + โบนัสฐานะ
     const perish = produceShelf(item.id) != null;
     const qBadge = perish ? `<div class="mkt-quality">${q.emoji} ${q.name}</div>` : '';
     return `
@@ -5884,7 +5918,7 @@ function renderMarket(){
 function sellAll(id){
   const item = getInv(id);
   if(!item){ return; }
-  const unit = itemSellPrice(item);
+  const unit = marketUnitPrice(item);  // คุณภาพ + โบนัสฐานะ
   const earned = unit * item.qty;
   if(earned <= 0){
     toast(`❌ ${item.emoji} ${item.name} เน่าเสียแล้ว ขายไม่ได้ — ทิ้งทั้งหมด`);
@@ -6042,7 +6076,36 @@ function calcNetWorth(){
     cat.forEach(a => { if(!a.sold) total += a.marketValue; })
   );
   total += gold;
+  // มูลค่าของในคลัง (ผลผลิตคิดตามคุณภาพ)
+  if(typeof inventory !== 'undefined'){
+    inventory.forEach(it => {
+      const unit = (typeof itemSellPrice === 'function') ? itemSellPrice(it) : (it.sell || 0);
+      total += unit * it.qty;
+    });
+  }
+  // มูลค่าเครื่องมือ/เครื่องจักรที่ซื้อ (คิด 50% ของราคาซื้อ)
+  if(typeof TOOLS !== 'undefined')    TOOLS.forEach(t => { if(ownedTools.includes(t.id)) total += Math.round(t.cost*0.5); });
+  if(typeof MACHINES !== 'undefined') MACHINES.forEach(m => { if(ownedMachines.includes(m.id)) total += Math.round(m.cost*0.5); });
   return total;
+}
+
+// ─── คืน perk ของฐานะปัจจุบัน (ตัวคูณสิทธิประโยชน์) ───
+function rankPerks(){
+  const r = getWealthRank(calcNetWorth());
+  return r.perks || { sell:0, wage:0, build:0, time:0, order:0, cap:0 };
+}
+
+// ─── ตรวจการเลื่อนขั้นฐานะ → แจ้งเตือนครั้งเดียวตอนข้ามขั้น ───
+let _lastRankId = null;
+function checkRankUp(){
+  const r = getWealthRank(calcNetWorth());
+  if(_lastRankId === null){ _lastRankId = r.id; return; }
+  if(r.id !== _lastRankId){
+    const oldIdx = WEALTH_RANKS.findIndex(x => x.id === _lastRankId);
+    const newIdx = WEALTH_RANKS.findIndex(x => x.id === r.id);
+    if(newIdx > oldIdx) toast(`🎉 เลื่อนฐานะเป็น ${r.emoji} ${r.name}!`, false);
+    _lastRankId = r.id;
+  }
 }
 
 // ─── คืนระดับฐานะปัจจุบันจากมูลค่าทรัพย์สินสุทธิ ───
@@ -6116,11 +6179,23 @@ function openRanksModal(){
       ? `฿${r.min.toLocaleString('th-TH')} – ฿${(nextMin - 1).toLocaleString('th-TH')}`
       : `฿${r.min.toLocaleString('th-TH')} ขึ้นไป`;
     const isCur = r.id === curRank.id;
+    const p = r.perks || {};
+    const perkParts = [];
+    if(p.sell)  perkParts.push(`ขาย +${Math.round(p.sell*100)}%`);
+    if(p.wage)  perkParts.push(`ค่าจ้าง −${Math.round(p.wage*100)}%`);
+    if(p.build) perkParts.push(`ค่าก่อสร้าง −${Math.round(p.build*100)}%`);
+    if(p.time)  perkParts.push(`เวลาสร้าง −${Math.round(p.time*100)}%`);
+    if(p.order) perkParts.push(`ออเดอร์ +${Math.round(p.order*100)}%`);
+    if(p.cap)   perkParts.push(`คนงาน +${p.cap}`);
+    const perksTxt = perkParts.length
+      ? `<div class="rank-row-perks" style="font-size:0.64rem;color:#3b6d11;font-weight:600;margin-top:3px;">🎁 ${perkParts.join(' · ')}</div>`
+      : `<div class="rank-row-perks" style="font-size:0.64rem;color:#b0a090;margin-top:3px;">— ยังไม่มีโบนัส —</div>`;
     return `<div class="rank-row ${isCur?'current':''}">
       <div class="rank-row-emoji">${r.emoji}</div>
       <div class="rank-row-info">
         <div class="rank-row-name" style="color:${r.color};">${r.name}</div>
         <div class="rank-row-range">${range}</div>
+        ${perksTxt}
       </div>
       ${isCur ? '<div class="rank-row-badge">ปัจจุบัน</div>' : ''}
     </div>`;
@@ -7300,7 +7375,9 @@ function renderWorkers(){
 function hireWorker(type, mode){
   const wt = WORKER_TYPES.find(x=>x.id===type);
   if(!wt) return;
-  const cost = mode==='task' ? wt.perTask : mode==='day' ? wt.perDay : wt.permanent;
+  const wageDisc = (typeof rankPerks === 'function') ? rankPerks().wage : 0;  // ส่วนลดค่าจ้างจากฐานะ
+  let cost = mode==='task' ? wt.perTask : mode==='day' ? wt.perDay : wt.permanent;
+  if(mode !== 'permanent') cost = Math.round(cost * (1 - wageDisc));  // รายครั้ง/รายวันได้ส่วนลด
   // เฟส 5: จ้างประจำ/รายวันจำกัดตามที่พักคนงาน
   if(mode !== 'task' && workers.length >= workerCap()){
     toast(`❌ คนงานเต็มแล้ว (${workers.length}/${workerCap()})<br>สร้าง "ที่พักคนงาน" เพื่อเพิ่มจำนวนสูงสุด 🏠`, true);
