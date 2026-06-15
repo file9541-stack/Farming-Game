@@ -7365,8 +7365,9 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(e.target === this){ hideAdmin(); return; }  // คลิกพื้นหลัง = ซ่อน (หุบเป็นแถบลอย)
     const moneyChip = e.target.closest('[data-money]');
     if(moneyChip){
-      // เด้งยอดที่เลือกใส่ช่องกรอกเท่านั้น — ต้องกด "เพิ่มเงิน" เองก่อนถึงจะเพิ่ม
-      document.getElementById('admin-money-input').value = moneyChip.dataset.money;
+      // บวกยอดที่เลือกสะสมในช่องกรอก — ต้องกด "เพิ่มเงิน" เองก่อนถึงจะเพิ่มจริง
+      const inp = document.getElementById('admin-money-input');
+      inp.value = (Math.max(0, Math.floor(Number(inp.value) || 0)) + Number(moneyChip.dataset.money));
       return;
     }
     const dayChip = e.target.closest('[data-skipday]');
