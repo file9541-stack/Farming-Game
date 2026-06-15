@@ -2298,6 +2298,91 @@ body { padding-bottom: 72px; }
 }
 .navd-version { font-size: 0.6rem; color: #b08030; margin-top: 6px; }
 
+/* ===== VERSION HISTORY MODAL (ประวัติการอัพเดต) ===== */
+#version-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#version-overlay.show { display: flex; }
+.version-sheet {
+  width: 100%; max-width: 420px; max-height: 82vh;
+  background: linear-gradient(180deg,#fffaf0,#fbf2e2);
+  border-radius: 20px;
+  border: 1.5px solid rgba(200,160,80,0.4);
+  box-shadow: 0 12px 40px rgba(120,80,20,0.35);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.version-header {
+  background: linear-gradient(135deg,#e0a010,#b87810);
+  padding: 16px 18px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-shrink: 0;
+}
+.version-header h2 { color: #fffaf0; font-size: 1.05rem; font-weight: 800; }
+.version-current { color: rgba(255,250,240,0.85); font-size: 0.68rem; margin-top: 3px; }
+.version-close {
+  background: rgba(255,255,255,0.2); border: none; color: #fffaf0;
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  font-size: 1.05rem; font-family: inherit; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.version-body { overflow-y: auto; padding: 14px 16px 18px; }
+.vh-entry {
+  position: relative;
+  padding: 0 0 16px 22px;
+  border-left: 2px solid rgba(200,160,80,0.4);
+}
+.vh-entry:last-child { border-left-color: transparent; padding-bottom: 0; }
+.vh-entry::before {
+  content: ''; position: absolute; left: -7px; top: 3px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #e0a010; border: 2px solid #fffaf0;
+}
+.vh-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.vh-ver {
+  font-size: 0.7rem; font-weight: 800; color: #6b3500;
+  background: #faeeda; border-radius: 99px; padding: 2px 10px;
+}
+.vh-date { font-size: 0.66rem; color: #b08030; font-weight: 700; }
+.vh-title { font-size: 0.88rem; font-weight: 800; color: #5a3a10; margin: 6px 0 6px; }
+.vh-list { list-style: none; padding: 0; margin: 0; }
+.vh-list li {
+  font-size: 0.76rem; color: #6b4a20; line-height: 1.5;
+  padding-left: 16px; position: relative; margin-bottom: 3px;
+}
+.vh-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
+
+/* ===== GUIDE MODAL (คู่มือการเล่น) — ใช้โครงเดียวกับ version modal ===== */
+#guide-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#guide-overlay.show { display: flex; }
+.gd-entry {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px;
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.gd-entry:last-child { margin-bottom: 0; }
+.gd-title { font-size: 0.9rem; font-weight: 800; color: #5a3a10; margin-bottom: 6px; }
+.gd-list { list-style: none; padding: 0; margin: 0; }
+.gd-list li {
+  font-size: 0.78rem; color: #6b4a20; line-height: 1.55;
+  padding-left: 16px; position: relative; margin-bottom: 3px;
+}
+.gd-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2315,6 +2400,29 @@ body { padding-bottom: 72px; }
 .slot-add    { background: linear-gradient(135deg,#4abf4a,#2a8030); color: #fff; }
 .slot-remove { background: linear-gradient(135deg,#e8a040,#d07010); color: #fff; }
 .slot-add:hover, .slot-remove:hover { filter: brightness(1.1); }
+
+/* ===== ระบบก่อสร้าง — การ์ดกำลังก่อสร้าง (เฟส 1) ===== */
+.sec-build-list { display: flex; flex-direction: column; gap: 6px; }
+.sec-build-list:not(:empty) { margin-bottom: 8px; }
+.build-card {
+  background: linear-gradient(135deg,#fff3da,#ffe9c4);
+  border: 1.5px dashed #e0a010;
+  border-radius: 12px; padding: 8px 10px;
+}
+.build-card-top {
+  font-size: 0.74rem; font-weight: 700; color: #7a4a00;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.build-timer { margin-left: auto; font-weight: 800; color: #b05000; white-space: nowrap; }
+.build-bar {
+  height: 6px; border-radius: 99px; background: rgba(200,160,80,0.25);
+  margin-top: 6px; overflow: hidden;
+}
+.build-bar-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg,#f5c518,#e0a010);
+  transition: width 0.4s linear;
+}
 
 /* ===== แถบพื้นที่ว่างรวม ===== */
 /* ===== แถบพื้นที่ว่างรวม (ใต้ topbar) ===== */
@@ -2627,11 +2735,45 @@ body { padding-bottom: 72px; }
       <span class="navd-label">คู่มือการเล่น</span>
       <i class="navd-chevron">›</i>
     </div>
+    <div class="navd-item" data-nav="version">
+      <div class="navd-icon">📝</div>
+      <span class="navd-label">เวอร์ชันเกม</span>
+      <span class="navd-badge nb-amber" id="navd-version-badge">v0.00</span>
+      <i class="navd-chevron">›</i>
+    </div>
   </div>
 
   <div class="navd-footer">
     <div class="navd-logout" data-nav="logout">🚪 ออกจากระบบ</div>
-    <div class="navd-version">v1.0 · งานฟาร์ม</div>
+    <div class="navd-version" id="navd-footer-version">v0.00 · งานฟาร์ม</div>
+  </div>
+</div>
+
+<!-- ===== VERSION HISTORY MODAL (ประวัติการอัพเดต) ===== -->
+<div id="version-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>📝 ประวัติการอัพเดต</h2>
+        <div class="version-current" id="version-current">เวอร์ชันปัจจุบัน v0.00</div>
+      </div>
+      <button class="version-close" id="version-close">✕</button>
+    </div>
+    <div class="version-body" id="version-body"></div>
+  </div>
+</div>
+
+<!-- ===== GUIDE MODAL (คู่มือการเล่น) ===== -->
+<div id="guide-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>📖 คู่มือการเล่น</h2>
+        <div class="version-current">ภาพรวมแต่ละระบบในเกม (ฉบับย่อ)</div>
+      </div>
+      <button class="version-close" id="guide-close">✕</button>
+    </div>
+    <div class="version-body" id="guide-body"></div>
   </div>
 </div>
 
@@ -3239,6 +3381,15 @@ const SLOT_INFO = {
   big:   { label:'คอกสัตว์ใหญ่', emoji:'🐄', cost:300, unit:'คอก' },
   ponds: { label:'บ่อปลา',      emoji:'🐟', cost:400, unit:'บ่อ' },
 };
+// ===== ระบบก่อสร้าง (เฟส 1) — ต้นทุนเงิน + เวลาก่อสร้างจริง (วินาที) ต่อสิ่งปลูกสร้าง =====
+// ก่อนได้แปลง/บ่อ/คอก/สวน ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ขุดบ่อ/สร้างคอก/ทำสวน)
+const BUILD_INFO = {
+  plots: { verb:'ทำหน้าดิน',    money:500,  seconds:30 },
+  trees: { verb:'ทำสวน',        money:1500, seconds:60 },
+  small: { verb:'สร้างคอก',     money:1000, seconds:45 },
+  big:   { verb:'สร้างคอก',     money:3000, seconds:90 },
+  ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75 },
+};
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3398,6 +3549,221 @@ const NPC_PARTNERS = [
   },
 ];
 
+// ===== ประวัติการอัพเดตเกม (Update History) =====
+// เรียงจากเก่า→ใหม่ เวอร์ชันเริ่มที่ 0.00 และเพิ่มครั้งละ +0.01
+// (ทุกครั้งที่อัพเดตเสร็จ ให้เพิ่มรายการใหม่ต่อท้ายตามกฎข้อ 13)
+const UPDATE_HISTORY = [
+  {
+    version: '0.00',
+    date: '10/06/2026',
+    title: 'ระบบฟาร์มพื้นฐาน + โครงหน้าจอเกม',
+    details: [
+      'วางโครงหน้าจอเกม: แถบบน (topbar) แสดงเงิน/วันเวลา และแถบนำทางลอยด้านล่าง',
+      'ระบบปลูกพืช–รดน้ำ–เก็บเกี่ยวบนแปลงฟาร์ม',
+      'ระบบเวลาในเกมและปุ่มเปลี่ยนวัน (Next day)',
+    ],
+  },
+  {
+    version: '0.01',
+    date: '11/06/2026',
+    title: 'สัตว์ฟาร์ม บ่อปลา และระบบพื้นที่',
+    details: [
+      'เพิ่มสัตว์ฟาร์มและบ่อเลี้ยงปลา',
+      'ระบบพื้นที่ว่าง: เพิ่ม/ลบช่องปลูก และย้ายลำดับหมวดได้',
+      'แสดงแถบพื้นที่เกษตรคงเหลือแบบเรียลไทม์',
+    ],
+  },
+  {
+    version: '0.02',
+    date: '12/06/2026',
+    title: 'โรงงานแปรรูป + ระบบคำสั่งซื้อ',
+    details: [
+      'เพิ่มโรงงานแปรรูปผลผลิตให้เป็นสินค้ามูลค่าสูงขึ้น',
+      'ระบบคำสั่งซื้อ (Orders) รับงานส่งของเพื่อรับเงินรางวัล',
+    ],
+  },
+  {
+    version: '0.03',
+    date: '12/06/2026',
+    title: 'ตลาดและร้านค้า',
+    details: [
+      'เพิ่มตลาดสำหรับซื้อ–ขายผลผลิตตามราคาตลาด',
+      'ระบบร้านค้าหลักและร้านย่อย (เมล็ด/ต้นไม้/สัตว์/ปลา)',
+    ],
+  },
+  {
+    version: '0.04',
+    date: '13/06/2026',
+    title: 'ระบบทรัพย์สิน บ้าน/ที่ดิน/รถ',
+    details: [
+      'เพิ่มทรัพย์สินเริ่มต้น: บ้าน ที่ดิน และยานพาหนะ',
+      'ระบบตั้งราคาขายทรัพย์สิน + ข้อเสนอจากผู้ซื้อ',
+      'คำพูดผู้ซื้อสอดคล้อง 3 มิติ: สินค้า / เพศ / ระดับราคา',
+    ],
+  },
+  {
+    version: '0.05',
+    date: '13/06/2026',
+    title: 'ป้ายฐานะ + พื้นที่ใช้สอย',
+    details: [
+      'เพิ่มป้ายระดับฐานะ (Wealth Rank) ตามมูลค่าทรัพย์สินรวม',
+      'ระบบพื้นที่ใช้สอย: เพิ่มบ้าน/ยานพาหนะเข้าพื้นที่ได้',
+    ],
+  },
+  {
+    version: '0.06',
+    date: '14/06/2026',
+    title: 'ระบบแต่งงาน',
+    details: [
+      'เพิ่มระบบจีบ NPC และแต่งงาน',
+      'มีสินสอด โบนัสจากคู่สมรส และระบบลูก',
+    ],
+  },
+  {
+    version: '0.07',
+    date: '14/06/2026',
+    title: 'แชทชุมชน',
+    details: [
+      'เพิ่มแถบแชทชุมชน (slide-in ฝั่งซ้าย) พร้อมปุ่มเปิด 💬',
+      'เตรียมโครงรองรับระบบผู้เล่นหลายคนในอนาคต',
+    ],
+  },
+  {
+    version: '0.08',
+    date: '15/06/2026',
+    title: 'Navigation Drawer (เมนูแฮมเบอร์เกอร์)',
+    details: [
+      'เพิ่ม Navigation Drawer (☰) ฝั่งขวา ไม่ทับแชทฝั่งซ้ายและแถบนำทางบน/ล่าง',
+      'เพิ่มเมนูหมวด เกม / สังคม / บัญชี / การตั้งค่า / ช่วยเหลือ (ปุ่มภายในรอการพัฒนา)',
+    ],
+  },
+  {
+    version: '0.09',
+    date: '15/06/2026',
+    title: 'เวอร์ชันเกม + ประวัติการอัพเดต',
+    details: [
+      'เพิ่มเมนู "เวอร์ชันเกม" ในหมวดช่วยเหลือ แสดงเวอร์ชันปัจจุบัน',
+      'คลิกเข้าไปแสดงหน้าต่างประวัติการอัพเดต (วันที่ / หัวข้อ / รายละเอียดสรุป)',
+      'เพิ่มกฎข้อ 13: ทุกครั้งที่อัพเดตเสร็จ ต้องบันทึกลงประวัติการอัพเดตแบบเรียลไทม์',
+      'เขียนประวัติย้อนหลังของระบบที่พัฒนามาก่อนหน้า (วันที่โดยประมาณ)',
+    ],
+  },
+  {
+    version: '0.10',
+    date: '15/06/2026',
+    title: 'คู่มือการเล่น',
+    details: [
+      'เพิ่มเมนู "คู่มือการเล่น" ในหมวดช่วยเหลือ',
+      'คลิกเข้าไปแสดงคู่มืออธิบายภาพรวมแต่ละระบบในเกมแบบย่อ',
+    ],
+  },
+  {
+    version: '0.11',
+    date: '15/06/2026',
+    title: 'ระบบก่อสร้าง เฟส 1',
+    details: [
+      'เพิ่มผัก/สวน/บ่อ/คอก เลยไม่ได้ ต้องสั่งก่อสร้างก่อน (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
+      'ก่อสร้างตรวจพื้นที่ว่าง + เงินทุน แล้วเข้าสถานะ "กำลังก่อสร้าง" จับเวลาจริงพร้อมแถบความคืบหน้า',
+      'พื้นที่ถูกจองระหว่างก่อสร้าง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
+    ],
+  },
+];
+// เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
+const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
+
+// ===== คู่มือการเล่น (Game Guide) =====
+// อธิบายภาพรวมการทำงานของแต่ละระบบในเกมแบบคร่าว ๆ
+const GAME_GUIDE = [
+  {
+    icon: '🏗️', title: 'ระบบก่อสร้าง (ต้องสร้างก่อนใช้)',
+    lines: [
+      'แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ จะใช้เลยไม่ได้ — ต้องก่อสร้างก่อน',
+      'กดปุ่ม ➕ ในแต่ละหมวด เพื่อสั่งก่อสร้าง (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก)',
+      'ก่อสร้างใช้ทั้งพื้นที่ว่างและเงินทุน และต้องรอเวลาก่อสร้างจริง',
+      'เมื่อครบเวลา สิ่งปลูกสร้างจะพร้อมใช้งานทันที',
+    ],
+  },
+  {
+    icon: '🌾', title: 'ฟาร์มและการเพาะปลูก',
+    lines: [
+      'ปลูกพืชลงในช่องแปลง รอเวลาให้โต แล้วเก็บเกี่ยวเพื่อนำไปขายหรือแปรรูป',
+      'พืชแต่ละชนิดใช้เวลาโตและให้ผลตอบแทนต่างกัน',
+      'เพิ่ม/ลดช่องปลูกและจัดลำดับหมวดได้ตามพื้นที่เกษตรที่มี',
+    ],
+  },
+  {
+    icon: '🐄', title: 'สัตว์ฟาร์มและบ่อปลา',
+    lines: [
+      'เลี้ยงสัตว์และเลี้ยงปลาเพื่อเก็บผลผลิต (เช่น ไข่ นม ปลา) อย่างต่อเนื่อง',
+      'คอยดูแลและเก็บผลผลิตเมื่อพร้อม เพื่อสร้างรายได้เสริมจากฟาร์ม',
+    ],
+  },
+  {
+    icon: '🏭', title: 'โรงงานแปรรูป',
+    lines: [
+      'นำผลผลิตดิบจากฟาร์มมาแปรรูปเป็นสินค้าที่มีมูลค่าสูงขึ้น',
+      'สินค้าแปรรูปขายได้ราคาดีกว่า และมักใช้ส่งคำสั่งซื้อ',
+    ],
+  },
+  {
+    icon: '📋', title: 'คำสั่งซื้อ (Orders)',
+    lines: [
+      'รับงานส่งสินค้าตามที่ลูกค้าต้องการ เพื่อแลกเงินรางวัล',
+      'เตรียมสินค้าให้ครบตามรายการแล้วส่งเพื่อรับผลตอบแทน',
+    ],
+  },
+  {
+    icon: '🛒', title: 'ตลาดและร้านค้า',
+    lines: [
+      'ตลาด: ซื้อ–ขายผลผลิตและสินค้าตามราคาตลาดที่เปลี่ยนแปลง',
+      'ร้านค้า: ซื้อเมล็ด ต้นไม้ สัตว์ และปลา เพื่อขยายฟาร์ม',
+    ],
+  },
+  {
+    icon: '🏠', title: 'ทรัพย์สิน (บ้าน/ที่ดิน/รถ)',
+    lines: [
+      'เริ่มเกมพร้อมทรัพย์สินติดตัว สามารถตั้งราคาขายเองได้',
+      'จะมีผู้ซื้อยื่นข้อเสนอ — ตั้งราคาสูงกว่าตลาดผู้ซื้ออยากได้ ราคาต่ำมักถูกต่อรอง',
+      'ขายทรัพย์สินเพื่อนำเงินไปลงทุนต่อยอดในเกม',
+    ],
+  },
+  {
+    icon: '🏅', title: 'ระดับฐานะ (Wealth Rank)',
+    lines: [
+      'ป้ายฐานะคำนวณจากมูลค่าทรัพย์สินรวม + เงินสด',
+      'ยิ่งสะสมความมั่งคั่งมาก ระดับฐานะยิ่งสูงขึ้น',
+    ],
+  },
+  {
+    icon: '🛋️', title: 'พื้นที่ใช้สอย',
+    lines: [
+      'จัดวางบ้านและยานพาหนะลงในพื้นที่ใช้สอยที่มีอยู่',
+      'ใช้บริหารพื้นที่ให้เหมาะกับทรัพย์สินที่ครอบครอง',
+    ],
+  },
+  {
+    icon: '💒', title: 'ระบบแต่งงาน',
+    lines: [
+      'จีบ NPC จนสำเร็จเพื่อแต่งงาน มีค่าใช้จ่ายในการจีบและจัดงาน',
+      'คู่สมรสมอบสินสอดและโบนัสช่วยเล่น และมีระบบลูกที่ให้โบนัสเพิ่ม',
+    ],
+  },
+  {
+    icon: '💬', title: 'แชทชุมชนและเมนูนำทาง',
+    lines: [
+      'ปุ่ม 💬 ฝั่งซ้าย: เปิดแชทชุมชน (เตรียมรองรับผู้เล่นหลายคน)',
+      'ปุ่ม ☰ ฝั่งขวา: เปิดเมนูรวมทางลัดไปยังระบบต่าง ๆ',
+    ],
+  },
+  {
+    icon: '📅', title: 'เวลาและการเปลี่ยนวัน',
+    lines: [
+      'เกมมีระบบวันเวลา ใช้กดเปลี่ยนวันเพื่อให้พืชโตและระบบเดินหน้า',
+      'วางแผนการปลูกและการขายให้สอดคล้องกับรอบวัน',
+    ],
+  },
+];
+
 </script>
 <script>
 // ============================================================
@@ -3418,6 +3784,12 @@ let treePlots  = [];  // ไม้ยืนต้น  — {tree, plantedAt, read
 let fishPonds  = [];  // บ่อปลา     — {fish, stockedAt, ready}
 let smallPens  = [];  // คอกสัตว์เล็ก (ไก่/เป็ด)  — {animal:id}
 let bigPens    = [];  // คอกสัตว์ใหญ่ (วัว/ควาย) — {animal:id}
+let constructions = [];  // งานก่อสร้างที่กำลังดำเนินอยู่ — {type, finishAt} (เฟส 1)
+
+// ─── พื้นที่ที่ถูกจองโดยงานก่อสร้างที่กำลังทำอยู่ ───
+function calcBuildingSpace(){
+  return constructions.reduce((s, c) => s + (SLOT_COST[c.type] || 0), 0);
+}
 
 // ─── พื้นที่ว่างรวม (จากที่ดินทุกแปลงที่ยังไม่ขาย) ───
 function calcTotalSpace(){
@@ -3438,8 +3810,8 @@ function calcUsedSpace(){
        + fishPonds.length * SLOT_COST.ponds;
 }
 
-// ─── พื้นที่ว่างที่เหลือ ───
-function freeSpace(){ return calcTotalSpace() - calcUsedSpace(); }
+// ─── พื้นที่ว่างที่เหลือ (หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย) ───
+function freeSpace(){ return calcTotalSpace() - calcUsedSpace() - calcBuildingSpace(); }
 
 // ─── เพิ่มช่องประเภทหนึ่ง (หักพื้นที่ว่าง) ───
 function addSlot(type){
@@ -3478,6 +3850,90 @@ function removeSlot(type){
   rerenderFarmArea();
 }
 
+// ============================================================
+//  ระบบก่อสร้าง (เฟส 1) — ต้องก่อสร้างก่อนจึงจะได้แปลง/บ่อ/คอก/สวน
+// ============================================================
+// ─── สั่งเริ่มก่อสร้าง: ตรวจพื้นที่ + เงิน → หักเงิน → เข้าคิวก่อสร้าง (จับเวลาจริง) ───
+function startConstruction(type){
+  const cost = SLOT_COST[type];
+  const info = SLOT_INFO[type];
+  const b    = BUILD_INFO[type];
+  if(!b) return;
+  if(freeSpace() < cost){
+    toast(`❌ พื้นที่เกษตรไม่พอ! ${info.emoji} ${info.label} ใช้ ${cost} ตร.ม.`);
+    return;
+  }
+  if(gold < b.money){
+    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${b.money.toLocaleString('th-TH')} บาท`);
+    return;
+  }
+  gold -= b.money;
+  constructions.push({ type, finishAt: Date.now() + b.seconds * 1000 });
+  updateTopbar();
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${b.money.toLocaleString('th-TH')} บาท · ใช้เวลา ${b.seconds} วินาที)`, true);
+  rerenderFarmArea();
+  startConstructionTimer();
+}
+
+// ─── สร้างช่องจริงเมื่อก่อสร้างเสร็จ (พื้นที่ถูกจองไว้แล้ว ไม่ต้องเช็คซ้ำ) ───
+function materializeSlot(type){
+  if(type==='plots') plots.push({crop:null, plantedAt:null, ready:false});
+  if(type==='trees') treePlots.push({tree:null, plantedAt:null, ready:false});
+  if(type==='small') smallPens.push({animal:null});
+  if(type==='big')   bigPens.push({animal:null});
+  if(type==='ponds') fishPonds.push({fish:null, stockedAt:null, ready:false});
+}
+
+// ─── ตรวจงานก่อสร้างที่ครบเวลา → สร้างช่องจริง ───
+let _constructionTimer = null;
+function tickConstructions(){
+  const now = Date.now();
+  let finished = false;
+  for(let i = constructions.length - 1; i >= 0; i--){
+    if(constructions[i].finishAt <= now){
+      const type = constructions[i].type;
+      constructions.splice(i, 1);
+      materializeSlot(type);
+      const info = SLOT_INFO[type];
+      toast(`✅ ${info.emoji} ${info.label} ก่อสร้างเสร็จแล้ว — พร้อมใช้งาน!`, true);
+      finished = true;
+    }
+  }
+  if(finished) rerenderFarmArea();
+  else renderConstructions();
+  if(constructions.length === 0 && _constructionTimer){
+    clearInterval(_constructionTimer);
+    _constructionTimer = null;
+  }
+}
+function startConstructionTimer(){
+  if(_constructionTimer || constructions.length === 0) return;
+  _constructionTimer = setInterval(tickConstructions, 1000);
+}
+
+// ─── แสดงสถานะ "กำลังก่อสร้าง" + นับถอยหลังในแต่ละหมวด ───
+function renderConstructions(){
+  const now = Date.now();
+  document.querySelectorAll('.sec-build-list').forEach(box => {
+    const type = box.dataset.slottype;
+    const list = constructions.filter(c => c.type === type);
+    if(list.length === 0){ box.innerHTML = ''; return; }
+    const b    = BUILD_INFO[type];
+    const info = SLOT_INFO[type];
+    box.innerHTML = list.map(c => {
+      const left = Math.max(0, Math.ceil((c.finishAt - now) / 1000));
+      const mm = String(Math.floor(left / 60)).padStart(2,'0');
+      const ss = String(left % 60).padStart(2,'0');
+      const pct = Math.min(100, Math.round((1 - left / b.seconds) * 100));
+      return `<div class="build-card">
+        <div class="build-card-top">🏗️ กำลัง${b.verb} ${info.emoji} ${info.label}
+          <span class="build-timer">⏳ ${mm}:${ss}</span></div>
+        <div class="build-bar"><div class="build-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  });
+}
+
 // ─── re-render พื้นที่ฟาร์มทั้งหมด + อัปเดตหัวข้อพื้นที่ว่าง ───
 function rerenderFarmArea(){
   renderFarmSections();
@@ -3487,7 +3943,7 @@ function rerenderFarmArea(){
 function updateSpaceLabels(){
   const used  = calcUsedSpace();
   const total = calcTotalSpace();
-  const free  = total - used;
+  const free  = freeSpace();  // หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย
   const pct   = total > 0 ? Math.round((used/total)*100) : 0;
   // แถบพื้นที่เกษตร
   document.querySelectorAll('.space-free-label').forEach(el => {
@@ -3516,8 +3972,9 @@ function updateSpaceLabels(){
     if(type==='ponds') count = fishPonds.length;
     const usedArea = count * info.cost;
     const pctOfFarm = total > 0 ? Math.round((usedArea/total)*100) : 0;
+    const b = BUILD_INFO[type];
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · สร้างได้อีก ${canAdd} ${info.unit}` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -3824,13 +4281,14 @@ function renderFarmSections(){
         </div>
       </div>
       <div class="sec-area-info" data-slottype="${m.slottype}"></div>
+      <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       ${gridTag}
     </div>`;
   }).join('');
   // ผูก slot-btn delegation ใหม่ (เพราะ rebuild HTML)
   container.querySelectorAll('[data-slotaction]').forEach(btn => {
     btn.addEventListener('click', function(){
-      if(btn.dataset.slotaction==='add') addSlot(btn.dataset.slottype);
+      if(btn.dataset.slotaction==='add') startConstruction(btn.dataset.slottype);
       else removeSlot(btn.dataset.slottype);
     });
   });
@@ -3843,6 +4301,7 @@ function renderFarmSections(){
   });
   // render เนื้อหาในแต่ละหมวด
   renderFarm(); renderTrees(); renderAnimals(); renderFish();
+  renderConstructions();
   updateSpaceLabels();
 }
 
@@ -5727,6 +6186,53 @@ function doFlirtAction(){
   }
 }
 
+// ===== VERSION HISTORY (ประวัติการอัพเดต) =====
+function renderVersionLabels(){
+  const v = 'v' + GAME_VERSION;
+  const badge = document.getElementById('navd-version-badge');
+  if(badge) badge.textContent = v;
+  const footer = document.getElementById('navd-footer-version');
+  if(footer) footer.textContent = v + ' · งานฟาร์ม';
+}
+function openVersionHistory(){
+  const cur = document.getElementById('version-current');
+  if(cur) cur.textContent = 'เวอร์ชันปัจจุบัน v' + GAME_VERSION;
+  const body = document.getElementById('version-body');
+  if(body){
+    body.innerHTML = UPDATE_HISTORY.slice().reverse().map(function(u){
+      const lis = u.details.map(function(d){ return '<li>' + d + '</li>'; }).join('');
+      return '<div class="vh-entry">'
+        + '<div class="vh-top"><span class="vh-ver">v' + u.version + '</span>'
+        + '<span class="vh-date">📅 ' + u.date + '</span></div>'
+        + '<div class="vh-title">' + u.title + '</div>'
+        + '<ul class="vh-list">' + lis + '</ul>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('version-overlay').classList.add('show');
+}
+function closeVersionHistory(){
+  document.getElementById('version-overlay').classList.remove('show');
+}
+
+// ===== GAME GUIDE (คู่มือการเล่น) =====
+function openGuide(){
+  const body = document.getElementById('guide-body');
+  if(body){
+    body.innerHTML = GAME_GUIDE.map(function(g){
+      const lis = g.lines.map(function(l){ return '<li>' + l + '</li>'; }).join('');
+      return '<div class="gd-entry">'
+        + '<div class="gd-title">' + g.icon + ' ' + g.title + '</div>'
+        + '<ul class="gd-list">' + lis + '</ul>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('guide-overlay').classList.add('show');
+}
+function closeGuide(){
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+
 </script>
 <script>
 // ============================================================
@@ -5754,11 +6260,23 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('nav-toggle').addEventListener('click', openNav);
   document.getElementById('nav-close').addEventListener('click', closeNav);
   navOverlay.addEventListener('click', closeNav);
-  // ปุ่มเมนูภายใน — รอการพัฒนา (ยังไม่ผูกการทำงาน) ใช้ event delegation บน container
+  // ปุ่มเมนูภายใน — ส่วนใหญ่รอการพัฒนา ใช้ event delegation บน container
   document.querySelector('#nav-drawer .navd-scroll').addEventListener('click', function(e){
     var item = e.target.closest('.navd-item');
     if(!item) return;
-    // TODO: ใส่การทำงานของแต่ละปุ่มตาม data-nav ในภายหลัง
+    if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
+    if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
+    // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
+  });
+  // ปิดหน้าต่างประวัติการอัพเดต
+  document.getElementById('version-close').addEventListener('click', closeVersionHistory);
+  document.getElementById('version-overlay').addEventListener('click', function(e){
+    if(e.target === this) closeVersionHistory();
+  });
+  // ปิดหน้าต่างคู่มือการเล่น
+  document.getElementById('guide-close').addEventListener('click', closeGuide);
+  document.getElementById('guide-overlay').addEventListener('click', function(e){
+    if(e.target === this) closeGuide();
   });
 })();
 
@@ -6102,6 +6620,11 @@ openFlirt(btn.dataset.npcid);
 //     (เช่น ระบบซื้อที่ดิน/ทรัพย์สิน/แต่งงาน/ฐานะ/พื้นที่ว่าง ฯลฯ)
 //     → ใช้ grep หาโค้ดหลักของระบบนั้นทันที ไม่ดึงโค้ดทั้งหมดมาดู
 //     → หาเฉพาะจุดที่เกี่ยวข้องแล้วแก้เลย เพื่อความรวดเร็วและแม่นยำ
+//
+// 13. บันทึกประวัติการอัพเดตแบบเรียลไทม์ — ทุกครั้งที่ผู้ใช้สั่งอัพเดต
+//     แล้วทำเสร็จ → ต้องเพิ่มรายการใหม่ลงใน UPDATE_HISTORY (Section [data])
+//     ต่อท้ายรายการเดิม โดยเพิ่มเวอร์ชัน +0.01 จากรายการล่าสุด
+//     พร้อมระบุ วันที่ / หัวข้ออัพเดต / รายละเอียดสรุปสิ่งที่เปลี่ยน
 // ============================================================
 // ============================================================
 //  DATA — ย้ายไป data.js แล้ว (Phase 2)
@@ -6127,6 +6650,8 @@ window.onload = function(){
   renderSelector();
   updateTopbar();
   updateSpaceLabels();
+  renderVersionLabels();
+  startConstructionTimer();
   genOrder(); genOrder(); genOrder();
   renderOrders();
   (function(){
