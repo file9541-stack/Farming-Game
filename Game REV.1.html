@@ -2593,6 +2593,46 @@ body { padding-bottom: 72px; }
 }
 .admin-exit-btn:active { transform: scale(0.97); }
 
+/* ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) ===== */
+#farmland-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#farmland-overlay.show { display: flex; }
+.fl-summary {
+  display: flex; gap: 10px; margin-bottom: 12px;
+}
+.fl-sum-box {
+  flex: 1; background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(200,160,80,0.35); border-radius: 12px;
+  padding: 10px; text-align: center;
+}
+.fl-sum-label { font-size: 0.66rem; color: #b08030; font-weight: 700; }
+.fl-sum-value { font-size: 1.05rem; font-weight: 800; color: #5a3a10; margin-top: 2px; }
+.fl-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(200,160,80,0.3); border-radius: 14px;
+  padding: 12px; margin-bottom: 10px;
+}
+.fl-emoji {
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px;
+  background: #e6f3da; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.fl-info { flex: 1; min-width: 0; }
+.fl-name { font-size: 0.9rem; font-weight: 800; color: #5a3a10; }
+.fl-desc { font-size: 0.7rem; color: #9a7850; margin: 2px 0 6px; line-height: 1.4; }
+.fl-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.fl-tag { font-size: 0.62rem; font-weight: 700; border-radius: 99px; padding: 2px 8px; background: #eef3e3; color: #4a6a1a; }
+.fl-value { font-size: 0.82rem; font-weight: 800; color: #7a4a00; }
+.fl-empty { text-align: center; color: #b08030; font-size: 0.82rem; padding: 24px 12px; line-height: 1.6; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2648,6 +2688,9 @@ body { padding-bottom: 72px; }
 .space-free-label {
   color: #ffe8b0; font-size: 0.9rem; font-weight: 800;
 }
+#farm-space-bar { cursor: pointer; transition: transform 0.1s, filter 0.1s; }
+#farm-space-bar:hover { filter: brightness(1.08); }
+#farm-space-bar:active { transform: scale(0.98); }
 .usable-bar {
   background: linear-gradient(135deg,#3a6a8b,#2a4a6b) !important;
   margin-left: 6px;
@@ -3102,6 +3145,20 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
+<!-- ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) ===== -->
+<div id="farmland-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>🌾 ที่ดินเพื่อการเกษตร</h2>
+        <div class="version-current" id="farmland-summary">รวมพื้นที่ 0 ตร.ม.</div>
+      </div>
+      <button class="version-close" id="farmland-close">✕</button>
+    </div>
+    <div class="version-body" id="farmland-body"></div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
@@ -3123,7 +3180,7 @@ body { padding-bottom: 72px; }
 
   <!-- FARM TAB -->
   <div id="tab-farm">
-    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div>
+    <div class="space-bar-inline" id="farm-space-bar" title="ดูรายละเอียดที่ดินเกษตร"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div>
     <div id="farm-sections-container"></div>
   </div>
 
@@ -4203,6 +4260,16 @@ const UPDATE_HISTORY = [
     details: [
       'เพิ่มพื้นหลังไล่สีท้องฟ้า → ทุ่งหญ้าเขียว พร้อมแสงแดดมุมขวาบน',
       'คงพาเนลโทนครีม-ทองเดิมให้เข้ากับธีม ไม่กระทบเลย์เอาต์',
+    ],
+  },
+  {
+    version: '0.27',
+    date: '15/06/2026',
+    title: 'กดแถบพื้นที่เกษตรดูรายละเอียดที่ดิน',
+    details: [
+      'แถบ "พื้นที่เกษตร" กดได้ → เด้งหน้าต่างรายละเอียดที่ดิน (ดึงข้อมูลจากทรัพย์สิน)',
+      'แสดงพื้นที่รวม + มูลค่ารวม + รายการที่ดินแต่ละแปลง พร้อมแท็ก',
+      'พื้นที่และมูลค่าจะเพิ่มขึ้นอัตโนมัติเมื่อซื้อที่ดินเพิ่ม',
     ],
   },
 ];
@@ -7011,6 +7078,44 @@ function closeVersionHistory(){
   document.getElementById('version-overlay').classList.remove('show');
 }
 
+// ===== FARMLAND MODAL (รายละเอียดที่ดินเกษตร) — ข้อมูลจากทรัพย์สิน (lands) =====
+function openFarmland(){
+  const lands = (assetsState.lands || []).filter(l => !l.sold);
+  const totalArea = lands.reduce((s,l)=> s + (l.space || 0), 0);
+  const totalVal  = lands.reduce((s,l)=> s + (l.marketValue || 0), 0);
+  const sum = document.getElementById('farmland-summary');
+  if(sum) sum.textContent = `รวมพื้นที่ ${totalArea.toLocaleString('th-TH')} ตร.ม. · มูลค่ารวม ฿${totalVal.toLocaleString('th-TH')}`;
+  const body = document.getElementById('farmland-body');
+  if(body){
+    if(lands.length === 0){
+      body.innerHTML = '<div class="fl-empty">🌱 ยังไม่มีที่ดินเกษตร<br>ซื้อที่ดินเพิ่มเพื่อขยายพื้นที่เพาะปลูก</div>';
+    } else {
+      body.innerHTML =
+        `<div class="fl-summary">
+          <div class="fl-sum-box"><div class="fl-sum-label">พื้นที่รวม</div><div class="fl-sum-value">${totalArea.toLocaleString('th-TH')} ตร.ม.</div></div>
+          <div class="fl-sum-box"><div class="fl-sum-label">มูลค่ารวม</div><div class="fl-sum-value">฿${totalVal.toLocaleString('th-TH')}</div></div>
+        </div>` +
+        lands.map(function(l){
+          const tags = (l.tags || []).map(function(t){ return `<span class="fl-tag">${t.label}</span>`; }).join('');
+          const desc = (l.desc || '').replace(/\n/g, '<br>');
+          return `<div class="fl-card">
+            <div class="fl-emoji">${l.emoji || '🌾'}</div>
+            <div class="fl-info">
+              <div class="fl-name">${l.name}</div>
+              <div class="fl-desc">${desc}</div>
+              <div class="fl-tags">${tags}</div>
+              <div class="fl-value">💰 มูลค่า ฿${(l.marketValue||0).toLocaleString('th-TH')}</div>
+            </div>
+          </div>`;
+        }).join('');
+    }
+  }
+  document.getElementById('farmland-overlay').classList.add('show');
+}
+function closeFarmland(){
+  document.getElementById('farmland-overlay').classList.remove('show');
+}
+
 // ===== GAME GUIDE (คู่มือการเล่น) =====
 function openGuide(){
   const body = document.getElementById('guide-body');
@@ -7367,6 +7472,12 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.getElementById('guide-close').addEventListener('click', closeGuide);
   document.getElementById('guide-overlay').addEventListener('click', function(e){
     if(e.target === this) closeGuide();
+  });
+  // แถบพื้นที่เกษตร → เปิดรายละเอียดที่ดิน
+  document.getElementById('farm-space-bar').addEventListener('click', openFarmland);
+  document.getElementById('farmland-close').addEventListener('click', closeFarmland);
+  document.getElementById('farmland-overlay').addEventListener('click', function(e){
+    if(e.target === this) closeFarmland();
   });
 })();
 
