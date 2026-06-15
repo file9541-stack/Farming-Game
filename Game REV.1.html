@@ -310,6 +310,7 @@ body{
 .market-card .mkt-emoji{font-size:1.8rem;}
 .market-card .mkt-name{font-size:0.72rem;font-weight:700;color:#6b3500;}
 .market-card .mkt-qty{font-size:0.68rem;color:#888;}
+.market-card .mkt-quality{font-size:0.64rem;font-weight:800;color:#7a4a00;background:rgba(245,197,24,0.18);border-radius:99px;padding:1px 8px;margin:2px 0;}
 .btn-sell-mkt{
   background:linear-gradient(135deg,#f5a020,#d08010);
   color:white;border:2px solid #a06000;
@@ -1225,6 +1226,7 @@ body{
 .market-card .mkt-emoji{font-size:1.8rem;}
 .market-card .mkt-name{font-size:0.72rem;font-weight:700;color:#6b3500;}
 .market-card .mkt-qty{font-size:0.68rem;color:#888;}
+.market-card .mkt-quality{font-size:0.64rem;font-weight:800;color:#7a4a00;background:rgba(245,197,24,0.18);border-radius:99px;padding:1px 8px;margin:2px 0;}
 .btn-sell-mkt{
   background:linear-gradient(135deg,#f5a020,#d08010);
   color:white;border:2px solid #a06000;
@@ -3643,6 +3645,19 @@ const WORKER_HOUSES = [
   { id:'wh1', name:'บ้านพักคนงาน Lv.1', emoji:'🏠', cost:20000, capAdd:5,  desc:'เพิ่มคนงานสูงสุด +5' },
   { id:'wh2', name:'บ้านพักคนงาน Lv.2', emoji:'🏡', cost:45000, capAdd:10, desc:'เพิ่มคนงานสูงสุด +10' },
 ];
+// ===== ระบบคุณภาพผลผลิต + การเน่าเสีย (เฟส A) =====
+// คุณภาพลดตามอายุจริง (วินาที) เทียบกับอายุการเก็บรักษาของผลผลิตนั้น
+// ตัวคูณราคา: สดใหม่ ×1.0 / ดี ×0.85 / ปานกลาง ×0.6 / ต่ำ ×0.3 / เน่าเสีย ×0
+const QUALITY_TIERS = [
+  { key:'fresh',   name:'สดใหม่',   emoji:'🟢', mult:1.0,  maxFrac:0.25 },
+  { key:'good',    name:'คุณภาพดี', emoji:'🟡', mult:0.85, maxFrac:0.50 },
+  { key:'normal',  name:'ปานกลาง',  emoji:'🟠', mult:0.6,  maxFrac:0.75 },
+  { key:'poor',    name:'คุณภาพต่ำ', emoji:'🔴', mult:0.3,  maxFrac:1.0  },
+  { key:'spoiled', name:'เน่าเสีย',  emoji:'❌', mult:0,    maxFrac:Infinity },
+];
+// อายุการเก็บรักษา (วินาทีจริง) — ตามชนิดผลผลิต (ค่าเริ่มต้น + override เฉพาะตัว)
+const SHELF_DEFAULT  = { crop:150, tree:300, animal:180, fish:120 };
+const SHELF_OVERRIDE = { lettuce:90, corn:240, mango:360, coconut:600 };
 // พื้นที่ใช้สอยส่วนตัว (แยกถังจากเกษตร) — เริ่มต้น 100 ตร.ม. (บีบรัด สมเป็นคนจน)
 // บ้าน/รถ/มอไซค์ กินพื้นที่นี้ตาม field area ของแต่ละชิ้น
 const USABLE_AREA_BASE = 100;
@@ -3980,6 +3995,17 @@ const UPDATE_HISTORY = [
       'ครอบคลุมทั้งการแก้ไขและการเพิ่มเติมสิ่งใหม่ เพื่อให้ทุกระบบรันต่อเนื่องสอดคล้องกัน',
     ],
   },
+  {
+    version: '0.18',
+    date: '15/06/2026',
+    title: 'ระบบคุณภาพผลผลิต + การเน่าเสีย (หลังเก็บเกี่ยว เฟส A)',
+    details: [
+      'ผลผลิตสดมีคุณภาพ 5 ระดับ (สดใหม่/ดี/ปานกลาง/ต่ำ/เน่าเสีย) เสื่อมตามเวลาจริง',
+      'ราคาขายในตลาดปรับตามคุณภาพ — เน่าเสียขายไม่ได้ (มูลค่า 0)',
+      'คลังบันทึกเวลาเก็บเกี่ยว (freshAt) และเฉลี่ยอายุเมื่อรวมกอง · เมล็ด/ไม้/สินค้าแปรรูปไม่เน่าเสีย',
+      'หน้าตลาดแสดงป้ายคุณภาพและราคาต่อชิ้น พร้อมรีเฟรชอัตโนมัติให้เห็นการเสื่อม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4072,6 +4098,15 @@ const GAME_GUIDE = [
     lines: [
       'ตลาด: ซื้อ–ขายผลผลิตและสินค้าตามราคาตลาดที่เปลี่ยนแปลง',
       'ร้านค้า: ซื้อเมล็ด ต้นไม้ สัตว์ และปลา เพื่อขยายฟาร์ม',
+    ],
+  },
+  {
+    icon: '📈', title: 'คุณภาพผลผลิต & การเน่าเสีย',
+    lines: [
+      'ผลผลิตสด (พืช/ผลไม้/ไข่/นม/ปลา) มีคุณภาพ 5 ระดับ: สดใหม่→ดี→ปานกลาง→ต่ำ→เน่าเสีย',
+      'คุณภาพลดลงตามเวลาจริงหลังเก็บเกี่ยว และส่งผลโดยตรงต่อราคาขาย (เน่าเสีย = ขายไม่ได้)',
+      'ของแต่ละชนิดเก็บได้นานไม่เท่ากัน (เช่น ผักกาดเสียไว มะพร้าวอยู่ได้นาน)',
+      'รีบขายตอนสดเพื่อราคาดีที่สุด — สินค้าแปรรูป/เมล็ด/ไม้ ไม่เน่าเสีย',
     ],
   },
   {
@@ -4538,10 +4573,40 @@ const SECTION_META = {
 // ============================================================
 function getInv(id){ return inventory.find(i => i.id === id); }
 
+// อายุการเก็บรักษาของผลผลิต (วินาที) — คืน null ถ้าเป็นของไม่เน่าเสีย (เมล็ด/ไม้/แปรรูป)
+function produceShelf(id){
+  if(SHELF_OVERRIDE[id] != null) return SHELF_OVERRIDE[id];
+  if(typeof CROPS   !== 'undefined' && CROPS.some(c=>c.id===id))   return SHELF_DEFAULT.crop;
+  if(typeof TREES   !== 'undefined' && TREES.some(t=>t.id===id))   return SHELF_DEFAULT.tree;
+  if(typeof ANIMALS !== 'undefined' && ANIMALS.some(a=>a.product===id)) return SHELF_DEFAULT.animal;
+  if(typeof FISH    !== 'undefined' && FISH.some(f=>f.product===id))    return SHELF_DEFAULT.fish;
+  return null;
+}
+// คุณภาพปัจจุบันของรายการคลัง (ตามอายุจริง)
+function itemQuality(item){
+  const shelf = produceShelf(item.id);
+  if(!shelf || !item.freshAt) return QUALITY_TIERS[0];  // ของไม่เน่าเสีย = สดใหม่เสมอ
+  const frac = (Date.now() - item.freshAt) / (shelf * 1000);
+  return QUALITY_TIERS.find(t => frac < t.maxFrac) || QUALITY_TIERS[QUALITY_TIERS.length-1];
+}
+// ราคาขายต่อชิ้นหลังปรับตามคุณภาพ
+function itemSellPrice(item){ return Math.round(item.sell * itemQuality(item).mult); }
+
 function addInv(id, name, emoji, qty, sell){
   const ex = getInv(id);
-  if(ex){ ex.qty += qty; }
-  else   { inventory.push({id, name, emoji, qty, sell}); }
+  const perish = produceShelf(id) != null;
+  if(ex){
+    if(perish){
+      // เฉลี่ยอายุแบบถ่วงน้ำหนักตามจำนวน (ของใหม่อายุ 0)
+      const now = Date.now();
+      const exAge = now - (ex.freshAt || now);
+      const blendedAge = (exAge * ex.qty) / (ex.qty + qty);
+      ex.freshAt = now - blendedAge;
+    }
+    ex.qty += qty;
+  } else {
+    inventory.push({id, name, emoji, qty, sell, freshAt: perish ? Date.now() : null});
+  }
   updateTopbar();
 }
 
@@ -5491,23 +5556,34 @@ function renderMarket(){
     grid.innerHTML='<div style="color:#aaa;font-size:0.85rem;grid-column:1/-1;">คลังว่าง — ปลูกพืชหรือผลิตสินค้าก่อน</div>';
     return;
   }
-  grid.innerHTML = inventory.map((item,i)=>`
+  grid.innerHTML = inventory.map((item,i)=>{
+    const q = itemQuality(item);
+    const unit = itemSellPrice(item);
+    const perish = produceShelf(item.id) != null;
+    const qBadge = perish ? `<div class="mkt-quality">${q.emoji} ${q.name}</div>` : '';
+    return `
     <div class="market-card">
       <div class="mkt-emoji">${item.emoji}</div>
       <div class="mkt-name">${item.name}</div>
-      <div class="mkt-qty">มี ${item.qty} ชิ้น</div>
-      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(item.sell*item.qty).toLocaleString('th-TH')} บาท</button>
-    </div>
-  `).join('');
+      ${qBadge}
+      <div class="mkt-qty">มี ${item.qty} ชิ้น${perish?` · ${unit}/ชิ้น`:''}</div>
+      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(unit*item.qty).toLocaleString('th-TH')} บาท</button>
+    </div>`;
+  }).join('');
 }
 
 function sellAll(id){
   const item = getInv(id);
   if(!item){ return; }
-  const earned = item.sell * item.qty;
-  gold += earned;
-  addExp(item.qty);
-  toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+  const unit = itemSellPrice(item);
+  const earned = unit * item.qty;
+  if(earned <= 0){
+    toast(`❌ ${item.emoji} ${item.name} เน่าเสียแล้ว ขายไม่ได้ — ทิ้งทั้งหมด`);
+  } else {
+    gold += earned;
+    addExp(item.qty);
+    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+  }
   removeInv(id, item.qty);
   updateTopbar();
   renderMarket();
@@ -7031,6 +7107,14 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   });
   // เก็บเกี่ยวอัตโนมัติเป็นระยะ เมื่อมีคนงานเกษตรประจำ/รายวัน
   setInterval(autoHarvest, 8000);
+})();
+
+// ─────────────────────────── PRODUCT QUALITY (คุณภาพ/เน่าเสีย เฟส A) ───────────────────────────
+(function(){
+  // รีเฟรชหน้าตลาดเป็นระยะ เพื่อให้คุณภาพ/ราคาที่เสื่อมตามเวลาแสดงผลแบบเรียลไทม์
+  setInterval(function(){
+    if(typeof currentTab !== 'undefined' && currentTab === 'market') renderMarket();
+  }, 3000);
 })();
 
 // ─────────────────────────── MATERIALS (วัสดุก่อสร้าง) ───────────────────────────
