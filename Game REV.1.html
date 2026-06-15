@@ -2357,6 +2357,32 @@ body { padding-bottom: 72px; }
 }
 .vh-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
 
+/* ===== GUIDE MODAL (คู่มือการเล่น) — ใช้โครงเดียวกับ version modal ===== */
+#guide-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(40,30,15,0.55);
+  z-index: 2800;
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+  padding: 18px;
+}
+#guide-overlay.show { display: flex; }
+.gd-entry {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,160,80,0.3);
+  border-radius: 14px;
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.gd-entry:last-child { margin-bottom: 0; }
+.gd-title { font-size: 0.9rem; font-weight: 800; color: #5a3a10; margin-bottom: 6px; }
+.gd-list { list-style: none; padding: 0; margin: 0; }
+.gd-list li {
+  font-size: 0.78rem; color: #6b4a20; line-height: 1.55;
+  padding-left: 16px; position: relative; margin-bottom: 3px;
+}
+.gd-list li::before { content: '•'; position: absolute; left: 4px; color: #e0a010; }
+
 /* ===== หัวข้อหมวด + ปุ่มเพิ่ม/ลบช่อง (ระบบพื้นที่ว่าง) ===== */
 .farm-section-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2711,6 +2737,20 @@ body { padding-bottom: 72px; }
       <button class="version-close" id="version-close">✕</button>
     </div>
     <div class="version-body" id="version-body"></div>
+  </div>
+</div>
+
+<!-- ===== GUIDE MODAL (คู่มือการเล่น) ===== -->
+<div id="guide-overlay">
+  <div class="version-sheet">
+    <div class="version-header">
+      <div>
+        <h2>📖 คู่มือการเล่น</h2>
+        <div class="version-current">ภาพรวมแต่ละระบบในเกม (ฉบับย่อ)</div>
+      </div>
+      <button class="version-close" id="guide-close">✕</button>
+    </div>
+    <div class="version-body" id="guide-body"></div>
   </div>
 </div>
 
@@ -3576,9 +3616,102 @@ const UPDATE_HISTORY = [
       'เขียนประวัติย้อนหลังของระบบที่พัฒนามาก่อนหน้า (วันที่โดยประมาณ)',
     ],
   },
+  {
+    version: '0.10',
+    date: '15/06/2026',
+    title: 'คู่มือการเล่น',
+    details: [
+      'เพิ่มเมนู "คู่มือการเล่น" ในหมวดช่วยเหลือ',
+      'คลิกเข้าไปแสดงคู่มืออธิบายภาพรวมแต่ละระบบในเกมแบบย่อ',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
+
+// ===== คู่มือการเล่น (Game Guide) =====
+// อธิบายภาพรวมการทำงานของแต่ละระบบในเกมแบบคร่าว ๆ
+const GAME_GUIDE = [
+  {
+    icon: '🌾', title: 'ฟาร์มและการเพาะปลูก',
+    lines: [
+      'ปลูกพืชลงในช่องแปลง รอเวลาให้โต แล้วเก็บเกี่ยวเพื่อนำไปขายหรือแปรรูป',
+      'พืชแต่ละชนิดใช้เวลาโตและให้ผลตอบแทนต่างกัน',
+      'เพิ่ม/ลดช่องปลูกและจัดลำดับหมวดได้ตามพื้นที่เกษตรที่มี',
+    ],
+  },
+  {
+    icon: '🐄', title: 'สัตว์ฟาร์มและบ่อปลา',
+    lines: [
+      'เลี้ยงสัตว์และเลี้ยงปลาเพื่อเก็บผลผลิต (เช่น ไข่ นม ปลา) อย่างต่อเนื่อง',
+      'คอยดูแลและเก็บผลผลิตเมื่อพร้อม เพื่อสร้างรายได้เสริมจากฟาร์ม',
+    ],
+  },
+  {
+    icon: '🏭', title: 'โรงงานแปรรูป',
+    lines: [
+      'นำผลผลิตดิบจากฟาร์มมาแปรรูปเป็นสินค้าที่มีมูลค่าสูงขึ้น',
+      'สินค้าแปรรูปขายได้ราคาดีกว่า และมักใช้ส่งคำสั่งซื้อ',
+    ],
+  },
+  {
+    icon: '📋', title: 'คำสั่งซื้อ (Orders)',
+    lines: [
+      'รับงานส่งสินค้าตามที่ลูกค้าต้องการ เพื่อแลกเงินรางวัล',
+      'เตรียมสินค้าให้ครบตามรายการแล้วส่งเพื่อรับผลตอบแทน',
+    ],
+  },
+  {
+    icon: '🛒', title: 'ตลาดและร้านค้า',
+    lines: [
+      'ตลาด: ซื้อ–ขายผลผลิตและสินค้าตามราคาตลาดที่เปลี่ยนแปลง',
+      'ร้านค้า: ซื้อเมล็ด ต้นไม้ สัตว์ และปลา เพื่อขยายฟาร์ม',
+    ],
+  },
+  {
+    icon: '🏠', title: 'ทรัพย์สิน (บ้าน/ที่ดิน/รถ)',
+    lines: [
+      'เริ่มเกมพร้อมทรัพย์สินติดตัว สามารถตั้งราคาขายเองได้',
+      'จะมีผู้ซื้อยื่นข้อเสนอ — ตั้งราคาสูงกว่าตลาดผู้ซื้ออยากได้ ราคาต่ำมักถูกต่อรอง',
+      'ขายทรัพย์สินเพื่อนำเงินไปลงทุนต่อยอดในเกม',
+    ],
+  },
+  {
+    icon: '🏅', title: 'ระดับฐานะ (Wealth Rank)',
+    lines: [
+      'ป้ายฐานะคำนวณจากมูลค่าทรัพย์สินรวม + เงินสด',
+      'ยิ่งสะสมความมั่งคั่งมาก ระดับฐานะยิ่งสูงขึ้น',
+    ],
+  },
+  {
+    icon: '🛋️', title: 'พื้นที่ใช้สอย',
+    lines: [
+      'จัดวางบ้านและยานพาหนะลงในพื้นที่ใช้สอยที่มีอยู่',
+      'ใช้บริหารพื้นที่ให้เหมาะกับทรัพย์สินที่ครอบครอง',
+    ],
+  },
+  {
+    icon: '💒', title: 'ระบบแต่งงาน',
+    lines: [
+      'จีบ NPC จนสำเร็จเพื่อแต่งงาน มีค่าใช้จ่ายในการจีบและจัดงาน',
+      'คู่สมรสมอบสินสอดและโบนัสช่วยเล่น และมีระบบลูกที่ให้โบนัสเพิ่ม',
+    ],
+  },
+  {
+    icon: '💬', title: 'แชทชุมชนและเมนูนำทาง',
+    lines: [
+      'ปุ่ม 💬 ฝั่งซ้าย: เปิดแชทชุมชน (เตรียมรองรับผู้เล่นหลายคน)',
+      'ปุ่ม ☰ ฝั่งขวา: เปิดเมนูรวมทางลัดไปยังระบบต่าง ๆ',
+    ],
+  },
+  {
+    icon: '📅', title: 'เวลาและการเปลี่ยนวัน',
+    lines: [
+      'เกมมีระบบวันเวลา ใช้กดเปลี่ยนวันเพื่อให้พืชโตและระบบเดินหน้า',
+      'วางแผนการปลูกและการขายให้สอดคล้องกับรอบวัน',
+    ],
+  },
+];
 
 </script>
 <script>
@@ -5938,6 +6071,24 @@ function closeVersionHistory(){
   document.getElementById('version-overlay').classList.remove('show');
 }
 
+// ===== GAME GUIDE (คู่มือการเล่น) =====
+function openGuide(){
+  const body = document.getElementById('guide-body');
+  if(body){
+    body.innerHTML = GAME_GUIDE.map(function(g){
+      const lis = g.lines.map(function(l){ return '<li>' + l + '</li>'; }).join('');
+      return '<div class="gd-entry">'
+        + '<div class="gd-title">' + g.icon + ' ' + g.title + '</div>'
+        + '<ul class="gd-list">' + lis + '</ul>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('guide-overlay').classList.add('show');
+}
+function closeGuide(){
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+
 </script>
 <script>
 // ============================================================
@@ -5970,12 +6121,18 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     var item = e.target.closest('.navd-item');
     if(!item) return;
     if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
+    if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
   // ปิดหน้าต่างประวัติการอัพเดต
   document.getElementById('version-close').addEventListener('click', closeVersionHistory);
   document.getElementById('version-overlay').addEventListener('click', function(e){
     if(e.target === this) closeVersionHistory();
+  });
+  // ปิดหน้าต่างคู่มือการเล่น
+  document.getElementById('guide-close').addEventListener('click', closeGuide);
+  document.getElementById('guide-overlay').addEventListener('click', function(e){
+    if(e.target === this) closeGuide();
   });
 })();
 
