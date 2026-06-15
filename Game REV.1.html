@@ -77,7 +77,7 @@ body{
 #topbar{
   position: fixed;
   top: 12px; left: 50%; transform: translateX(-50%);
-  width: calc(100% - 24px); max-width: 600px;
+  width: calc(100% - 88px); max-width: 560px;
   display:flex; flex-direction:column; gap:8px;
   padding:10px 12px 8px;
   background:rgba(255,248,232,0.95);
@@ -1010,7 +1010,7 @@ body{
 #topbar{
   position: fixed;
   top: 12px; left: 50%; transform: translateX(-50%);
-  width: calc(100% - 24px); max-width: 600px;
+  width: calc(100% - 88px); max-width: 560px;
   display:flex; flex-direction:column; gap:8px;
   padding:10px 12px 8px;
   background:rgba(255,248,232,0.95);
@@ -2118,13 +2118,13 @@ body { padding-bottom: 72px; }
 /* ===== CHAT PANEL (แถบแชทออนไลน์ — slide-in ด้านซ้าย) ===== */
 #chat-toggle {
   position: fixed;
-  left: 0; top: 50%; transform: translateY(-50%);
+  left: 0; top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#5a9bd4,#3a7ab0);
   color: #fff; border: none;
-  border-radius: 0 16px 16px 0;
-  padding: 14px 8px;
-  font-size: 1.3rem; cursor: pointer;
+  border-radius: 0 14px 14px 0;
+  padding: 16px 7px;
+  font-size: 1.2rem; cursor: pointer;
   box-shadow: 2px 2px 10px rgba(40,80,120,0.35);
   writing-mode: vertical-rl;
   display: flex; align-items: center; gap: 4px;
@@ -2220,17 +2220,17 @@ body { padding-bottom: 72px; }
 /* ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== */
 #nav-toggle {
   position: fixed;
-  right: 0; top: 50%; transform: translateY(-50%);
+  right: 0; top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#f5c518,#e0a010);
   color: #6b3500; border: none;
-  border-radius: 16px 0 0 16px;
-  padding: 14px 8px;
-  font-size: 1.3rem; cursor: pointer;
+  border-radius: 14px 0 0 14px;
+  padding: 16px 7px;
+  font-size: 1.2rem; cursor: pointer;
   box-shadow: -2px 2px 10px rgba(120,80,20,0.3);
   display: flex; align-items: center; justify-content: center;
 }
-#nav-toggle:active { transform: translateY(-50%) scale(0.94); }
+#nav-toggle:active { transform: scale(0.94); }
 
 #nav-overlay {
   display: none;
