@@ -2876,6 +2876,111 @@ body { padding-bottom: 72px; }
 }
 .pp-place-btn:disabled { background: #ccc; cursor: not-allowed; }
 
+/* ===== STORAGE OVERLAY (คลังสินค้า) ===== */
+#storage-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(20,8,0,0.72);
+  z-index:2150; align-items:flex-end; justify-content:center;
+  backdrop-filter:blur(2px);
+}
+#storage-overlay.show { display:flex; }
+.storage-sheet {
+  width:100%; max-width:360px;
+  background:linear-gradient(180deg,#fff8ec,#fffdf6);
+  border-radius:28px 28px 0 0;
+  padding:0 0 100px;
+  max-height:88vh; overflow-y:auto;
+  animation:slideUp 0.3s cubic-bezier(0.34,1.2,0.64,1);
+  box-shadow:0 -6px 32px rgba(80,40,0,0.3);
+}
+.storage-header {
+  position:sticky; top:0; z-index:1;
+  background:linear-gradient(135deg,#7a4a00,#a06010);
+  border-radius:28px 28px 0 0;
+  padding:16px 20px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.storage-header h2 { color:#ffe0a0; font-size:1.05rem; font-weight:800; }
+.storage-close {
+  background:rgba(255,255,255,0.15); border:none;
+  color:#ffe0a0; font-size:1.3rem; width:36px; height:36px;
+  border-radius:50%; cursor:pointer; font-family:inherit;
+  display:flex; align-items:center; justify-content:center;
+}
+#storage-body { padding:12px 14px; }
+.storage-locked {
+  text-align:center; color:#a06030; font-size:0.85rem; line-height:1.7;
+  padding:30px 16px;
+}
+.storage-locked .sl-emoji { font-size:2.6rem; display:block; margin-bottom:10px; }
+.storage-empty {
+  text-align:center; color:#aa9070; font-size:0.82rem; line-height:1.6; padding:24px 16px;
+}
+.storage-cat-title {
+  font-size:0.78rem; font-weight:800; color:#8b5e30;
+  padding:12px 4px 6px;
+}
+.storage-row {
+  display:flex; align-items:center; gap:10px;
+  background:#fff; border:1.5px solid #eed9b8; border-radius:12px;
+  padding:8px 10px; margin-bottom:8px;
+}
+.storage-row .st-emoji { font-size:1.7rem; flex-shrink:0; }
+.storage-row .st-info { flex:1; text-align:left; min-width:0; }
+.storage-row .st-name { font-size:0.85rem; font-weight:800; color:#3d2a10; }
+.storage-row .st-qty  { font-size:0.72rem; color:#a07020; font-weight:700; }
+.storage-row .st-place {
+  background:linear-gradient(135deg,#4abf4a,#2a8030);
+  color:#fff; border:none; border-radius:10px; padding:8px 14px;
+  font-family:inherit; font-weight:800; font-size:0.78rem; cursor:pointer; flex-shrink:0;
+}
+.storage-row .st-place:disabled { background:#ccc; cursor:not-allowed; }
+
+/* ===== STOCK STATUS (ปุ่มกรอบลอยในหมวดฟาร์ม) ===== */
+.sec-stock-status {
+  margin:6px 0 2px; border-radius:12px;
+  padding:9px 12px; font-size:0.78rem; font-weight:700;
+  text-align:center; border:1.5px dashed;
+}
+.sec-stock-status.ss-wait {
+  background:rgba(150,120,60,0.07); border-color:rgba(150,120,60,0.3); color:#8a6a30;
+}
+.sec-stock-status.ss-nospace {
+  background:rgba(220,140,0,0.12); border-color:rgba(220,140,0,0.45); color:#9a5a00;
+}
+.sec-stock-status.ss-ready {
+  background:rgba(60,170,60,0.12); border-color:rgba(60,170,60,0.5); color:#1f7a20;
+  cursor:pointer; border-style:solid;
+}
+.sec-stock-status.ss-ready:active { transform:scale(0.98); }
+
+/* ===== AGRI SHOP ITEM (ร้านค้าเกษตร + Stepper) ===== */
+.agri-item {
+  display:flex; align-items:center; gap:10px;
+  background:#fff; border:1.5px solid #eed9b8; border-radius:12px;
+  padding:8px 10px; margin:0 4px 8px;
+}
+.agri-item .ag-emoji { font-size:1.8rem; flex-shrink:0; }
+.agri-item .ag-info { flex:1; text-align:left; min-width:0; }
+.agri-item .ag-name { font-size:0.82rem; font-weight:800; color:#3d2a10; }
+.agri-item .ag-unit { font-size:0.66rem; color:#b07000; font-weight:700; }
+.agri-item .ag-stock { font-size:0.64rem; color:#8a6a30; }
+.agri-item .ag-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+.agri-stepper { display:flex; align-items:center; gap:4px; }
+.agri-step {
+  width:26px; height:26px; border-radius:8px; border:1.5px solid #d8b878;
+  background:#fff7e8; color:#8b5e10; font-weight:800; font-size:1rem; cursor:pointer;
+  font-family:inherit; display:flex; align-items:center; justify-content:center;
+}
+.agri-step:active { transform:scale(0.9); }
+.agri-qty { min-width:26px; text-align:center; font-weight:800; font-size:0.85rem; color:#3d2a10; }
+.agri-buy-btn {
+  background:linear-gradient(135deg,#4abf4a,#2a8030);
+  color:#fff; border:none; border-radius:10px; padding:6px 12px;
+  font-family:inherit; font-weight:800; font-size:0.74rem; cursor:pointer; white-space:nowrap;
+}
+.agri-buy-btn:active { transform:scale(0.95); }
+
 </style>
 <body>
 
@@ -3227,15 +3332,6 @@ body { padding-bottom: 72px; }
 
 </div>
 
-<!-- SELECTOR -->
-<div id="selector">
-  <div class="sel-title" id="sel-title">🌾 เลือกพืชที่จะปลูก</div>
-  <div class="sel-items" id="sel-items"></div>
-</div>
-
-<!-- LOG -->
-<div id="log"><div id="log-box">🌻 ยินดีต้อนรับ! เลือกพืชด้านล่าง แล้วคลิกแปลงดินเพื่อปลูก</div></div>
-
 <div id="toast"></div>
 
 <!-- BOTTOM NAV -->
@@ -3463,6 +3559,17 @@ body { padding-bottom: 72px; }
       <button class="subshop-close">✕</button>
     </div>
     <div id="subshop-body"></div>
+  </div>
+</div>
+
+<!-- STORAGE OVERLAY (คลังสินค้า — แถบลอย) -->
+<div id="storage-overlay">
+  <div class="storage-sheet">
+    <div class="storage-header">
+      <h2>📦 คลังสินค้า</h2>
+      <button class="storage-close" id="storage-close">✕</button>
+    </div>
+    <div id="storage-body"></div>
   </div>
 </div>
 
@@ -4332,6 +4439,19 @@ const UPDATE_HISTORY = [
       'ลดความกว้างแถบลอยด้านบน (topbar) จาก calc(100% - 24px)/max 600px เป็น calc(100% - 88px)/max 560px เพื่อเว้นที่ให้แถบซ่อนและแถบเมนูทั้งสองข้าง',
     ],
   },
+  {
+    version: '0.33',
+    date: '15/06/2026',
+    title: 'ระบบคลังสินค้า + flow ซื้อ→ลงสินค้า + Stepper ร้านค้าเกษตร',
+    details: [
+      'ถอดแผงเลือกพืช (selector) และแถบต้อนรับ (log) ออกจากหน้าฟาร์ม',
+      'เพิ่มคลังสินค้าจริง (แถบลอย) แทนหน้า "กำลังพัฒนา" — เก็บของเกษตรที่ซื้อมา (เมล็ด/ไม้ผล/สัตว์/ปลา)',
+      'ผูกกับ "โรงเก็บสินค้า": ถ้าไม่มีโรงเก็บ คลังถูกล็อกและซื้อของเกษตรไม่ได้',
+      'แต่ละหมวดฟาร์มมีปุ่มสถานะ 3 แบบ: รอเพิ่ม(ไม่มีของ) / มีของแต่ไม่มีพื้นที่ / รอลงสินค้า(กดเปิดคลังลงของ)',
+      'เปลี่ยน flow เดิม: ซื้อของเข้าคลังก่อน แล้วกด "ลง" หรือคลิกช่องว่างเพื่อลงของจากคลัง',
+      'ร้านค้าเกษตรเพิ่ม Stepper (➖/➕) เลือกจำนวน + แสดงราคารวมเรียลไทม์ คงราคาต่อชิ้นไว้',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4822,6 +4942,53 @@ function trimSlotsToSpace(){
 // inventory: {id, name, emoji, qty, sell}
 let inventory = [];
 
+// ─── คลังสินค้าเกษตร — ของที่ซื้อจากร้านค้าเกษตร รอนำไป "ลง" พื้นที่ ───
+// โครงสร้าง: { seeds:{id:qty}, trees:{id:qty}, animals:{id:qty}, fish:{id:qty} }
+let farmStock = { seeds:{}, trees:{}, animals:{}, fish:{} };
+
+// ต้องมีโรงเก็บสินค้า (warehouse1) จึงจะใช้คลัง + ซื้อของเกษตรได้
+function hasWarehouse(){
+  return assetsState.houses.some(a => (a.id==='warehouse1' || a.shopId==='warehouse1') && !a.sold);
+}
+// map ประเภทร้านเกษตร → หมวดคลัง
+function shopCat(type){
+  if(type==='seeds') return 'seeds';
+  if(type==='trees') return 'trees';
+  if(type==='fish')  return 'fish';
+  if(type==='animals' || type==='animals_small' || type==='animals_big') return 'animals';
+  return null;
+}
+function stockAdd(cat, id, qty){ farmStock[cat][id] = (farmStock[cat][id]||0) + qty; }
+function stockRemove(cat, id, qty){
+  if((farmStock[cat][id]||0) < qty) return false;
+  farmStock[cat][id] -= qty;
+  if(farmStock[cat][id] <= 0) delete farmStock[cat][id];
+  return true;
+}
+// จำนวนสินค้าในคลังที่ตรงกับหมวดฟาร์ม (key: plots/trees/small/big/ponds)
+function sectionStockCount(key){
+  if(key==='plots') return Object.values(farmStock.seeds).reduce((s,n)=>s+n,0);
+  if(key==='trees') return Object.values(farmStock.trees).reduce((s,n)=>s+n,0);
+  if(key==='ponds') return Object.values(farmStock.fish).reduce((s,n)=>s+n,0);
+  if(key==='small' || key==='big'){
+    const size = key==='small' ? 'small' : 'big';
+    return Object.entries(farmStock.animals).reduce((s,[id,n])=>{
+      const a = ANIMALS.find(x=>x.id===id);
+      return s + ((a && a.size===size) ? n : 0);
+    }, 0);
+  }
+  return 0;
+}
+// มีพื้นที่ว่างในหมวดฟาร์มให้ลงของไหม
+function sectionHasSpace(key){
+  if(key==='plots') return plots.some(p=>!p.crop);
+  if(key==='trees') return treePlots.some(p=>!p.tree);
+  if(key==='small') return smallPens.some(p=>!p.animal);
+  if(key==='big')   return bigPens.some(p=>!p.animal);
+  if(key==='ponds') return fishPonds.some(p=>!p.fish);
+  return false;
+}
+
 // factory slots
 let factorySlots = FACTORIES.map(f => ({...f, startedAt:null, ready:false, busy:false}));
 
@@ -5047,7 +5214,7 @@ function eatFood(id){
   renderFoodList();
 }
 
-function setLog(msg){ document.getElementById('log-box').textContent = msg; }
+function setLog(msg){ const b = document.getElementById('log-box'); if(b) b.textContent = msg; }
 
 let toastTimer;
 function toast(msg, allowHtml){
@@ -5097,6 +5264,7 @@ function showTab(name){
 function renderSelector(){
   const title = document.getElementById('sel-title');
   const items = document.getElementById('sel-items');
+  if(!title || !items) return;  // แผง selector ถูกถอดออกแล้ว
   if(currentTab==='farm'){
     title.textContent = '🌾 เลือกพืชที่จะปลูก (ซื้อเมล็ดพันธุ์จากร้านค้าในเมืองก่อน)';
     const tierLabel = ['','⭐','⭐⭐','⭐⭐⭐','👑'];
@@ -5161,6 +5329,7 @@ function renderFarmSections(){
       </div>
       <div class="sec-area-info" data-slottype="${m.slottype}"></div>
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
+      <div class="sec-stock-status" data-seckey="${key}"></div>
       ${gridTag}
     </div>`;
   }).join('');
@@ -5178,10 +5347,17 @@ function renderFarmSections(){
       openSectionMoveModal(Number(badge.dataset.secidx));
     });
   });
+  // ผูกปุ่มสถานะคลัง (รอลงสินค้า → เปิดคลังกรองหมวดนั้น)
+  container.querySelectorAll('.sec-stock-status').forEach(el => {
+    el.addEventListener('click', function(){
+      if(el.dataset.act) openStorage(el.dataset.act);
+    });
+  });
   // render เนื้อหาในแต่ละหมวด
   renderFarm(); renderTrees(); renderAnimals(); renderFish();
   renderConstructions();
   updateSpaceLabels();
+  updateStockStatus();
 }
 
 // ย้ายหมวดตาม sectionOrder (insert)
@@ -5369,18 +5545,11 @@ function clickPlot(i){
     addExp(c.exp);
     plots[i] = {crop:null, plantedAt:null, ready:false};
     toast(`เก็บ ${c.emoji} ${c.name} แล้ว!`);
-    renderFarm(); renderSelector();
+    renderFarm(); updateStockStatus();
     return;
   }
-  const cropDef = CROPS.find(x=>x.id===selCropId);
-  if(!cropDef){ setLog('เลือกพืชก่อน — ซื้อเมล็ดพันธุ์ที่ร้านค้าในเมือง 🏬'); return; }
-  const seedInv = getInv('seed_'+selCropId);
-  if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีเมล็ด ${cropDef.emoji} ${cropDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
-  if(!spendEnergy(ENERGY_COST.plant,'agri')) return;  // ปลูกพืชใช้พลังงาน
-  removeInv('seed_'+selCropId, 1);
-  plots[i] = {crop:cropDef.id};
-  setLog(`ปลูก ${cropDef.emoji} ${cropDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บเกี่ยว`);
-  updateTopbar(); renderFarm(); renderSelector();
+  // แปลงว่าง → เปิดคลังสินค้าให้ลงเมล็ด
+  openStorage('plots');
 }
 
 
@@ -5418,18 +5587,11 @@ function clickTree(i){
     addInv(t.id, t.name, t.emoji, t.harvestQty, t.sell);
     addExp(t.exp*t.harvestQty);
     toast(`เก็บ ${t.emoji} ${t.name} x${t.harvestQty} แล้ว! ต้นไม้ยังอยู่ 🌳`);
-    renderTrees();
+    renderTrees(); updateStockStatus();
     return;
   }
-  const treeDef = TREES.find(x=>x.id===selCropId);
-  if(!treeDef){ setLog('เลือกต้นไม้ — ซื้อกล้าไม้จากร้านค้าในเมือง 🏬'); return; }
-  const seedInv = getInv('seed_'+selCropId);
-  if(!seedInv || seedInv.qty < 1){ toast(`❌ ไม่มีกล้า ${treeDef.emoji} ${treeDef.name} — ซื้อที่ร้านค้าก่อน`); return; }
-  if(!spendEnergy(ENERGY_COST.treePlant,'agri')) return;  // ปลูกไม้ผลใช้พลังงาน
-  removeInv('seed_'+selCropId, 1);
-  treePlots[i] = {tree:treeDef.id};
-  setLog(`ปลูก ${treeDef.emoji} ${treeDef.name} แล้ว! คลิกอีกครั้งเพื่อเก็บ`);
-  updateTopbar(); renderTrees(); renderSelector();
+  // ช่องว่าง → เปิดคลังสินค้าให้ลงกล้าไม้
+  openStorage('trees');
 }
 
 
@@ -5488,10 +5650,10 @@ function clickPen(size, idx){
     addInv(a.product, a.productName, a.productEmoji, 1, a.sell);
     addExp(a.exp);
     toast(`เก็บ ${a.productEmoji} ${a.productName} จาก${a.name}แล้ว!`);
-    renderAnimals();
+    renderAnimals(); updateStockStatus();
   } else {
-    // เปิดร้านสัตว์ตามขนาดคอก
-    openSubShop(size==='small' ? 'animals_small' : 'animals_big');
+    // คอกว่าง → เปิดคลังสินค้าให้ลงสัตว์ตามขนาดคอก
+    openStorage(size==='small' ? 'small' : 'big');
   }
 }
 
@@ -5505,11 +5667,11 @@ function renderFish(){
   grid.innerHTML = fishPonds.map((p,i)=>{
     const badge = '';
     if(!p.fish){
-      return `<div class="fish-pen" style="opacity:0.45;cursor:default;position:relative;">
+      return `<div class="fish-pen" style="opacity:0.6;cursor:pointer;position:relative;">
         ${badge}
         <span class="pen-emoji">🪣</span>
         <div class="pen-name" style="color:#aaa;">บ่อว่าง</div>
-        <div class="pen-status" style="color:#bbb;">ซื้อจากร้านค้า 🏬</div>
+        <div class="pen-status" style="color:#bbb;">กดเพื่อลงปลา 📦</div>
       </div>`;
     }
     const f = FISH.find(x=>x.id===p.fish);
@@ -5526,13 +5688,152 @@ function renderFish(){
 
 function collectFish(i){
   const p = fishPonds[i];
-  if(!p.fish) return;
+  if(!p.fish){ openStorage('ponds'); return; }  // บ่อว่าง → เปิดคลังให้ลงปลา
   if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
   addExp(f.exp);
   toast(`เก็บ ${f.productEmoji} ${f.productName} จาก${f.name}แล้ว!`);
-  renderFish();
+  renderFish(); updateStockStatus();
+}
+
+// ============================================================
+//  คลังสินค้า (Storage) — รับของเกษตรที่ซื้อมา + ลงพื้นที่
+// ============================================================
+let storageFilter = null;  // null = แสดงทุกหมวด, หรือ key หมวดฟาร์ม
+
+// กลุ่มสินค้าในคลัง (เชื่อมหมวดคลัง ↔ หมวดฟาร์ม)
+const STORAGE_GROUPS = [
+  { cat:'seeds',   key:'plots', title:'🌱 เมล็ดพันธุ์พืช → แปลงปลูกพืช', pool:CROPS },
+  { cat:'trees',   key:'trees', title:'🌳 พันธุ์ไม้ผล → สวนไม้ยืนต้น',  pool:TREES },
+  { cat:'animals', key:'small', title:'🐔 สัตว์เล็ก → คอกสัตว์เล็ก',     pool:ANIMALS, size:'small' },
+  { cat:'animals', key:'big',   title:'🐄 สัตว์ใหญ่ → คอกสัตว์ใหญ่',     pool:ANIMALS, size:'big' },
+  { cat:'fish',    key:'ponds', title:'🐟 พันธุ์ปลา → บ่อเลี้ยงปลา',     pool:FISH },
+];
+
+function openStorage(filter){
+  storageFilter = filter || null;
+  renderStorage();
+  document.getElementById('storage-overlay').classList.add('show');
+}
+function closeStorage(){
+  document.getElementById('storage-overlay').classList.remove('show');
+  // คืนสถานะปุ่ม bnav ให้พื้นที่เกษตร (ถ้าเปิดมาจากปุ่มคลังสินค้า)
+  if(document.getElementById('bnav-storage').classList.contains('bnav-active')){
+    document.querySelectorAll('.bnav-item').forEach(el => el.classList.remove('bnav-active'));
+    document.getElementById('bnav-farm').classList.add('bnav-active');
+  }
+}
+
+function renderStorage(){
+  const body = document.getElementById('storage-body');
+  if(!body) return;
+  // ล็อกถ้าไม่มีโรงเก็บสินค้า
+  if(!hasWarehouse()){
+    body.innerHTML = `<div class="storage-locked"><span class="sl-emoji">🔒</span>
+      <strong>คลังสินค้าถูกล็อก</strong><br>
+      ต้องมี "โรงเก็บสินค้า" 🏬 ก่อนจึงจะใช้งานคลังสินค้าได้<br>
+      <span style="font-size:0.74rem;color:#b07840;">ดูได้ที่เมนูพื้นที่ใช้สอย หมวดบ้านและที่อยู่อาศัย</span></div>`;
+    return;
+  }
+  let html = '';
+  STORAGE_GROUPS.forEach(g => {
+    if(storageFilter && g.key !== storageFilter) return;
+    const ids = Object.keys(farmStock[g.cat]).filter(id => {
+      if(!g.size) return true;
+      const it = g.pool.find(x=>x.id===id); return it && it.size===g.size;
+    });
+    if(ids.length === 0){
+      if(storageFilter){
+        html += `<div class="storage-cat-title">${g.title}</div>
+          <div class="storage-empty">ยังไม่มีในคลัง — ซื้อจากร้านค้าเกษตร 🏬</div>`;
+      }
+      return;
+    }
+    const space = sectionHasSpace(g.key);
+    html += `<div class="storage-cat-title">${g.title}</div>`;
+    ids.forEach(id => {
+      const it = g.pool.find(x=>x.id===id);
+      const qty = farmStock[g.cat][id];
+      html += `<div class="storage-row">
+        <div class="st-emoji">${it.emoji}</div>
+        <div class="st-info">
+          <div class="st-name">${it.name}</div>
+          <div class="st-qty">📦 ${qty} ชิ้น</div>
+        </div>
+        <button class="st-place" data-cat="${g.cat}" data-id="${id}" ${space?'':'disabled'}>${space?'⬇️ ลง':'ไม่มีพื้นที่'}</button>
+      </div>`;
+    });
+  });
+  if(!html){
+    html = `<div class="storage-empty">📭 คลังสินค้าว่างเปล่า<br>ซื้อสินค้าเกษตรจากร้านค้าในเมืองเพื่อเก็บไว้ที่นี่</div>`;
+  }
+  body.innerHTML = html;
+}
+
+// นำของจากคลัง 1 ชิ้น ลงพื้นที่ในหมวดที่เกี่ยวข้อง
+function placeFromStorage(cat, id){
+  if(!hasWarehouse()){ toast('🔒 ไม่มีโรงเก็บสินค้า'); return; }
+  if((farmStock[cat][id]||0) < 1) return;
+  if(cat==='seeds'){
+    const idx = plots.findIndex(p=>!p.crop);
+    if(idx<0){ toast('❌ ไม่มีแปลงว่าง — กดเพิ่มแปลง ➕ ก่อน'); return; }
+    const c = CROPS.find(x=>x.id===id);
+    if(!spendEnergy(ENERGY_COST.plant,'agri')) return;
+    stockRemove('seeds',id,1);
+    plots[idx] = {crop:id, plantedAt:Date.now(), ready:false};
+    toast(`🌱 ลงปลูก ${c.emoji} ${c.name} แล้ว!`);
+  } else if(cat==='trees'){
+    const idx = treePlots.findIndex(p=>!p.tree);
+    if(idx<0){ toast('❌ ไม่มีสวนว่าง — กดเพิ่มสวน ➕ ก่อน'); return; }
+    const t = TREES.find(x=>x.id===id);
+    if(!spendEnergy(ENERGY_COST.treePlant,'agri')) return;
+    stockRemove('trees',id,1);
+    treePlots[idx] = {tree:id, plantedAt:Date.now(), ready:false};
+    toast(`🌳 ปลูก ${t.emoji} ${t.name} แล้ว!`);
+  } else if(cat==='animals'){
+    const a = ANIMALS.find(x=>x.id===id);
+    const pens = a.size==='small' ? smallPens : bigPens;
+    const idx = pens.findIndex(p=>!p.animal);
+    if(idx<0){ toast('❌ ไม่มีคอกว่าง — กดเพิ่มคอก ➕ ก่อน'); return; }
+    stockRemove('animals',id,1);
+    pens[idx] = {animal:id};
+    toast(`🐾 นำ ${a.emoji} ${a.name} เข้าคอกแล้ว!`);
+  } else if(cat==='fish'){
+    const f = FISH.find(x=>x.id===id);
+    const idx = fishPonds.findIndex(p=>!p.fish);
+    if(idx<0){ toast('❌ ไม่มีบ่อว่าง — กดเพิ่มบ่อ ➕ ก่อน'); return; }
+    stockRemove('fish',id,1);
+    fishPonds[idx] = {fish:id, stockedAt:Date.now(), ready:false};
+    toast(`🐟 ปล่อย ${f.emoji} ${f.name} ลงบ่อแล้ว!`);
+  }
+  updateTopbar();
+  rerenderFarmArea();
+  renderStorage();
+}
+
+// อัปเดตปุ่มกรอบลอยสถานะในแต่ละหมวดฟาร์ม (3 สถานะ)
+function updateStockStatus(){
+  const NOUN = { plots:'แปลงปลูกผัก', trees:'สวนไม้ผล', small:'คอกสัตว์เล็ก', big:'คอกสัตว์ใหญ่', ponds:'บ่อเลี้ยงปลา' };
+  document.querySelectorAll('.sec-stock-status').forEach(el => {
+    const key = el.dataset.seckey;
+    if(!key) return;
+    const stock = sectionStockCount(key);
+    const space = sectionHasSpace(key);
+    el.classList.remove('ss-wait','ss-nospace','ss-ready');
+    delete el.dataset.act;
+    if(stock <= 0){
+      el.classList.add('ss-wait');
+      el.textContent = `🕗 รอเพิ่ม${NOUN[key]||''} — ซื้อจากร้านค้าเกษตร 🏬`;
+    } else if(!space){
+      el.classList.add('ss-nospace');
+      el.textContent = `📦 มีสินค้าในคลัง (${stock}) — กรุณากดเพิ่มพื้นที่ ➕`;
+    } else {
+      el.classList.add('ss-ready');
+      el.dataset.act = key;
+      el.textContent = `✅ รอลงสินค้า (${stock}) — กดเพื่อลงของ`;
+    }
+  });
 }
 
 // ============================================================
@@ -5631,47 +5932,63 @@ function renderSubShop(type){
     return;
   }
 
-  // Group by tier
+  // ─── ร้านค้าเกษตร (เมล็ด/ไม้/สัตว์/ปลา) — การ์ดพร้อม Stepper + ราคารวมเรียลไทม์ ───
+  const cat = shopCat(type);
   const tiers = [...new Set(items.map(x=>x.tier||1))].sort();
   let html = '';
+  // เตือนเมื่อยังไม่มีโรงเก็บสินค้า (ซื้อไม่ได้)
+  if(!hasWarehouse()){
+    html += `<div style="margin:10px 14px;padding:10px 12px;background:#fff0e0;border:1.5px solid #f0c080;border-radius:12px;color:#9a5a00;font-size:0.74rem;font-weight:700;line-height:1.5;text-align:center;">
+      🔒 ยังไม่มี "โรงเก็บสินค้า" — ซื้อสินค้าเกษตรไม่ได้<br>(โรงเก็บสินค้าอยู่ในเมนูพื้นที่ใช้สอย หมวดบ้านและที่อยู่อาศัย)</div>`;
+  }
   tiers.forEach(t => {
-    html += `<div class="subshop-section-title">${tierLabel[t]} ${tierGroups[t]||''}</div>
-             <div class="subshop-grid" id="subshop-grid">`;
+    html += `<div class="subshop-section-title">${tierLabel[t]} ${tierGroups[t]||''}</div>`;
     items.filter(x=>(x.tier||1)===t).forEach(item => {
-      let owned = false;
       let desc = '';
-      if(type==='animals_small' || type==='animals_big'){
-        const pens = type==='animals_small' ? smallPens : bigPens;
-        const hasEmpty = pens.some(p=>!p.animal);
+      if(type==='animals_small' || type==='animals_big' || type==='animals'){
         desc = `ผลิต ${item.productEmoji} ${item.productName} ทุก ${item.mins}m`;
-        if(!hasEmpty) owned = true; // คอกเต็ม → ปิดปุ่มซื้อ
       } else if(type==='fish'){
-        const hasEmptyPond = fishPonds.some(p=>!p.fish);
         desc = `เก็บ ${item.productEmoji} ${item.productName} ทุก ${item.mins}m`;
-        if(!hasEmptyPond) owned = true; // ใช้ trick บ่อเต็ม
       } else {
-        // seeds/trees - show inventory count
-        const inv = getInv('seed_'+item.id);
-        const cnt = inv ? inv.qty : 0;
         desc = type==='trees'
           ? `ออกผล ${item.harvestQty} ชิ้น ทุก ${item.mins}m`
           : `เก็บเกี่ยวใน ${item.mins}m`;
-        if(cnt > 0) desc += ` <strong>(มี ${cnt} ถุง)</strong>`;
       }
-      html += `<div class="subshop-item ${owned?'owned-item':''}" data-itemid="${item.id}" data-type="${type}">
-        <div class="si2-emoji">${item.emoji}</div>
-        <div class="si2-name">${item.name}</div>
-        <div class="si2-desc">${desc}</div>
-        <div class="si2-price">💵 ${item.cost.toLocaleString('th-TH')} บาท</div>
-        <div class="si2-time">${tierLabel[item.tier||1]}</div>
+      const inStock = cat ? (farmStock[cat][item.id]||0) : 0;
+      const stockTxt = inStock>0 ? `📦 มีในคลัง: ${inStock}` : '📦 มีในคลัง: 0';
+      html += `<div class="agri-item" data-itemid="${item.id}" data-type="${type}" data-cost="${item.cost}">
+        <div class="ag-emoji">${item.emoji}</div>
+        <div class="ag-info">
+          <div class="ag-name">${item.name} <span style="font-size:0.6rem;color:#c8a000;">${tierLabel[item.tier||1]}</span></div>
+          <div class="ag-unit">💵 ${item.cost.toLocaleString('th-TH')} บาท/ชิ้น · ${desc}</div>
+          <div class="ag-stock">${stockTxt}</div>
+        </div>
+        <div class="ag-right">
+          <div class="agri-stepper">
+            <button class="agri-step" data-d="-1">−</button>
+            <span class="agri-qty">1</span>
+            <button class="agri-step" data-d="1">+</button>
+          </div>
+          <button class="agri-buy-btn">ซื้อ 💵 <span class="agri-total">${item.cost.toLocaleString('th-TH')}</span></button>
+        </div>
       </div>`;
     });
-    html += '</div>';
   });
   body.innerHTML = html;
 }
 
-function buyFromSubShop(type, itemId){
+// ปรับจำนวนใน stepper ของร้านค้าเกษตร + อัปเดตราคารวมเรียลไทม์
+function agriStep(card, delta){
+  const qtyEl   = card.querySelector('.agri-qty');
+  const totalEl = card.querySelector('.agri-total');
+  const cost    = Number(card.dataset.cost) || 0;
+  let q = Math.max(1, (Number(qtyEl.textContent)||1) + delta);
+  qtyEl.textContent = q;
+  totalEl.textContent = (cost * q).toLocaleString('th-TH');
+}
+
+function buyFromSubShop(type, itemId, qty){
+  qty = Math.max(1, qty || 1);
   // ─── หมวดทรัพย์สิน (รถ/มอไซค์/ที่ดิน/บ้าน) ───
   const assetCat = SUBSHOP_CONFIG[type] && SUBSHOP_CONFIG[type].assetCat;
   if(assetCat){
@@ -5741,40 +6058,28 @@ function buyFromSubShop(type, itemId){
     return;
   }
 
-  if(type==='seeds' || type==='trees'){
-    const item = [...CROPS,...TREES].find(x=>x.id===itemId);
+  // ─── สินค้าเกษตร (เมล็ด/ไม้/สัตว์/ปลา) → ซื้อตามจำนวน เข้าคลังสินค้า ───
+  const cat = shopCat(type);
+  if(cat){
+    if(!hasWarehouse()){
+      toast('🔒 ยังไม่มีโรงเก็บสินค้า — ซื้อของเกษตรไม่ได้<br>(ดูเมนูพื้นที่ใช้สอย หมวดบ้านและที่อยู่อาศัย)', true);
+      return;
+    }
+    let pool = [];
+    if(cat==='seeds')   pool = CROPS;
+    if(cat==='trees')   pool = TREES;
+    if(cat==='animals') pool = ANIMALS;
+    if(cat==='fish')    pool = FISH;
+    const item = pool.find(x=>x.id===itemId);
     if(!item) return;
-    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} บาท`); return; }
-    gold -= item.cost;
-    addInv('seed_'+item.id, '🌱 '+item.name, item.emoji, 1, 0);
+    const total = item.cost * qty;
+    if(gold < total){ toast(`💸 เงินไม่พอ! ต้องใช้ ${total.toLocaleString('th-TH')} บาท`); return; }
+    gold -= total;
+    stockAdd(cat, item.id, qty);
     updateTopbar();
-    toast(`ซื้อ ${item.emoji} ${item.name} x1 แล้ว! -${item.cost.toLocaleString('th-TH')} บาท`);
-    renderSubShop(type); renderSelector();
-
-  } else if(type==='animals_small' || type==='animals_big'){
-    const item = ANIMALS.find(x=>x.id===itemId);
-    if(!item) return;
-    const pens = type==='animals_small' ? smallPens : bigPens;
-    const penIdx = pens.findIndex(p=>!p.animal);
-    if(penIdx<0){ toast('❌ คอกเต็มแล้ว! ซื้อที่ดินเพื่อเพิ่มคอก'); return; }
-    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} บาท`); return; }
-    gold -= item.cost;
-    pens[penIdx] = {animal:item.id};
-    updateTopbar();
-    toast(`ซื้อ ${item.emoji} ${item.name} เข้าคอกแล้ว! -${item.cost.toLocaleString('th-TH')} บาท`);
-    renderSubShop(type); renderAnimals();
-
-  } else if(type==='fish'){
-    const item = FISH.find(x=>x.id===itemId);
-    if(!item) return;
-    const pondIdx = fishPonds.findIndex(p=>!p.fish);
-    if(pondIdx<0){ toast('❌ บ่อเต็มแล้ว! ไม่มีบ่อว่าง'); return; }
-    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} บาท`); return; }
-    gold -= item.cost;
-    fishPonds[pondIdx] = {fish:item.id};
-    updateTopbar();
-    toast(`ปล่อย ${item.emoji} ${item.name} ลงบ่อแล้ว! -${item.cost.toLocaleString('th-TH')} บาท`);
-    renderSubShop(type); renderFish();
+    toast(`🛒 ซื้อ ${item.emoji} ${item.name} x${qty} เข้าคลังสินค้าแล้ว!<br>-${total.toLocaleString('th-TH')} บาท`, true);
+    renderSubShop(type);
+    updateStockStatus();
   }
 }
 
@@ -6619,6 +6924,11 @@ function bnavClick(id){
   if(id === 'shop'){
     closeComingSoon();
     openShop();
+    return;
+  }
+  if(id === 'storage'){
+    closeComingSoon();
+    openStorage();
     return;
   }
   const info = BNAV_COMING_SOON[id];
@@ -7761,6 +8071,20 @@ if (subshopSheet)    subshopSheet.addEventListener('click', function (e) { e.sto
 if (subshopBackBtn)  subshopBackBtn.addEventListener('click', closeSubShop);
 if (subshopCloseBtn) subshopCloseBtn.addEventListener('click', closeSubShop);
 
+// ─────────────────────────── STORAGE OVERLAY (คลังสินค้า) ───────────────────────────
+const storageOverlay  = document.getElementById('storage-overlay');
+const storageSheet    = storageOverlay && storageOverlay.querySelector('.storage-sheet');
+const storageCloseBtn = document.getElementById('storage-close');
+const storageBody     = document.getElementById('storage-body');
+if (storageOverlay)  storageOverlay.addEventListener('click', closeStorage);
+if (storageSheet)    storageSheet.addEventListener('click', function (e) { e.stopPropagation(); });
+if (storageCloseBtn) storageCloseBtn.addEventListener('click', closeStorage);
+if (storageBody) storageBody.addEventListener('click', function (e) {
+  const btn = e.target.closest('.st-place');
+  if (!btn || btn.disabled) return;
+  placeFromStorage(btn.dataset.cat, btn.dataset.id);
+});
+
 // ─────────────────────────── ASSETS OVERLAY ───────────────────────────
 const assetsOverlay = document.getElementById('assets-overlay');
 const assetsSheet   = assetsOverlay && assetsOverlay.querySelector('.assets-sheet');
@@ -7927,8 +8251,9 @@ document.getElementById('ui-sell-btn').addEventListener('click', function(){
 // Slot add/remove buttons — ผูกแบบ delegation บน container (renderFarmSections ผูกให้แล้วทุกครั้ง)
 // (binding เดิมที่ทำที่นี่ถูกย้ายเข้า renderFarmSections เพื่อให้ rebuild ได้)
 
-// Selector items
-document.getElementById('sel-items').addEventListener('click', function (e) {
+// Selector items (แผง selector ถูกถอดออกแล้ว — guard กันพัง)
+const selItemsEl = document.getElementById('sel-items');
+if (selItemsEl) selItemsEl.addEventListener('click', function (e) {
 const el = e.target.closest('.sel-item');
 if (!el || !el.dataset.cropid) return;
 selCrop(el.dataset.cropid);
@@ -7966,10 +8291,23 @@ if (assetBtn && assetBtn.dataset.itemid) {
   buyFromSubShop(assetBtn.dataset.type, assetBtn.dataset.itemid);
   return;
 }
-// สินค้าทั่วไป (เมล็ด/ต้นไม้/สัตว์/ปลา) — การ์ดเล็ก
-const el = e.target.closest('.subshop-item');
-if (!el || el.classList.contains('owned-item') || !el.dataset.itemid) return;
-buyFromSubShop(el.dataset.type, el.dataset.itemid);
+// ร้านค้าเกษตร — ปุ่ม Stepper (+/-)
+const stepBtn = e.target.closest('.agri-step');
+if (stepBtn) {
+  const card = stepBtn.closest('.agri-item');
+  if (card) agriStep(card, Number(stepBtn.dataset.d));
+  return;
+}
+// ร้านค้าเกษตร — ปุ่มซื้อตามจำนวน
+const buyBtn = e.target.closest('.agri-buy-btn');
+if (buyBtn) {
+  const card = buyBtn.closest('.agri-item');
+  if (card) {
+    const qty = Number(card.querySelector('.agri-qty').textContent) || 1;
+    buyFromSubShop(card.dataset.type, card.dataset.itemid, qty);
+  }
+  return;
+}
 });
 
 // Marriage NPC cards (openFlirt)
