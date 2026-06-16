@@ -490,7 +490,7 @@ body{
 }
 .assets-net-worth {
   margin: 16px 16px 4px;
-  background: linear-gradient(135deg,#e0a010,#b87810);
+  background: linear-gradient(135deg,#c9890c,#a06408);
   border-radius: 18px;
   padding: 16px 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -1449,7 +1449,7 @@ body { padding-bottom: 72px; }
 
 .assets-net-worth {
   margin: 16px 16px 4px;
-  background: linear-gradient(135deg,#e0a010,#b87810);
+  background: linear-gradient(135deg,#c9890c,#a06408);
   border-radius: 18px;
   padding: 16px 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -1993,8 +1993,8 @@ body { padding-bottom: 72px; }
 /* ===== ป้ายระดับฐานะ (Wealth Rank) ===== */
 .wealth-rank-card {
   margin: 0 16px 4px;
-  background: linear-gradient(135deg,#e0a010,#b87810);
-  border: 1.5px solid #ffd877;
+  background: linear-gradient(135deg,#b9761a,#8f560f);
+  border: 1.5px solid #e6b85a;
   border-radius: 16px;
   padding: 12px 16px;
   display: flex; align-items: center; gap: 14px;
@@ -2032,8 +2032,8 @@ body { padding-bottom: 72px; }
 /* ===== ASSET BREAKDOWN (สรุปมูลค่าทรัพย์สินแยกหมวด) ===== */
 #assets-breakdown {
   margin: 4px 16px 0;
-  background: linear-gradient(135deg,#e0a010,#b87810);
-  border: 1px solid #ffd877;
+  background: linear-gradient(135deg,#a8680f,#7c4a0a);
+  border: 1px solid #d4a24e;
   border-radius: 14px;
   padding: 10px 13px;
 }
@@ -4636,6 +4636,14 @@ const UPDATE_HISTORY = [
       'กล่องเส้นประ "เพิ่มพื้นที่" ใช้ปุ่ม + วงกลมเขียว + บรรทัด "เพิ่ม[หมวด]" + "🕗 รอ[ทำหน้าดิน/ทำสวน/สร้างคอก/ขุดบ่อ] · สร้างได้อีก X หน่วย"',
       'ลบแถบสถานะ "รอเพิ่ม...ซื้อจากร้านค้าเกษตร" (sec-stock-status) ออกจากทุกหมวด',
       'ช่องที่ทำหน้าดิน/สร้างแล้วและว่าง เปลี่ยนคำว่า "ว่าง" เป็น "รอปลูกผัก/รอปลูกไม้ผล/รอเลี้ยงสัตว์เล็ก/รอเลี้ยงสัตว์ใหญ่/รอเลี้ยงปลา" (ตัวหนา)',
+    ],
+  },
+  {
+    version: '0.41',
+    date: '16/06/2026',
+    title: 'ลดความจ้าหน้าทรัพย์สิน + แยกเฉดสีแต่ละกล่อง',
+    details: [
+      'ปรับโทนสีให้เข้มลง (ไม่แสบตา) และแต่ละกล่องมีเฉดต่างกันพอแยกได้: มูลค่าสุทธิ (ทองอำพัน) · ระดับฐานะ (ส้ม-น้ำตาล) · ทรัพย์สินตอนนี้ (น้ำตาลทองเข้ม)',
     ],
   },
 ];
