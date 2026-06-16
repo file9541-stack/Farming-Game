@@ -3027,6 +3027,9 @@ body { padding-bottom: 72px; }
 }
 .dem-confirm { background:linear-gradient(135deg,#e8704a,#c0401a); color:#fff; }
 .dem-cancel  { background:#eee; color:#777; }
+.dem-actions-col { flex-direction:column; }
+.slotact-add { background:linear-gradient(135deg,#4abf4a,#2a8030); color:#fff; }
+.slotact-add:disabled { background:#dcdcdc; color:#999; cursor:not-allowed; }
 
 </style>
 <body>
@@ -3439,13 +3442,14 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
-<!-- DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่เกษตร) -->
+<!-- SLOT ACTION MODAL (กดช่องว่าง → เลือก ลงสินค้า / รื้อถอน) -->
 <div id="demolish-modal">
   <div class="dem-box">
-    <div class="dem-emoji">🧹</div>
-    <div class="dem-title">ต้องการรื้อถอน?</div>
+    <div class="dem-emoji" id="slotact-emoji">🌱</div>
+    <div class="dem-title" id="slotact-title">จัดการช่องนี้</div>
     <div class="dem-text" id="demolish-text"></div>
-    <div class="dem-actions">
+    <div class="dem-actions dem-actions-col">
+      <button class="slotact-add" id="slotact-add">⬇️ เพิ่มสินค้า</button>
       <button class="dem-confirm" id="demolish-confirm">🧹 รื้อถอน</button>
       <button class="dem-cancel" id="demolish-cancel">ยกเลิก</button>
     </div>
@@ -4520,6 +4524,16 @@ const UPDATE_HISTORY = [
       'ย้ายปุ่มเพิ่มพื้นที่จากหัวข้อหมวด ลงมาเป็น "Dashed Add Card" ด้านล่างแต่ละหมวด (แสดงต้นทุนพื้นที่/เงิน/ไม้)',
       'เอาปุ่มลบ (➖) ออก — รื้อถอนพื้นที่โดยกดที่แปลง/สวน/บ่อ/คอกที่สร้างแล้ว (ช่องว่าง) → ยืนยัน "ต้องการรื้อถอน?" แล้วคืนพื้นที่',
       'ช่องที่มีของอยู่ต้องเก็บผลผลิตก่อนจึงรื้อถอนได้ · การลงของยังทำผ่านปุ่มสถานะ "รอลงสินค้า"/คลังสินค้า',
+    ],
+  },
+  {
+    version: '0.35',
+    date: '16/06/2026',
+    title: 'กดช่องว่าง → 2 ออฟชั่น (เพิ่มสินค้า / รื้อถอน) ทุกหมวดเกษตร',
+    details: [
+      'กดช่องว่างที่สร้างแล้ว เด้งกล่อง 2 ออฟชั่น: เพิ่มสินค้าที่จะปลูก/เลี้ยง และ รื้อถอน',
+      'ปุ่มเพิ่มสินค้าแสดงชื่อตามหมวด (เมล็ดพันธุ์พืช/พันธุ์ไม้ผล/สัตว์เล็ก/สัตว์ใหญ่/พันธุ์ปลา) + จำนวนในคลัง — ถ้าไม่มีของจะ disable พร้อมบอก "ไม่มีในคลัง"',
+      'กดเพิ่มสินค้า → เปิดคลังสินค้ากรองเฉพาะหมวดนั้นให้กดลงของ · ใช้กับทุกหมวดงานเกษตร',
     ],
   },
 ];
@@ -5624,7 +5638,7 @@ function clickPlot(i){
     return;
   }
   // แปลงว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openDemolish('plots', i);
+  openSlotAction('plots', i);
 }
 
 
@@ -5666,7 +5680,7 @@ function clickTree(i){
     return;
   }
   // ช่องว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openDemolish('trees', i);
+  openSlotAction('trees', i);
 }
 
 
@@ -5728,7 +5742,7 @@ function clickPen(size, idx){
     renderAnimals(); updateStockStatus();
   } else {
     // คอกว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-    openDemolish(size==='small' ? 'small' : 'big', idx);
+    openSlotAction(size==='small' ? 'small' : 'big', idx);
   }
 }
 
@@ -5763,7 +5777,7 @@ function renderFish(){
 
 function collectFish(i){
   const p = fishPonds[i];
-  if(!p.fish){ openDemolish('ponds', i); return; }  // บ่อว่างที่สร้างแล้ว → ยืนยันรื้อถอน
+  if(!p.fish){ openSlotAction('ponds', i); return; }  // บ่อว่างที่สร้างแล้ว → ยืนยันรื้อถอน
   if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
@@ -5915,12 +5929,33 @@ function updateStockStatus(){
 //  รื้อถอนพื้นที่ (กดช่องว่างที่สร้างแล้ว → ยืนยัน → คืนพื้นที่)
 // ============================================================
 let demolishTarget = null;  // {type, index}
-function openDemolish(type, index){
+// ชื่อสินค้าตามหมวด (สำหรับปุ่ม "เพิ่มสินค้า")
+const SLOTACT_NOUN = { plots:'เมล็ดพันธุ์พืช', trees:'พันธุ์ไม้ผล', small:'สัตว์เล็ก', big:'สัตว์ใหญ่', ponds:'พันธุ์ปลา' };
+function openSlotAction(type, index){
   const info = SLOT_INFO[type];
   demolishTarget = { type, index };
+  const cnt  = sectionStockCount(type);
+  const noun = SLOTACT_NOUN[type] || 'สินค้า';
+  document.getElementById('slotact-emoji').textContent = info.emoji;
+  document.getElementById('slotact-title').textContent = `จัดการ ${info.label} ช่องนี้`;
   document.getElementById('demolish-text').innerHTML =
-    `รื้อถอน ${info.emoji} ${info.label} นี้?<br>จะคืนพื้นที่เกษตร ${SLOT_COST[type]} ตร.ม.`;
+    `เลือกการดำเนินการกับช่องว่างนี้<br>(รื้อถอนจะคืนพื้นที่เกษตร ${SLOT_COST[type]} ตร.ม.)`;
+  const addBtn = document.getElementById('slotact-add');
+  if(cnt > 0){
+    addBtn.disabled = false;
+    addBtn.textContent = `⬇️ เพิ่ม${noun} (มีในคลัง ${cnt})`;
+  } else {
+    addBtn.disabled = true;
+    addBtn.textContent = `📭 ไม่มี${noun}ในคลัง`;
+  }
   document.getElementById('demolish-modal').classList.add('show');
+}
+// ออฟชั่น 1: เปิดคลังสินค้ากรองเฉพาะหมวดนี้ เพื่อเลือกลงของ
+function slotActionAdd(){
+  if(!demolishTarget) return;
+  const type = demolishTarget.type;
+  closeDemolish();
+  openStorage(type);
 }
 function closeDemolish(){
   document.getElementById('demolish-modal').classList.remove('show');
@@ -8237,6 +8272,8 @@ if (lsqCancel)  lsqCancel.addEventListener('click', cancelSellLand);
 const demConfirm = document.getElementById('demolish-confirm');
 const demCancel  = document.getElementById('demolish-cancel');
 const demModal   = document.getElementById('demolish-modal');
+const slotactAdd = document.getElementById('slotact-add');
+if (slotactAdd) slotactAdd.addEventListener('click', function(){ if(!slotactAdd.disabled) slotActionAdd(); });
 if (demConfirm) demConfirm.addEventListener('click', confirmDemolish);
 if (demCancel)  demCancel.addEventListener('click', closeDemolish);
 if (demModal)   demModal.addEventListener('click', function (e) { if (e.target === this) closeDemolish(); });
