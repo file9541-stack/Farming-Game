@@ -90,6 +90,7 @@ body{
 }
 #topbar-row1{
   display:flex; align-items:center; gap:7px;
+  flex-wrap:wrap; justify-content:center;
 }
 #topbar-title{
   font-size:0.95rem;font-weight:800;color:#7a4a00;
@@ -1024,6 +1025,7 @@ body{
 /* แถวบน */
 #topbar-row1{
   display:flex; align-items:center; gap:7px;
+  flex-wrap:wrap; justify-content:center;
 }
 #topbar-title{
   font-size:0.95rem;font-weight:800;color:#7a4a00;
@@ -2027,6 +2029,35 @@ body { padding-bottom: 72px; }
   margin-top: 3px;
 }
 
+/* ===== ASSET BREAKDOWN (สรุปมูลค่าทรัพย์สินแยกหมวด) ===== */
+#assets-breakdown {
+  margin: 4px 16px 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,210,120,0.18);
+  border-radius: 14px;
+  padding: 8px 12px;
+}
+.abd-title {
+  font-size: 0.72rem; font-weight: 800; color: rgba(255,220,150,0.85);
+  margin-bottom: 4px;
+}
+.abd-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px dashed rgba(255,210,120,0.14);
+}
+.abd-row:last-child { border-bottom: none; }
+.abd-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.abd-emoji { font-size: 1.05rem; flex-shrink: 0; }
+.abd-label { font-size: 0.8rem; color: #ffe8c0; font-weight: 600; }
+.abd-sub   { font-size: 0.62rem; color: rgba(255,210,140,0.55); }
+.abd-value { font-size: 0.85rem; font-weight: 800; color: #ffd060; white-space: nowrap; }
+.abd-total {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 5px; padding-top: 6px; border-top: 1.5px solid rgba(255,210,120,0.3);
+}
+.abd-total .abd-label { color: #fff0d0; font-weight: 800; font-size: 0.82rem; }
+.abd-total .abd-value { color: #ffe070; font-size: 0.95rem; }
+
 /* ===== ALL RANKS MODAL (ดูฐานะทั้งหมด) ===== */
 #ranks-modal-overlay {
   display: none; position: fixed; inset: 0;
@@ -2981,27 +3012,27 @@ body { padding-bottom: 72px; }
 }
 .agri-buy-btn:active { transform:scale(0.95); }
 
-/* ===== FARM ADD CARD (Dashed Add Card — เพิ่มพื้นที่) ===== */
-.farm-add-card {
-  margin-top:8px;
-  display:flex; align-items:center; gap:12px;
-  background:linear-gradient(135deg,#f3fbec,#eaf6e0);
-  border:2px dashed #9ccb6a; border-radius:16px;
-  padding:12px 14px; cursor:pointer;
-  transition:transform 0.1s, box-shadow 0.15s, background 0.15s;
+/* ===== SLOT ADD CELL (กล่องเส้นประสี่เหลี่ยม "เพิ่มพื้นที่" ในกริด) ===== */
+.slot-add-cell {
+  background:linear-gradient(135deg,#f4fbec,#eaf6e0) !important;
+  border:2px dashed #9ccb6a !important;
+  cursor:pointer; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; text-align:center; padding:4px;
+  box-shadow:none !important;
 }
-.farm-add-card:hover { background:linear-gradient(135deg,#eef9e2,#e2f2d2); box-shadow:0 4px 14px rgba(90,160,40,0.18); }
-.farm-add-card:active { transform:scale(0.985); }
-.farm-add-card .fac-plus {
-  width:42px; height:42px; flex-shrink:0;
-  border-radius:50%; background:linear-gradient(135deg,#5fb83c,#2f8a20);
-  color:#fff; font-size:1.5rem; font-weight:800;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 3px 10px rgba(60,140,30,0.35);
+.slot-add-cell:hover { filter:none; background:linear-gradient(135deg,#eef9e2,#e0f2d0) !important; }
+.slot-add-cell .sac-plus {
+  font-size:1.4rem; font-weight:800; color:#2f8a20; line-height:1;
 }
-.farm-add-card .fac-text { text-align:left; min-width:0; }
-.farm-add-card .fac-label { font-size:0.9rem; font-weight:800; color:#2f7a20; }
-.farm-add-card .fac-sub   { font-size:0.68rem; color:#6a8a50; font-weight:600; margin-top:1px; }
+.slot-add-cell .sac-x { font-size:1.2rem; line-height:1; }
+.slot-add-cell .sac-txt { font-size:0.56rem; font-weight:700; color:#4a7a20; line-height:1.2; }
+.slot-add-cell.slot-add-none {
+  background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important;
+  border-color:#cbb89a !important; cursor:default;
+}
+.slot-add-cell.slot-add-none .sac-txt { color:#a08860; }
+.slot-add-cell.slot-add-none:hover { background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important; }
 
 /* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
 #demolish-modal {
@@ -3027,6 +3058,9 @@ body { padding-bottom: 72px; }
 }
 .dem-confirm { background:linear-gradient(135deg,#e8704a,#c0401a); color:#fff; }
 .dem-cancel  { background:#eee; color:#777; }
+.dem-actions-col { flex-direction:column; }
+.slotact-add { background:linear-gradient(135deg,#4abf4a,#2a8030); color:#fff; }
+.slotact-add:disabled { background:#dcdcdc; color:#999; cursor:not-allowed; }
 
 </style>
 <body>
@@ -3077,6 +3111,22 @@ body { padding-bottom: 72px; }
 
   <div class="navd-scroll">
     <div class="navd-section">เกม</div>
+    <div class="navd-item" data-nav="view-farm">
+      <div class="navd-icon">🌾</div>
+      <span class="navd-label">ฟาร์ม (พื้นที่เกษตร)</span>
+    </div>
+    <div class="navd-item" data-nav="view-factory">
+      <div class="navd-icon">🏭</div>
+      <span class="navd-label">โรงงาน</span>
+    </div>
+    <div class="navd-item" data-nav="view-orders">
+      <div class="navd-icon">📋</div>
+      <span class="navd-label">คำสั่งซื้อ</span>
+    </div>
+    <div class="navd-item" data-nav="view-market">
+      <div class="navd-icon">🛒</div>
+      <span class="navd-label">ตลาด (ขายผลผลิต)</span>
+    </div>
     <div class="navd-item" data-nav="myfarm">
       <div class="navd-icon">🌾</div>
       <span class="navd-label">ฟาร์มของฉัน</span>
@@ -3330,12 +3380,6 @@ body { padding-bottom: 72px; }
     <div class="topstat topstat-energy" id="t-energy" title="กดเพื่อกินอาหารฟื้นพลังงาน">⚡ 100/100</div>
     <div class="topstat topstat-day" id="t-datetime" style="font-size:0.7rem;">📅 --</div>
   </div>
-  <div id="topbar-row2">
-    <div class="tab active">🌾 ฟาร์ม</div>
-    <div class="tab">🏭 โรงงาน</div>
-    <div class="tab">📋 คำสั่งซื้อ</div>
-    <div class="tab">🛒 ตลาด</div>
-  </div>
 </div>
 
 
@@ -3439,13 +3483,14 @@ body { padding-bottom: 72px; }
   </div>
 </div>
 
-<!-- DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่เกษตร) -->
+<!-- SLOT ACTION MODAL (กดช่องว่าง → เลือก ลงสินค้า / รื้อถอน) -->
 <div id="demolish-modal">
   <div class="dem-box">
-    <div class="dem-emoji">🧹</div>
-    <div class="dem-title">ต้องการรื้อถอน?</div>
+    <div class="dem-emoji" id="slotact-emoji">🌱</div>
+    <div class="dem-title" id="slotact-title">จัดการช่องนี้</div>
     <div class="dem-text" id="demolish-text"></div>
-    <div class="dem-actions">
+    <div class="dem-actions dem-actions-col">
+      <button class="slotact-add" id="slotact-add">⬇️ เพิ่มสินค้า</button>
       <button class="dem-confirm" id="demolish-confirm">🧹 รื้อถอน</button>
       <button class="dem-cancel" id="demolish-cancel">ยกเลิก</button>
     </div>
@@ -3667,6 +3712,9 @@ body { padding-bottom: 72px; }
         <div class="wr-tap-hint">👆 แตะเพื่อดูฐานะทั้งหมด</div>
       </div>
     </div>
+
+    <!-- สรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) -->
+    <div id="assets-breakdown"></div>
 
     <!-- dynamic asset list -->
     <div id="assets-list-container"></div>
@@ -4522,6 +4570,37 @@ const UPDATE_HISTORY = [
       'ช่องที่มีของอยู่ต้องเก็บผลผลิตก่อนจึงรื้อถอนได้ · การลงของยังทำผ่านปุ่มสถานะ "รอลงสินค้า"/คลังสินค้า',
     ],
   },
+  {
+    version: '0.35',
+    date: '16/06/2026',
+    title: 'กดช่องว่าง → 2 ออฟชั่น (เพิ่มสินค้า / รื้อถอน) ทุกหมวดเกษตร',
+    details: [
+      'กดช่องว่างที่สร้างแล้ว เด้งกล่อง 2 ออฟชั่น: เพิ่มสินค้าที่จะปลูก/เลี้ยง และ รื้อถอน',
+      'ปุ่มเพิ่มสินค้าแสดงชื่อตามหมวด (เมล็ดพันธุ์พืช/พันธุ์ไม้ผล/สัตว์เล็ก/สัตว์ใหญ่/พันธุ์ปลา) + จำนวนในคลัง — ถ้าไม่มีของจะ disable พร้อมบอก "ไม่มีในคลัง"',
+      'กดเพิ่มสินค้า → เปิดคลังสินค้ากรองเฉพาะหมวดนั้นให้กดลงของ · ใช้กับทุกหมวดงานเกษตร',
+    ],
+  },
+  {
+    version: '0.36',
+    date: '16/06/2026',
+    title: 'ย้ายแท็บมุมมองเข้าเมนูซ่อน + กล่องเพิ่มพื้นที่แบบสี่เหลี่ยมในกริด',
+    details: [
+      'ย้ายแท็บ ฟาร์ม/โรงงาน/คำสั่งซื้อ/ตลาด จากแถบลอยด้านบน ไปไว้ในเมนูซ่อน (☰) หมวดเกม — แก้ปัญหาวันที่ล้นจอบนมือถือ (แถวบนตัดบรรทัดได้)',
+      'เปลี่ยนกล่องเส้นประยาวเป็นกล่องสี่เหลี่ยม "เพิ่มพื้นที่" วางต่อท้ายช่องในกริดแต่ละหมวด',
+      'ย้ายข้อความ "สร้างได้อีก X หน่วย" ไปอยู่ในกล่องเส้นประ — ถ้าพื้นที่หมดจะขึ้น "ไม่มีพื้นที่ว่างเหลือให้สร้างแล้ว"',
+      'เพิ่มกฎข้อ 15: หลังอัพเดตต้องสรุปสิ่งที่เปลี่ยน + ระบุฟังก์ชันที่ต้องทดสอบ',
+    ],
+  },
+  {
+    version: '0.37',
+    date: '16/06/2026',
+    title: 'สรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) ใต้ช่องฐานะ',
+    details: [
+      'เพิ่มรายการใต้ระดับฐานะ แสดงมูลค่าแยกหมวด: พื้นที่เกษตร / พื้นที่ใช้สอย / คลังสินค้า / เงินสด + รวมทั้งหมด',
+      'ตัวเลขอัปเดตแบบเรียลไทม์ขณะเปิดหน้าทรัพย์สิน (ผูกกับ updateTopbar + รีเฟรชทุก 3 วินาที)',
+      'เป็นการแสดงผลอย่างเดียว ยังกดดู/ดำเนินการไม่ได้ (ตามที่กำหนด)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4958,7 +5037,7 @@ function updateSpaceLabels(){
     const b = BUILD_INFO[type];
     const woodTxt = b.wood ? ` + 🪵 ${b.wood}` : '';
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ) · สร้างได้อีก ${canAdd} ${info.unit}` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ)` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -5243,6 +5322,7 @@ function updateTopbar(){
     rankEl.style.color = rank.color;
   }
   if(typeof checkRankUp === 'function') checkRankUp();  // ตรวจเลื่อนขั้นฐานะ
+  if(typeof refreshAssetsLive === 'function') refreshAssetsLive();  // สรุปทรัพย์สินเรียลไทม์
 }
 
 // ===== ระบบพลังงาน + อาหาร (เฟส 2) =====
@@ -5383,9 +5463,6 @@ function renderFarmSections(){
   const nums = ['①','②','③','④','⑤'];
   container.innerHTML = sectionOrder.map((key, si) => {
     const m = SECTION_META[key];
-    const info = SLOT_INFO[m.slottype];
-    const b    = BUILD_INFO[m.slottype];
-    const woodTxt = b && b.wood ? ` · 🪵 ${b.wood}` : '';
     const gridTag = key==='trees'
       ? `<div id="${m.gridId}" style="${m.gridStyle}"></div>`
       : `<div class="${m.gridClass}" id="${m.gridId}"></div>`;
@@ -5400,21 +5477,8 @@ function renderFarmSections(){
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       <div class="sec-stock-status" data-seckey="${key}"></div>
       ${gridTag}
-      <div class="farm-add-card" data-slottype="${m.slottype}" data-slotaction="add">
-        <div class="fac-plus">＋</div>
-        <div class="fac-text">
-          <div class="fac-label">เพิ่ม${m.label}</div>
-          <div class="fac-sub">${b ? b.verb : ''} · ใช้ ${info.cost} ตร.ม. · 💵 ${b ? b.money.toLocaleString('th-TH') : 0}${woodTxt}</div>
-        </div>
-      </div>
     </div>`;
   }).join('');
-  // ผูกปุ่มเพิ่ม (Dashed Add Card) — สั่งก่อสร้าง
-  container.querySelectorAll('[data-slotaction="add"]').forEach(btn => {
-    btn.addEventListener('click', function(){
-      startConstruction(btn.dataset.slottype);
-    });
-  });
   // ผูก sec-order-badge
   container.querySelectorAll('.sec-order-badge').forEach(badge => {
     badge.addEventListener('click', function(e){
@@ -5593,6 +5657,24 @@ function closeSectionMoveModal(){
   moveSectionCtx = null;
 }
 
+// ─── กล่องเส้นประ "เพิ่มพื้นที่" (สี่เหลี่ยม) ต่อท้ายกริดแต่ละหมวด ───
+function addCellHtml(type){
+  const info = SLOT_INFO[type];
+  const base = type==='plots' ? 'plot' : (type==='ponds' ? 'fish-pen' : 'animal-pen');
+  const extra = (type==='trees') ? ' style="min-height:70px;"' : '';
+  const can = Math.floor(freeSpace() / info.cost);
+  if(can <= 0){
+    return `<div class="${base} slot-add-cell slot-add-none"${extra}>
+      <span class="sac-x">🚫</span>
+      <span class="sac-txt">ไม่มีพื้นที่ว่างเหลือให้สร้างแล้ว</span>
+    </div>`;
+  }
+  return `<div class="${base} slot-add-cell" data-addtype="${type}"${extra}>
+    <span class="sac-plus">＋</span>
+    <span class="sac-txt">สร้างได้อีก ${can} ${info.unit}</span>
+  </div>`;
+}
+
 function renderFarm(){
   const grid = document.getElementById('plots-grid');
   grid.innerHTML = plots.map((p,i)=>{
@@ -5608,7 +5690,7 @@ function renderFarm(){
         <span class="plot-time">เก็บได้!</span>
         <div class="plot-badge">✓</div>
       </div>`;
-  }).join('');
+  }).join('') + addCellHtml('plots');
 }
 
 function clickPlot(i){
@@ -5624,7 +5706,7 @@ function clickPlot(i){
     return;
   }
   // แปลงว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openDemolish('plots', i);
+  openSlotAction('plots', i);
 }
 
 
@@ -5650,7 +5732,7 @@ function renderTrees(){
         <div class="pen-name">${t.name}</div>
         <div class="pen-status">✅ เก็บได้!</div>
       </div>`;
-  }).join('');
+  }).join('') + addCellHtml('trees');
 }
 
 
@@ -5666,7 +5748,7 @@ function clickTree(i){
     return;
   }
   // ช่องว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openDemolish('trees', i);
+  openSlotAction('trees', i);
 }
 
 
@@ -5679,14 +5761,10 @@ function renderAnimals(){
   const smallGrid = document.getElementById('small-grid');
   const bigGrid   = document.getElementById('big-grid');
   if(smallGrid){
-    let html = smallPens.map((pen,i) => penCardHtml(pen,'small',i)).join('');
-    if(!html) html = '<div style="grid-column:1/-1;text-align:center;color:#aaa;font-size:0.75rem;padding:12px;">ยังไม่มีคอกเล็ก — กด ➕ เพื่อเพิ่ม</div>';
-    smallGrid.innerHTML = html;
+    smallGrid.innerHTML = smallPens.map((pen,i) => penCardHtml(pen,'small',i)).join('') + addCellHtml('small');
   }
   if(bigGrid){
-    let html = bigPens.map((pen,i) => penCardHtml(pen,'big',i)).join('');
-    if(!html) html = '<div style="grid-column:1/-1;text-align:center;color:#aaa;font-size:0.75rem;padding:12px;">ยังไม่มีคอกใหญ่ — กด ➕ เพื่อเพิ่ม</div>';
-    bigGrid.innerHTML = html;
+    bigGrid.innerHTML = bigPens.map((pen,i) => penCardHtml(pen,'big',i)).join('') + addCellHtml('big');
   }
 }
 
@@ -5728,7 +5806,7 @@ function clickPen(size, idx){
     renderAnimals(); updateStockStatus();
   } else {
     // คอกว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-    openDemolish(size==='small' ? 'small' : 'big', idx);
+    openSlotAction(size==='small' ? 'small' : 'big', idx);
   }
 }
 
@@ -5757,13 +5835,13 @@ function renderFish(){
         <div class="pen-name">${f.name}</div>
         <div class="pen-status">${f.productEmoji} เก็บได้!</div>
       </div>`;
-  }).join('');
+  }).join('') + addCellHtml('ponds');
 }
 
 
 function collectFish(i){
   const p = fishPonds[i];
-  if(!p.fish){ openDemolish('ponds', i); return; }  // บ่อว่างที่สร้างแล้ว → ยืนยันรื้อถอน
+  if(!p.fish){ openSlotAction('ponds', i); return; }  // บ่อว่างที่สร้างแล้ว → ยืนยันรื้อถอน
   if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
@@ -5915,12 +5993,33 @@ function updateStockStatus(){
 //  รื้อถอนพื้นที่ (กดช่องว่างที่สร้างแล้ว → ยืนยัน → คืนพื้นที่)
 // ============================================================
 let demolishTarget = null;  // {type, index}
-function openDemolish(type, index){
+// ชื่อสินค้าตามหมวด (สำหรับปุ่ม "เพิ่มสินค้า")
+const SLOTACT_NOUN = { plots:'เมล็ดพันธุ์พืช', trees:'พันธุ์ไม้ผล', small:'สัตว์เล็ก', big:'สัตว์ใหญ่', ponds:'พันธุ์ปลา' };
+function openSlotAction(type, index){
   const info = SLOT_INFO[type];
   demolishTarget = { type, index };
+  const cnt  = sectionStockCount(type);
+  const noun = SLOTACT_NOUN[type] || 'สินค้า';
+  document.getElementById('slotact-emoji').textContent = info.emoji;
+  document.getElementById('slotact-title').textContent = `จัดการ ${info.label} ช่องนี้`;
   document.getElementById('demolish-text').innerHTML =
-    `รื้อถอน ${info.emoji} ${info.label} นี้?<br>จะคืนพื้นที่เกษตร ${SLOT_COST[type]} ตร.ม.`;
+    `เลือกการดำเนินการกับช่องว่างนี้<br>(รื้อถอนจะคืนพื้นที่เกษตร ${SLOT_COST[type]} ตร.ม.)`;
+  const addBtn = document.getElementById('slotact-add');
+  if(cnt > 0){
+    addBtn.disabled = false;
+    addBtn.textContent = `⬇️ เพิ่ม${noun} (มีในคลัง ${cnt})`;
+  } else {
+    addBtn.disabled = true;
+    addBtn.textContent = `📭 ไม่มี${noun}ในคลัง`;
+  }
   document.getElementById('demolish-modal').classList.add('show');
+}
+// ออฟชั่น 1: เปิดคลังสินค้ากรองเฉพาะหมวดนี้ เพื่อเลือกลงของ
+function slotActionAdd(){
+  if(!demolishTarget) return;
+  const type = demolishTarget.type;
+  closeDemolish();
+  openStorage(type);
 }
 function closeDemolish(){
   document.getElementById('demolish-modal').classList.remove('show');
@@ -6496,6 +6595,68 @@ function renderAssetsList(){
   container.innerHTML = html;
 }
 
+// ─── มูลค่าแยกหมวด (ใช้ในสรุปทรัพย์สิน) ───
+function calcFarmlandValue(){
+  let t = 0;
+  (assetsState.lands || []).forEach(a => { if(!a.sold) t += a.marketValue; });
+  return t;
+}
+function calcUsableValue(){
+  let t = 0;
+  ['houses','vehicles','usablelands'].forEach(k =>
+    (assetsState[k] || []).forEach(a => { if(!a.sold) t += a.marketValue; })
+  );
+  return t;
+}
+function calcStorageValue(){
+  let t = 0;
+  if(typeof inventory !== 'undefined'){
+    inventory.forEach(it => {
+      const unit = (typeof itemSellPrice === 'function') ? itemSellPrice(it) : (it.sell || 0);
+      t += unit * it.qty;
+    });
+  }
+  // สินค้าเกษตรที่ซื้อรอลง (คิดตามราคาซื้อ)
+  if(typeof farmStock !== 'undefined'){
+    const pools = { seeds:CROPS, trees:TREES, animals:ANIMALS, fish:FISH };
+    Object.keys(farmStock).forEach(cat => {
+      Object.entries(farmStock[cat]).forEach(([id, q]) => {
+        const it = (pools[cat] || []).find(x => x.id === id);
+        if(it) t += (it.cost || 0) * q;
+      });
+    });
+  }
+  return t;
+}
+
+// ─── แสดงสรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) ───
+function renderAssetBreakdown(){
+  const el = document.getElementById('assets-breakdown');
+  if(!el) return;
+  const farmland = calcFarmlandValue();
+  const usable   = calcUsableValue();
+  const storage  = calcStorageValue();
+  const cash     = gold;
+  const sum      = farmland + usable + storage + cash;
+  const fmt = v => '฿' + v.toLocaleString('th-TH');
+  const rows = [
+    { emoji:'🌾', label:'พื้นที่เกษตร', sub:'มูลค่าที่ดินเพื่อการเกษตร', val:farmland },
+    { emoji:'🏠', label:'พื้นที่ใช้สอย', sub:'บ้าน · ยานพาหนะ · พื้นที่ขยาย', val:usable },
+    { emoji:'📦', label:'คลังสินค้า',   sub:'ของในคลัง + สินค้าเกษตรรอลง', val:storage },
+    { emoji:'💵', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
+  ];
+  el.innerHTML =
+    `<div class="abd-title">📊 ทรัพย์สินตอนนี้ (เรียลไทม์)</div>` +
+    rows.map(r => `<div class="abd-row">
+      <div class="abd-left">
+        <span class="abd-emoji">${r.emoji}</span>
+        <div><div class="abd-label">${r.label}</div><div class="abd-sub">${r.sub}</div></div>
+      </div>
+      <div class="abd-value">${fmt(r.val)}</div>
+    </div>`).join('') +
+    `<div class="abd-total"><div class="abd-label">รวมทั้งหมด</div><div class="abd-value">${fmt(sum)}</div></div>`;
+}
+
 function calcNetWorth(){
   let total = 0;
   Object.values(assetsState).forEach(cat =>
@@ -6556,10 +6717,21 @@ function getNextRankInfo(netWorth){
 function openAssets(){
   renderAssetsList();
   renderWealthRank();
+  renderAssetBreakdown();
   updateSpaceLabels();
   document.getElementById('anw-value').textContent = '฿' + calcNetWorth().toLocaleString('th-TH');
   document.getElementById('assets-overlay').classList.add('show');
-  
+
+}
+
+// ─── อัปเดตสรุปทรัพย์สินแบบเรียลไทม์ (เรียกจาก updateTopbar เมื่อหน้าทรัพย์สินเปิดอยู่) ───
+function refreshAssetsLive(){
+  const ov = document.getElementById('assets-overlay');
+  if(!ov || !ov.classList.contains('show')) return;
+  renderAssetBreakdown();
+  renderWealthRank();
+  const v = document.getElementById('anw-value');
+  if(v) v.textContent = '฿' + calcNetWorth().toLocaleString('th-TH');
 }
 
 // ─── แสดงป้ายระดับฐานะ + progress ไประดับถัดไป ───
@@ -7997,6 +8169,16 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   document.querySelector('#nav-drawer .navd-scroll').addEventListener('click', function(e){
     var item = e.target.closest('.navd-item');
     if(!item) return;
+    // มุมมองเกม (ฟาร์ม/โรงงาน/คำสั่งซื้อ/ตลาด) — ย้ายมาจากแท็บบนแถบลอย
+    if(item.dataset.nav && item.dataset.nav.indexOf('view-') === 0){
+      closeNav();
+      const viewName = item.dataset.nav.replace('view-','');
+      // กลับมาหน้า main (เผื่ออยู่หน้าพื้นที่ใช้สอย)
+      document.querySelectorAll('.bnav-item').forEach(el => el.classList.remove('bnav-active'));
+      document.getElementById('bnav-farm').classList.add('bnav-active');
+      showTab(viewName);
+      return;
+    }
     if(item.dataset.nav === 'version'){ closeNav(); openVersionHistory(); return; }
     if(item.dataset.nav === 'guide'){ closeNav(); openGuide(); return; }
     if(item.dataset.nav === 'equipment'){ closeNav(); openEquipment(); return; }
@@ -8074,6 +8256,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   // รีเฟรชหน้าตลาดเป็นระยะ เพื่อให้คุณภาพ/ราคาที่เสื่อมตามเวลาแสดงผลแบบเรียลไทม์
   setInterval(function(){
     if(typeof currentTab !== 'undefined' && currentTab === 'market') renderMarket();
+    if(typeof refreshAssetsLive === 'function') refreshAssetsLive();  // สรุปทรัพย์สินเรียลไทม์
   }, 3000);
 })();
 
@@ -8237,6 +8420,8 @@ if (lsqCancel)  lsqCancel.addEventListener('click', cancelSellLand);
 const demConfirm = document.getElementById('demolish-confirm');
 const demCancel  = document.getElementById('demolish-cancel');
 const demModal   = document.getElementById('demolish-modal');
+const slotactAdd = document.getElementById('slotact-add');
+if (slotactAdd) slotactAdd.addEventListener('click', function(){ if(!slotactAdd.disabled) slotActionAdd(); });
 if (demConfirm) demConfirm.addEventListener('click', confirmDemolish);
 if (demCancel)  demCancel.addEventListener('click', closeDemolish);
 if (demModal)   demModal.addEventListener('click', function (e) { if (e.target === this) closeDemolish(); });
@@ -8293,6 +8478,12 @@ el.addEventListener('click', function () { stepPrice(Number(el.dataset.step)); }
 // delegation บน farm-sections-container (ครอบทุก grid ที่ renderFarmSections สร้าง)
 const farmContainer = document.getElementById('farm-sections-container');
 farmContainer.addEventListener('click', function(e){
+  // กล่องเส้นประ "เพิ่มพื้นที่" — สั่งก่อสร้าง (ดักก่อนช่องปกติ)
+  const addCell = e.target.closest('.slot-add-cell');
+  if(addCell){
+    if(addCell.dataset.addtype) startConstruction(addCell.dataset.addtype);
+    return;
+  }
   // แปลงผัก
   const plot = e.target.closest('.plot');
   if(plot){
@@ -8508,6 +8699,10 @@ openFlirt(btn.dataset.npcid);
 //       (ไม่ใช่ทำเฉพาะจุดที่สั่งแล้วปล่อยให้ระบบอื่นพังหรือไม่ตรงกัน)
 //     - เป้าหมาย: หลังทำเสร็จ ทุกระบบต้องยังรันต่อเนื่องและตรรกะสอดคล้องกันทั้งหมด
 //     - หากผลกระทบใหญ่/กำกวม → อธิบายผลกระทบที่พบและถามยืนยันก่อนลงมือ
+//
+// 15. รายงานหลังอัพเดต + ระบุสิ่งที่ต้องทดสอบ — ทุกครั้งที่อัพเดตเสร็จ
+//     → ต้องบอกว่า "อัพเดตอะไรไปบ้าง" (สรุปการเปลี่ยนแปลง)
+//     → และต้องบอกด้วยว่า "ให้ผู้ใช้เช็ค/ทดสอบฟังก์ชันอะไรบ้าง" เพื่อยืนยันว่าใช้งานได้จริง
 // ============================================================
 // ============================================================
 //  DATA — ย้ายไป data.js แล้ว (Phase 2)
