@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>🌻 Isometric Farm (Standalone)</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;font-family:'Sarabun',system-ui,sans-serif;}
+  body{background:#1d2b1a;}
+  #game{position:fixed;inset:0;display:block;width:100%;height:100%;
+        background:linear-gradient(180deg,#aee6ff,#cfeffd 30%,#8fd16a);}
+  #ui{position:fixed;inset:0;pointer-events:none;}
+  #ui button{pointer-events:auto;}
+  .iso-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
+    align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;
+    background:linear-gradient(180deg,rgba(0,0,0,0.35),transparent);}
+  .iso-inv{color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+  .iso-actions{display:flex;gap:6px;}
+  .iso-actions button{width:40px;height:40px;border:none;border-radius:12px;font-size:18px;
+    background:rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.3);}
+  .iso-bar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;overflow-x:auto;
+    padding:10px 12px calc(env(safe-area-inset-bottom) + 12px);
+    background:linear-gradient(0deg,rgba(0,0,0,0.4),transparent);}
+  .iso-bar button{flex:0 0 auto;min-width:64px;height:48px;padding:0 14px;border:none;
+    border-radius:14px;font-size:14px;font-weight:700;color:#3a2a12;background:#fffdf5;
+    box-shadow:0 3px 0 #d4b483;transition:transform .08s;}
+  .iso-bar button:active{transform:translateY(2px);box-shadow:0 1px 0 #d4b483;}
+  .iso-bar button.active{background:#f5c518;box-shadow:0 3px 0 #b9930f;}
+  .iso-bar button.iso-cancel{background:#e84040;color:#fff;box-shadow:0 3px 0 #a82020;}
+  .iso-toast{position:absolute;top:64px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:rgba(20,20,20,.9);color:#fff;padding:10px 20px;border-radius:20px;font-weight:700;
+    font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:5;}
+  .iso-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;
+    font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6);text-align:center;}
+</style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="ui"><div class="hint" id="hint">กำลังโหลด…</div></div>
+
+<!-- ============================================================
+     STANDALONE BUILD — ทุกโมดูลจาก src/ ถูกรวมไว้ในไฟล์เดียว
+     เพื่อให้ "ดับเบิลคลิกเปิดได้เลย" โดยไม่ต้องใช้เว็บเซิร์ฟเวอร์
+     (เวอร์ชันแยกไฟล์ที่พัฒนาต่อง่ายอยู่ที่ index.html + src/)
+     ============================================================ -->
+<script>
+"use strict";
+
+/* ---------------- Config ---------------- */
+const CONFIG = {
+  TILE_W:128, TILE_H:64,
+  MAP_W:50, MAP_H:50, MAP_MAX:200,
+  ZOOM_MIN:0.5, ZOOM_MAX:2.0, ZOOM_START:1.0, ZOOM_STEP:0.1, CAMERA_PADDING:256,
+  CULL_PADDING:2,
+  SAVE_KEY:'isofarm.save.v1', AUTOSAVE_MS:30000,
+};
+const LAYERS = { GROUND:0, DECORATION:1, BUILDING:2, ANIMAL:3, EFFECT:4 };
+
+/* ---------------- TileMath ---------------- */
+const HALF_W = CONFIG.TILE_W/2, HALF_H = CONFIG.TILE_H/2;
+function tileToWorld(tx,ty){ return { x:(tx-ty)*HALF_W, y:(tx+ty)*HALF_H }; }
+function worldToTile(wx,wy){
+  const tx=(wx/HALF_W + wy/HALF_H)/2, ty=(wy/HALF_H - wx/HALF_W)/2;
+  return { x:tx, y:ty };
+}
+function clampNum(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
+
+/* ---------------- assets.manifest ---------------- */
+const T=CONFIG.TILE_W, H=CONFIG.TILE_H;
+const MANIFEST = {
+  grass:{src:'assets/tiles/grass.png',w:T,h:H,kind:'tile',color:'#6dbf45',color2:'#55a030'},
+  soil:{src:'assets/tiles/soil.png',w:T,h:H,kind:'tile',color:'#a0704a',color2:'#7a4e2e'},
+  water:{src:'assets/tiles/water.png',w:T,h:H,kind:'tile',color:'#38b0e8',color2:'#1f8fcf'},
+  sand:{src:'assets/tiles/sand.png',w:T,h:H,kind:'tile',color:'#e8d28a',color2:'#cdb35f'},
+  house:{src:'assets/buildings/house.png',w:T,h:H*2,kind:'object',color:'#c8873a',label:'🏠'},
+  barn:{src:'assets/buildings/barn.png',w:T,h:H*2,kind:'object',color:'#b5532f',label:'🛖'},
+  silo:{src:'assets/buildings/silo.png',w:T,h:H*2.2,kind:'object',color:'#8a96a3',label:'🗄️'},
+  crop_seed:{src:'assets/crops/seed.png',w:T,h:H,kind:'object',color:'#7a4e2e',label:'·'},
+  crop_grow:{src:'assets/crops/grow.png',w:T,h:H,kind:'object',color:'#3cad3c',label:'🌱'},
+  crop_ready:{src:'assets/crops/ready.png',w:T,h:H,kind:'object',color:'#f5c518',label:'🌾'},
+  chicken:{src:'assets/animals/chicken.png',w:T,h:H,kind:'object',color:'#fff3c4',label:'🐔'},
+  cow:{src:'assets/animals/cow.png',w:T,h:H*1.3,kind:'object',color:'#efe7da',label:'🐄'},
+  tree:{src:'assets/decorations/tree.png',w:T,h:H*2,kind:'object',color:'#2e7d32',label:'🌳'},
+  rock:{src:'assets/decorations/rock.png',w:T,h:H,kind:'object',color:'#9e9e9e',label:'🪨'},
+};
+
+/* ---------------- AssetManager ---------------- */
+class AssetManager {
+  constructor(){ this.images=new Map(); this.manifest=null; }
+  async loadManifest(manifest){
+    this.manifest=manifest;
+    await Promise.all(Object.entries(manifest).map(([k,d])=>this._load(k,d)));
+  }
+  get(key){ return this.images.get(key) || this.images.get('__missing__'); }
+  has(key){ return this.images.has(key); }
+  _load(key,def){
+    return new Promise((resolve)=>{
+      if(!def.src){ this.images.set(key,this._placeholder(def)); return resolve(); }
+      const img=new Image();
+      img.onload=()=>{ this.images.set(key,img); resolve(); };
+      img.onerror=()=>{ this.images.set(key,this._placeholder(def)); resolve(); };
+      img.src=def.src;
+    });
+  }
+  _placeholder(def){
+    const w=def.w||128, h=def.h||64;
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    const ctx=c.getContext('2d');
+    if(def.kind==='tile') this._drawDiamond(ctx,w,h,def.color||'#6dbf45',def.color2||'#55a030');
+    else this._drawObject(ctx,w,h,def.color||'#c8873a',def.label||'?');
+    return c;
+  }
+  _drawDiamond(ctx,w,h,top,side){
+    ctx.beginPath();
+    ctx.moveTo(w/2,0); ctx.lineTo(w,h/2); ctx.lineTo(w/2,h); ctx.lineTo(0,h/2); ctx.closePath();
+    ctx.fillStyle=top; ctx.fill(); ctx.strokeStyle=side; ctx.lineWidth=2; ctx.stroke();
+  }
+  _drawObject(ctx,w,h,color,label){
+    ctx.globalAlpha=0.35; this._drawDiamond(ctx,w,Math.min(h,64),color,color); ctx.globalAlpha=1;
+    const bw=w*0.5, bh=h*0.55, bx=(w-bw)/2, by=h-bh-4;
+    ctx.fillStyle=color; ctx.fillRect(bx,by,bw,bh);
+    ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.strokeRect(bx,by,bw,bh);
+    ctx.fillStyle='#fff'; ctx.font=`bold ${Math.floor(bh/2)}px sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(label,w/2,by+bh/2);
+  }
+}
+
+/* ---------------- Camera ---------------- */
+class Camera {
+  constructor(viewport){
+    this.viewport=viewport; this.x=0; this.y=0; this.zoom=CONFIG.ZOOM_START; this.bounds=null;
+  }
+  setViewport(w,h){ this.viewport.w=w; this.viewport.h=h; this.clamp(); }
+  computeBounds(mapW,mapH){
+    const corners=[tileToWorld(0,0),tileToWorld(mapW,0),tileToWorld(0,mapH),tileToWorld(mapW,mapH)];
+    const xs=corners.map(c=>c.x), ys=corners.map(c=>c.y), p=CONFIG.CAMERA_PADDING;
+    this.bounds={ minX:Math.min(...xs)-p, maxX:Math.max(...xs)+p, minY:Math.min(...ys)-p, maxY:Math.max(...ys)+p };
+    this.clamp();
+  }
+  centerOnTile(tx,ty){ const w=tileToWorld(tx,ty); this.x=w.x; this.y=w.y; this.clamp(); }
+  pan(dx,dy){ this.x-=dx/this.zoom; this.y-=dy/this.zoom; this.clamp(); }
+  zoomAt(factor,sx,sy){
+    const before=this.screenToWorld(sx,sy);
+    this.zoom=clampNum(this.zoom*factor,CONFIG.ZOOM_MIN,CONFIG.ZOOM_MAX);
+    const after=this.screenToWorld(sx,sy);
+    this.x+=before.x-after.x; this.y+=before.y-after.y; this.clamp();
+  }
+  clamp(){
+    if(!this.bounds) return;
+    this.x=clampNum(this.x,this.bounds.minX,this.bounds.maxX);
+    this.y=clampNum(this.y,this.bounds.minY,this.bounds.maxY);
+  }
+  worldToScreen(wx,wy){
+    return { x:(wx-this.x)*this.zoom+this.viewport.w/2, y:(wy-this.y)*this.zoom+this.viewport.h/2 };
+  }
+  screenToWorld(sx,sy){
+    return { x:(sx-this.viewport.w/2)/this.zoom+this.x, y:(sy-this.viewport.h/2)/this.zoom+this.y };
+  }
+}
+
+/* ---------------- Input ---------------- */
+class Input {
+  constructor(canvas,camera,opts){
+    opts=opts||{};
+    this.canvas=canvas; this.camera=camera; this.onTap=opts.onTap||function(){};
+    this.pointers=new Map(); this.lastSingle=null; this.pinchDist=0; this.dragMoved=0; this.downPos=null;
+    this._bind();
+  }
+  _bind(){
+    const c=this.canvas; c.style.touchAction='none';
+    c.addEventListener('pointerdown',e=>this._down(e));
+    c.addEventListener('pointermove',e=>this._move(e));
+    window.addEventListener('pointerup',e=>this._up(e));
+    window.addEventListener('pointercancel',e=>this._up(e));
+    c.addEventListener('wheel',e=>{
+      e.preventDefault();
+      const f=e.deltaY<0?(1+CONFIG.ZOOM_STEP):(1-CONFIG.ZOOM_STEP);
+      this.camera.zoomAt(f,e.offsetX,e.offsetY);
+    },{passive:false});
+  }
+  _pos(e){ const r=this.canvas.getBoundingClientRect(); return { x:e.clientX-r.left, y:e.clientY-r.top }; }
+  _down(e){
+    if(this.canvas.setPointerCapture) this.canvas.setPointerCapture(e.pointerId);
+    const p=this._pos(e); this.pointers.set(e.pointerId,p);
+    if(this.pointers.size===1){ this.lastSingle=p; this.dragMoved=0; this.downPos=p; }
+    else if(this.pointers.size===2){ this.pinchDist=this._twoFingerDist(); }
+  }
+  _move(e){
+    if(!this.pointers.has(e.pointerId)) return;
+    const p=this._pos(e); this.pointers.set(e.pointerId,p);
+    if(this.pointers.size===1 && this.lastSingle){
+      const dx=p.x-this.lastSingle.x, dy=p.y-this.lastSingle.y;
+      this.dragMoved+=Math.abs(dx)+Math.abs(dy);
+      this.camera.pan(dx,dy); this.lastSingle=p;
+    } else if(this.pointers.size===2){
+      const dist=this._twoFingerDist();
+      if(this.pinchDist>0){ const mid=this._twoFingerMid(); this.camera.zoomAt(dist/this.pinchDist,mid.x,mid.y); }
+      this.pinchDist=dist;
+    }
+  }
+  _up(e){
+    const wasSingle=this.pointers.size===1;
+    this.pointers.delete(e.pointerId);
+    if(wasSingle && this.downPos && this.dragMoved<8) this.onTap(this.downPos.x,this.downPos.y);
+    if(this.pointers.size===1){ this.lastSingle=[...this.pointers.values()][0]; }
+    else if(this.pointers.size===0){ this.lastSingle=null; this.downPos=null; }
+  }
+  _twoFingerDist(){ const [a,b]=[...this.pointers.values()]; return Math.hypot(a.x-b.x,a.y-b.y); }
+  _twoFingerMid(){ const [a,b]=[...this.pointers.values()]; return { x:(a.x+b.x)/2, y:(a.y+b.y)/2 }; }
+}
+
+/* ---------------- IsoMap ---------------- */
+class IsoMap {
+  constructor(w,h){
+    this.w=w; this.h=h;
+    this.ground=new Array(w*h).fill('grass');
+    this.occupied=new Array(w*h).fill(null);
+  }
+  inBounds(x,y){ return x>=0&&y>=0&&x<this.w&&y<this.h; }
+  idx(x,y){ return y*this.w+x; }
+  getGround(x,y){ return this.inBounds(x,y)?this.ground[this.idx(x,y)]:null; }
+  setGround(x,y,t){ if(this.inBounds(x,y)) this.ground[this.idx(x,y)]=t; }
+  isFree(x,y){ return this.inBounds(x,y) && this.occupied[this.idx(x,y)]===null; }
+  canPlace(x,y,fw,fh){
+    fw=fw||1; fh=fh||1;
+    for(let dy=0;dy<fh;dy++) for(let dx=0;dx<fw;dx++) if(!this.isFree(x+dx,y+dy)) return false;
+    return true;
+  }
+  occupy(x,y,fw,fh,id){
+    for(let dy=0;dy<fh;dy++) for(let dx=0;dx<fw;dx++)
+      if(this.inBounds(x+dx,y+dy)) this.occupied[this.idx(x+dx,y+dy)]=id;
+  }
+  release(x,y,fw,fh){
+    for(let dy=0;dy<fh;dy++) for(let dx=0;dx<fw;dx++)
+      if(this.inBounds(x+dx,y+dy)) this.occupied[this.idx(x+dx,y+dy)]=null;
+  }
+  serialize(){ return { w:this.w, h:this.h, ground:this.ground }; }
+  static deserialize(d){
+    const m=new IsoMap(d.w,d.h);
+    if(Array.isArray(d.ground)&&d.ground.length===d.w*d.h) m.ground=d.ground.slice();
+    return m;
+  }
+}
+
+/* ---------------- Entities ---------------- */
+let NEXT_ID=1;
+class Entity {
+  constructor(o){
+    this.id=NEXT_ID++;
+    this.type=o.type; this.sprite=o.sprite; this.tx=o.tx; this.ty=o.ty;
+    this.layer=o.layer; this.fw=o.fw||1; this.fh=o.fh||1;
+  }
+  depth(){ return (this.tx+this.fw-1)+(this.ty+this.fh-1); }
+  update(){}
+  serialize(){
+    return { cls:'Entity', type:this.type, sprite:this.sprite, tx:this.tx, ty:this.ty,
+             layer:this.layer, fw:this.fw, fh:this.fh };
+  }
+  static resetIds(){ NEXT_ID=1; }
+}
+class Building extends Entity {
+  constructor(o){ super(Object.assign({},o,{layer:LAYERS.BUILDING})); this.role=o.role||'generic'; }
+  serialize(){ return Object.assign(super.serialize(),{cls:'Building',role:this.role}); }
+}
+const CROP_STAGES=[
+  {sprite:'crop_seed',ms:8000},
+  {sprite:'crop_grow',ms:12000},
+  {sprite:'crop_ready',ms:Infinity},
+];
+class Crop extends Entity {
+  constructor(o){
+    super(Object.assign({},o,{sprite:CROP_STAGES[0].sprite,layer:LAYERS.DECORATION,fw:1,fh:1}));
+    this.stage=o.stage||0; this.elapsed=o.elapsed||0;
+    this.sprite=CROP_STAGES[this.stage].sprite; this.yieldItem=o.yieldItem||'wheat';
+  }
+  update(dt){
+    if(this.stage>=CROP_STAGES.length-1) return;
+    this.elapsed+=dt;
+    if(this.elapsed>=CROP_STAGES[this.stage].ms){ this.elapsed=0; this.stage++; this.sprite=CROP_STAGES[this.stage].sprite; }
+  }
+  get isReady(){ return this.stage>=CROP_STAGES.length-1; }
+  serialize(){ return Object.assign(super.serialize(),{cls:'Crop',stage:this.stage,elapsed:this.elapsed,yieldItem:this.yieldItem}); }
+}
+class Animal extends Entity {
+  constructor(o){
+    super(Object.assign({},o,{layer:LAYERS.ANIMAL,fw:1,fh:1}));
+    this.species=o.species||'chicken'; this.produce=o.produce||'egg';
+    this.produceMs=o.produceMs||15000; this.timer=o.timer||0; this.ready=o.ready||false;
+  }
+  update(dt){
+    if(this.ready) return;
+    this.timer+=dt;
+    if(this.timer>=this.produceMs){ this.timer=0; this.ready=true; }
+  }
+  collect(){ if(!this.ready) return null; this.ready=false; return this.produce; }
+  serialize(){ return Object.assign(super.serialize(),{cls:'Animal',species:this.species,produce:this.produce,produceMs:this.produceMs,timer:this.timer,ready:this.ready}); }
+}
+class Decoration extends Entity {
+  constructor(o){ super(Object.assign({},o,{layer:LAYERS.DECORATION})); }
+  serialize(){ return Object.assign(super.serialize(),{cls:'Decoration'}); }
+}
+
+/* ---------------- EntityFactory ---------------- */
+const BLUEPRINTS = {
+  house:{cls:'Building',sprite:'house',role:'house',fw:1,fh:1,label:'บ้าน'},
+  barn:{cls:'Building',sprite:'barn',role:'barn',fw:1,fh:1,label:'โรงนา'},
+  silo:{cls:'Building',sprite:'silo',role:'storage',fw:1,fh:1,label:'คลัง'},
+  tree:{cls:'Decoration',sprite:'tree',fw:1,fh:1,label:'ต้นไม้'},
+  rock:{cls:'Decoration',sprite:'rock',fw:1,fh:1,label:'หิน'},
+  wheat:{cls:'Crop',yieldItem:'wheat',fw:1,fh:1,label:'ข้าวสาลี'},
+  chicken:{cls:'Animal',sprite:'chicken',species:'chicken',produce:'egg',fw:1,fh:1,label:'ไก่'},
+  cow:{cls:'Animal',sprite:'cow',species:'cow',produce:'milk',fw:1,fh:1,label:'วัว'},
+};
+const CLASSES = { Building, Crop, Animal, Decoration };
+function createFromBlueprint(key,tx,ty){
+  const bp=BLUEPRINTS[key]; if(!bp) throw new Error('Unknown blueprint: '+key);
+  return _make(bp.cls, Object.assign({},bp,{type:key,tx:tx,ty:ty}));
+}
+function createFromData(d){ return _make(d.cls,d); }
+function _make(cls,o){ const C=CLASSES[cls]||Decoration; return new C(o); }
+
+/* ---------------- World ---------------- */
+class World {
+  constructor(map){
+    this.map=map||new IsoMap(CONFIG.MAP_W,CONFIG.MAP_H);
+    this.entities=[]; this.inventory={}; this.coins=0;
+  }
+  canPlace(key,tx,ty){ const bp=BLUEPRINTS[key]; if(!bp) return false; return this.map.canPlace(tx,ty,bp.fw,bp.fh); }
+  place(key,tx,ty){
+    if(!this.canPlace(key,tx,ty)) return null;
+    const e=createFromBlueprint(key,tx,ty);
+    this.entities.push(e); this.map.occupy(tx,ty,e.fw,e.fh,e.id);
+    if(e instanceof Crop) this.map.setGround(tx,ty,'soil');
+    return e;
+  }
+  remove(e){
+    const i=this.entities.indexOf(e); if(i<0) return;
+    this.entities.splice(i,1); this.map.release(e.tx,e.ty,e.fw,e.fh);
+  }
+  entityAt(tx,ty){
+    const id=this.map.occupied[this.map.idx(tx,ty)];
+    return id?this.entities.find(e=>e.id===id):null;
+  }
+  interact(tx,ty){
+    const e=this.entityAt(tx,ty); if(!e) return null;
+    if(e instanceof Crop && e.isReady){ this.addItem(e.yieldItem,1); this.remove(e); return {action:'harvest',item:e.yieldItem}; }
+    if(e instanceof Animal && e.ready){ const item=e.collect(); this.addItem(item,1); return {action:'collect',item:item}; }
+    return { action:'none', entity:e };
+  }
+  addItem(item,n){ n=n||1; this.inventory[item]=(this.inventory[item]||0)+n; }
+  update(dt){ for(const e of this.entities) e.update(dt,this); }
+  serialize(){
+    return { map:this.map.serialize(), entities:this.entities.map(e=>e.serialize()), inventory:this.inventory, coins:this.coins };
+  }
+  static deserialize(d){
+    const w=new World(IsoMap.deserialize(d.map));
+    w.inventory=d.inventory||{}; w.coins=d.coins||0;
+    for(const ed of (d.entities||[])){ const e=createFromData(ed); w.entities.push(e); w.map.occupy(e.tx,e.ty,e.fw,e.fh,e.id); }
+    return w;
+  }
+}
+
+/* ---------------- Renderer ---------------- */
+class Renderer {
+  constructor(canvas,camera,assets){
+    this.canvas=canvas; this.ctx=canvas.getContext('2d'); this.camera=camera; this.assets=assets;
+    this.dpr=Math.min(window.devicePixelRatio||1,2); this.resize();
+  }
+  resize(){
+    const w=this.canvas.clientWidth, h=this.canvas.clientHeight;
+    this.canvas.width=Math.floor(w*this.dpr); this.canvas.height=Math.floor(h*this.dpr);
+    this.camera.setViewport(w,h);
+  }
+  render(map,entities,highlight){
+    const ctx=this.ctx;
+    ctx.setTransform(this.dpr,0,0,this.dpr,0,0);
+    ctx.clearRect(0,0,this.camera.viewport.w,this.camera.viewport.h);
+    ctx.imageSmoothingEnabled=false;
+    const range=this._visibleTileRange(map);
+    this._drawGround(map,range);
+    this._drawEntities(entities,range);
+    if(highlight) this._drawHighlight(highlight);
+  }
+  _visibleTileRange(map){
+    const cam=this.camera;
+    const corners=[cam.screenToWorld(0,0),cam.screenToWorld(cam.viewport.w,0),
+                   cam.screenToWorld(0,cam.viewport.h),cam.screenToWorld(cam.viewport.w,cam.viewport.h)]
+                  .map(w=>worldToTile(w.x,w.y));
+    const pad=CONFIG.CULL_PADDING;
+    let minX=Math.floor(Math.min(...corners.map(c=>c.x)))-pad;
+    let maxX=Math.ceil(Math.max(...corners.map(c=>c.x)))+pad;
+    let minY=Math.floor(Math.min(...corners.map(c=>c.y)))-pad;
+    let maxY=Math.ceil(Math.max(...corners.map(c=>c.y)))+pad;
+    minX=Math.max(0,minX); minY=Math.max(0,minY);
+    maxX=Math.min(map.w-1,maxX); maxY=Math.min(map.h-1,maxY);
+    return { minX:minX, maxX:maxX, minY:minY, maxY:maxY };
+  }
+  _drawGround(map,r){
+    for(let sum=r.minX+r.minY; sum<=r.maxX+r.maxY; sum++){
+      for(let x=r.minX; x<=r.maxX; x++){
+        const y=sum-x; if(y<r.minY||y>r.maxY) continue;
+        const type=map.getGround(x,y); if(!type) continue;
+        this._drawSprite(this.assets.get(type),x,y,CONFIG.TILE_W,CONFIG.TILE_H,true);
+      }
+    }
+  }
+  _drawEntities(entities,r){
+    const visible=[];
+    for(const e of entities){
+      if(e.tx+e.fw-1<r.minX||e.tx>r.maxX) continue;
+      if(e.ty+e.fh-1<r.minY||e.ty>r.maxY) continue;
+      visible.push(e);
+    }
+    visible.sort((a,b)=>(a.layer-b.layer)||(a.depth()-b.depth())||(a.ty-b.ty));
+    for(const e of visible){
+      const img=this.assets.get(e.sprite);
+      const def=(this.assets.manifest&&this.assets.manifest[e.sprite])||{};
+      const w=def.w||CONFIG.TILE_W, h=def.h||CONFIG.TILE_H;
+      this._drawSprite(img,e.tx,e.ty,w,h,false,e.fw,e.fh);
+    }
+  }
+  _drawSprite(img,tx,ty,w,h,isTile,fw,fh){
+    if(!img) return;
+    fw=fw||1; fh=fh||1;
+    const cam=this.camera;
+    const aw=tileToWorld(tx+fw-1,ty+fh-1);
+    const s=cam.worldToScreen(aw.x,aw.y);
+    let dx,dy;
+    if(isTile){ dx=s.x-(w/2)*cam.zoom; dy=s.y; }
+    else { dx=s.x-(w/2)*cam.zoom; dy=s.y+HALF_H*cam.zoom-h*cam.zoom; }
+    this.ctx.drawImage(img,dx,dy,w*cam.zoom,h*cam.zoom);
+  }
+  _drawHighlight(h){
+    const cam=this.camera, w=tileToWorld(h.tx,h.ty), s=cam.worldToScreen(w.x,w.y), ctx=this.ctx;
+    const hw=HALF_W*cam.zoom, hh=HALF_H*cam.zoom;
+    ctx.beginPath();
+    ctx.moveTo(s.x,s.y); ctx.lineTo(s.x+hw,s.y+hh); ctx.lineTo(s.x,s.y+hh*2); ctx.lineTo(s.x-hw,s.y+hh); ctx.closePath();
+    ctx.fillStyle=h.valid?'rgba(80,220,120,0.4)':'rgba(230,70,70,0.4)'; ctx.fill();
+    ctx.strokeStyle=h.valid?'#2fa84f':'#c83232'; ctx.lineWidth=2; ctx.stroke();
+  }
+}
+
+/* ---------------- SaveManager ---------------- */
+class SaveManager {
+  constructor(key){ this.key=key||CONFIG.SAVE_KEY; this.backend=window.localStorage; }
+  save(world){
+    try {
+      const payload=JSON.stringify({v:1,ts:Date.now(),world:world.serialize()});
+      this.backend.setItem(this.key,payload); return true;
+    } catch(e){ console.warn('Save failed',e); return false; }
+  }
+  load(){
+    try {
+      const raw=this.backend.getItem(this.key); if(!raw) return null;
+      const data=JSON.parse(raw); return World.deserialize(data.world);
+    } catch(e){ console.warn('Load failed',e); return null; }
+  }
+  clear(){ this.backend.removeItem(this.key); }
+  has(){ return !!this.backend.getItem(this.key); }
+}
+
+/* ---------------- UI ---------------- */
+function _el(tag,cls){ const e=document.createElement(tag); e.className=cls; return e; }
+function _btn(label,onClick){ const b=document.createElement('button'); b.textContent=label; b.addEventListener('click',onClick); return b; }
+function _icon(k){ return ({wheat:'🌾',egg:'🥚',milk:'🥛'})[k]||'📦'; }
+class UI {
+  constructor(root,cb){ this.root=root; this.cb=cb; this.selected=null; this._build(); }
+  _build(){
+    this.toast=_el('div','iso-toast'); this.root.appendChild(this.toast);
+    this.top=_el('div','iso-top'); this.invEl=_el('div','iso-inv'); this.top.appendChild(this.invEl);
+    const actions=_el('div','iso-actions');
+    actions.appendChild(_btn('💾',()=>this.cb.onSave()));
+    actions.appendChild(_btn('🗑️',()=>this.cb.onReset()));
+    this.top.appendChild(actions); this.root.appendChild(this.top);
+    this.bar=_el('div','iso-bar');
+    for(const key of Object.keys(BLUEPRINTS)){
+      const bp=BLUEPRINTS[key]; const b=_btn(bp.label,()=>this._select(key,b)); b.dataset.key=key; this.bar.appendChild(b);
+    }
+    this.cancelBtn=_btn('✖ ยกเลิก',()=>this._select(null));
+    this.cancelBtn.classList.add('iso-cancel'); this.cancelBtn.style.display='none';
+    this.bar.appendChild(this.cancelBtn); this.root.appendChild(this.bar);
+  }
+  _select(key,button){
+    this.selected=key;
+    [...this.bar.querySelectorAll('button')].forEach(b=>b.classList.remove('active'));
+    if(key&&button){ button.classList.add('active'); this.cancelBtn.style.display=''; this.cb.onSelectBlueprint(key); }
+    else { this.cancelBtn.style.display='none'; this.cb.onCancel(); }
+  }
+  clearSelection(){ this._select(null); }
+  setInventory(inv,coins){
+    const parts=['🪙 '+coins];
+    for(const k of Object.keys(inv)) parts.push(_icon(k)+' '+inv[k]);
+    this.invEl.textContent=parts.join('   ');
+  }
+  showToast(msg){
+    this.toast.textContent=msg; this.toast.classList.add('show');
+    clearTimeout(this._tt); this._tt=setTimeout(()=>this.toast.classList.remove('show'),1600);
+  }
+}
+
+/* ---------------- Game ---------------- */
+class Game {
+  constructor(canvas,uiRoot){
+    this.canvas=canvas; this.uiRoot=uiRoot; this.mode='view'; this.placeKey=null;
+    this.highlight=null; this.lastTs=0;
+  }
+  async start(){
+    this.assets=new AssetManager(); await this.assets.loadManifest(MANIFEST);
+    this.save=new SaveManager(); this.world=this.save.load()||this._newWorld();
+    this.camera=new Camera({w:this.canvas.clientWidth,h:this.canvas.clientHeight});
+    this.camera.computeBounds(this.world.map.w,this.world.map.h);
+    this.camera.centerOnTile(this.world.map.w/2,this.world.map.h/2);
+    this.renderer=new Renderer(this.canvas,this.camera,this.assets);
+    this.input=new Input(this.canvas,this.camera,{ onTap:(x,y)=>this._onTap(x,y) });
+    this.canvas.addEventListener('pointermove',e=>this._onHover(e));
+    this.ui=new UI(this.uiRoot,{
+      onSelectBlueprint:k=>{ this.mode='place'; this.placeKey=k; },
+      onCancel:()=>{ this.mode='view'; this.placeKey=null; this.highlight=null; },
+      onSave:()=>{ this.save.save(this.world); this.ui.showToast('บันทึกแล้ว 💾'); },
+      onReset:()=>this._reset(),
+    });
+    this._refreshUI();
+    window.addEventListener('resize',()=>this.renderer.resize());
+    setInterval(()=>this.save.save(this.world),CONFIG.AUTOSAVE_MS);
+    requestAnimationFrame(t=>this._loop(t));
+  }
+  _newWorld(){
+    const w=new World(new IsoMap(CONFIG.MAP_W,CONFIG.MAP_H)); const m=w.map;
+    for(let y=4;y<9;y++) for(let x=4;x<9;x++) m.setGround(x,y,'water');
+    w.place('house',20,20); w.place('tree',24,18); w.place('tree',26,22);
+    w.coins=100; return w;
+  }
+  _reset(){
+    this.save.clear(); this.world=this._newWorld();
+    this.camera.computeBounds(this.world.map.w,this.world.map.h);
+    this.camera.centerOnTile(this.world.map.w/2,this.world.map.h/2);
+    this.ui.clearSelection(); this.mode='view'; this._refreshUI(); this.ui.showToast('เริ่มฟาร์มใหม่ 🌱');
+  }
+  _tileUnder(sx,sy){
+    const w=this.camera.screenToWorld(sx,sy); const t=worldToTile(w.x,w.y);
+    return { x:Math.floor(t.x), y:Math.floor(t.y) };
+  }
+  _onHover(e){
+    if(this.mode!=='place') return;
+    const r=this.canvas.getBoundingClientRect();
+    const t=this._tileUnder(e.clientX-r.left,e.clientY-r.top);
+    this.highlight={ tx:t.x, ty:t.y, valid:this.world.canPlace(this.placeKey,t.x,t.y) };
+  }
+  _onTap(sx,sy){
+    const t=this._tileUnder(sx,sy);
+    if(!this.world.map.inBounds(t.x,t.y)) return;
+    if(this.mode==='place'){
+      if(this.world.place(this.placeKey,t.x,t.y)){ this.ui.showToast('วางแล้ว ✓'); this._refreshUI(); }
+      else this.ui.showToast('วางตรงนี้ไม่ได้ ✗');
+    } else {
+      const r=this.world.interact(t.x,t.y);
+      if(r&&(r.action==='harvest'||r.action==='collect')){ this.ui.showToast('ได้รับ '+r.item+' +1'); this._refreshUI(); }
+    }
+  }
+  _refreshUI(){ this.ui.setInventory(this.world.inventory,this.world.coins); }
+  _loop(ts){
+    const dt=Math.min(ts-this.lastTs,100); this.lastTs=ts;
+    this.world.update(dt);
+    this.renderer.render(this.world.map,this.world.entities, this.mode==='place'?this.highlight:null);
+    requestAnimationFrame(t=>this._loop(t));
+  }
+}
+
+/* ---------------- bootstrap ---------------- */
+(function(){
+  const canvas=document.getElementById('game');
+  const ui=document.getElementById('ui');
+  const game=new Game(canvas,ui);
+  game.start().then(()=>{ const h=document.getElementById('hint'); if(h) h.remove(); })
+    .catch(err=>{ document.getElementById('hint').textContent='เกิดข้อผิดพลาด: '+err.message; console.error(err); });
+})();
+</script>
+</body>
+</html>
