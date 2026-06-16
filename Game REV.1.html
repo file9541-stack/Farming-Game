@@ -2029,6 +2029,35 @@ body { padding-bottom: 72px; }
   margin-top: 3px;
 }
 
+/* ===== ASSET BREAKDOWN (สรุปมูลค่าทรัพย์สินแยกหมวด) ===== */
+#assets-breakdown {
+  margin: 4px 16px 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,210,120,0.18);
+  border-radius: 14px;
+  padding: 8px 12px;
+}
+.abd-title {
+  font-size: 0.72rem; font-weight: 800; color: rgba(255,220,150,0.85);
+  margin-bottom: 4px;
+}
+.abd-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px dashed rgba(255,210,120,0.14);
+}
+.abd-row:last-child { border-bottom: none; }
+.abd-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.abd-emoji { font-size: 1.05rem; flex-shrink: 0; }
+.abd-label { font-size: 0.8rem; color: #ffe8c0; font-weight: 600; }
+.abd-sub   { font-size: 0.62rem; color: rgba(255,210,140,0.55); }
+.abd-value { font-size: 0.85rem; font-weight: 800; color: #ffd060; white-space: nowrap; }
+.abd-total {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 5px; padding-top: 6px; border-top: 1.5px solid rgba(255,210,120,0.3);
+}
+.abd-total .abd-label { color: #fff0d0; font-weight: 800; font-size: 0.82rem; }
+.abd-total .abd-value { color: #ffe070; font-size: 0.95rem; }
+
 /* ===== ALL RANKS MODAL (ดูฐานะทั้งหมด) ===== */
 #ranks-modal-overlay {
   display: none; position: fixed; inset: 0;
@@ -3684,6 +3713,9 @@ body { padding-bottom: 72px; }
       </div>
     </div>
 
+    <!-- สรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) -->
+    <div id="assets-breakdown"></div>
+
     <!-- dynamic asset list -->
     <div id="assets-list-container"></div>
 
@@ -4559,6 +4591,16 @@ const UPDATE_HISTORY = [
       'เพิ่มกฎข้อ 15: หลังอัพเดตต้องสรุปสิ่งที่เปลี่ยน + ระบุฟังก์ชันที่ต้องทดสอบ',
     ],
   },
+  {
+    version: '0.37',
+    date: '16/06/2026',
+    title: 'สรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) ใต้ช่องฐานะ',
+    details: [
+      'เพิ่มรายการใต้ระดับฐานะ แสดงมูลค่าแยกหมวด: พื้นที่เกษตร / พื้นที่ใช้สอย / คลังสินค้า / เงินสด + รวมทั้งหมด',
+      'ตัวเลขอัปเดตแบบเรียลไทม์ขณะเปิดหน้าทรัพย์สิน (ผูกกับ updateTopbar + รีเฟรชทุก 3 วินาที)',
+      'เป็นการแสดงผลอย่างเดียว ยังกดดู/ดำเนินการไม่ได้ (ตามที่กำหนด)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5280,6 +5322,7 @@ function updateTopbar(){
     rankEl.style.color = rank.color;
   }
   if(typeof checkRankUp === 'function') checkRankUp();  // ตรวจเลื่อนขั้นฐานะ
+  if(typeof refreshAssetsLive === 'function') refreshAssetsLive();  // สรุปทรัพย์สินเรียลไทม์
 }
 
 // ===== ระบบพลังงาน + อาหาร (เฟส 2) =====
@@ -6552,6 +6595,68 @@ function renderAssetsList(){
   container.innerHTML = html;
 }
 
+// ─── มูลค่าแยกหมวด (ใช้ในสรุปทรัพย์สิน) ───
+function calcFarmlandValue(){
+  let t = 0;
+  (assetsState.lands || []).forEach(a => { if(!a.sold) t += a.marketValue; });
+  return t;
+}
+function calcUsableValue(){
+  let t = 0;
+  ['houses','vehicles','usablelands'].forEach(k =>
+    (assetsState[k] || []).forEach(a => { if(!a.sold) t += a.marketValue; })
+  );
+  return t;
+}
+function calcStorageValue(){
+  let t = 0;
+  if(typeof inventory !== 'undefined'){
+    inventory.forEach(it => {
+      const unit = (typeof itemSellPrice === 'function') ? itemSellPrice(it) : (it.sell || 0);
+      t += unit * it.qty;
+    });
+  }
+  // สินค้าเกษตรที่ซื้อรอลง (คิดตามราคาซื้อ)
+  if(typeof farmStock !== 'undefined'){
+    const pools = { seeds:CROPS, trees:TREES, animals:ANIMALS, fish:FISH };
+    Object.keys(farmStock).forEach(cat => {
+      Object.entries(farmStock[cat]).forEach(([id, q]) => {
+        const it = (pools[cat] || []).find(x => x.id === id);
+        if(it) t += (it.cost || 0) * q;
+      });
+    });
+  }
+  return t;
+}
+
+// ─── แสดงสรุปมูลค่าทรัพย์สินแยกหมวด (เรียลไทม์) ───
+function renderAssetBreakdown(){
+  const el = document.getElementById('assets-breakdown');
+  if(!el) return;
+  const farmland = calcFarmlandValue();
+  const usable   = calcUsableValue();
+  const storage  = calcStorageValue();
+  const cash     = gold;
+  const sum      = farmland + usable + storage + cash;
+  const fmt = v => '฿' + v.toLocaleString('th-TH');
+  const rows = [
+    { emoji:'🌾', label:'พื้นที่เกษตร', sub:'มูลค่าที่ดินเพื่อการเกษตร', val:farmland },
+    { emoji:'🏠', label:'พื้นที่ใช้สอย', sub:'บ้าน · ยานพาหนะ · พื้นที่ขยาย', val:usable },
+    { emoji:'📦', label:'คลังสินค้า',   sub:'ของในคลัง + สินค้าเกษตรรอลง', val:storage },
+    { emoji:'💵', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
+  ];
+  el.innerHTML =
+    `<div class="abd-title">📊 ทรัพย์สินตอนนี้ (เรียลไทม์)</div>` +
+    rows.map(r => `<div class="abd-row">
+      <div class="abd-left">
+        <span class="abd-emoji">${r.emoji}</span>
+        <div><div class="abd-label">${r.label}</div><div class="abd-sub">${r.sub}</div></div>
+      </div>
+      <div class="abd-value">${fmt(r.val)}</div>
+    </div>`).join('') +
+    `<div class="abd-total"><div class="abd-label">รวมทั้งหมด</div><div class="abd-value">${fmt(sum)}</div></div>`;
+}
+
 function calcNetWorth(){
   let total = 0;
   Object.values(assetsState).forEach(cat =>
@@ -6612,10 +6717,21 @@ function getNextRankInfo(netWorth){
 function openAssets(){
   renderAssetsList();
   renderWealthRank();
+  renderAssetBreakdown();
   updateSpaceLabels();
   document.getElementById('anw-value').textContent = '฿' + calcNetWorth().toLocaleString('th-TH');
   document.getElementById('assets-overlay').classList.add('show');
-  
+
+}
+
+// ─── อัปเดตสรุปทรัพย์สินแบบเรียลไทม์ (เรียกจาก updateTopbar เมื่อหน้าทรัพย์สินเปิดอยู่) ───
+function refreshAssetsLive(){
+  const ov = document.getElementById('assets-overlay');
+  if(!ov || !ov.classList.contains('show')) return;
+  renderAssetBreakdown();
+  renderWealthRank();
+  const v = document.getElementById('anw-value');
+  if(v) v.textContent = '฿' + calcNetWorth().toLocaleString('th-TH');
 }
 
 // ─── แสดงป้ายระดับฐานะ + progress ไประดับถัดไป ───
@@ -8140,6 +8256,7 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
   // รีเฟรชหน้าตลาดเป็นระยะ เพื่อให้คุณภาพ/ราคาที่เสื่อมตามเวลาแสดงผลแบบเรียลไทม์
   setInterval(function(){
     if(typeof currentTab !== 'undefined' && currentTab === 'market') renderMarket();
+    if(typeof refreshAssetsLive === 'function') refreshAssetsLive();  // สรุปทรัพย์สินเรียลไทม์
   }, 3000);
 })();
 
