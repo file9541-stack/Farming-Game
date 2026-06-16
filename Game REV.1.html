@@ -2981,6 +2981,53 @@ body { padding-bottom: 72px; }
 }
 .agri-buy-btn:active { transform:scale(0.95); }
 
+/* ===== FARM ADD CARD (Dashed Add Card — เพิ่มพื้นที่) ===== */
+.farm-add-card {
+  margin-top:8px;
+  display:flex; align-items:center; gap:12px;
+  background:linear-gradient(135deg,#f3fbec,#eaf6e0);
+  border:2px dashed #9ccb6a; border-radius:16px;
+  padding:12px 14px; cursor:pointer;
+  transition:transform 0.1s, box-shadow 0.15s, background 0.15s;
+}
+.farm-add-card:hover { background:linear-gradient(135deg,#eef9e2,#e2f2d2); box-shadow:0 4px 14px rgba(90,160,40,0.18); }
+.farm-add-card:active { transform:scale(0.985); }
+.farm-add-card .fac-plus {
+  width:42px; height:42px; flex-shrink:0;
+  border-radius:50%; background:linear-gradient(135deg,#5fb83c,#2f8a20);
+  color:#fff; font-size:1.5rem; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 3px 10px rgba(60,140,30,0.35);
+}
+.farm-add-card .fac-text { text-align:left; min-width:0; }
+.farm-add-card .fac-label { font-size:0.9rem; font-weight:800; color:#2f7a20; }
+.farm-add-card .fac-sub   { font-size:0.68rem; color:#6a8a50; font-weight:600; margin-top:1px; }
+
+/* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
+#demolish-modal {
+  display:none; position:fixed; inset:0;
+  background:rgba(20,10,0,0.55); z-index:3000;
+  align-items:center; justify-content:center;
+  backdrop-filter:blur(2px);
+}
+#demolish-modal.show { display:flex; }
+.dem-box {
+  background:#fff; border-radius:20px; padding:22px 22px 18px;
+  width:88%; max-width:320px; text-align:center;
+  box-shadow:0 14px 44px rgba(60,30,0,0.4);
+  animation:popIn 0.25s cubic-bezier(0.34,1.4,0.64,1);
+}
+.dem-emoji { font-size:2.6rem; }
+.dem-title { font-size:1.1rem; font-weight:800; color:#a04020; margin:6px 0 4px; }
+.dem-text  { font-size:0.82rem; color:#8a6a50; line-height:1.5; margin-bottom:16px; }
+.dem-actions { display:flex; gap:10px; }
+.dem-actions button {
+  flex:1; border:none; border-radius:14px; padding:11px;
+  font-family:inherit; font-weight:800; font-size:0.85rem; cursor:pointer;
+}
+.dem-confirm { background:linear-gradient(135deg,#e8704a,#c0401a); color:#fff; }
+.dem-cancel  { background:#eee; color:#777; }
+
 </style>
 <body>
 
@@ -3388,6 +3435,19 @@ body { padding-bottom: 72px; }
     <div class="lsq-actions">
       <button class="lsq-btn-confirm" id="lsq-confirm">💰 ขายพร้อมผลผลิต</button>
       <button class="lsq-btn-cancel" id="lsq-cancel">ไม่ขาย</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่เกษตร) -->
+<div id="demolish-modal">
+  <div class="dem-box">
+    <div class="dem-emoji">🧹</div>
+    <div class="dem-title">ต้องการรื้อถอน?</div>
+    <div class="dem-text" id="demolish-text"></div>
+    <div class="dem-actions">
+      <button class="dem-confirm" id="demolish-confirm">🧹 รื้อถอน</button>
+      <button class="dem-cancel" id="demolish-cancel">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -4452,6 +4512,16 @@ const UPDATE_HISTORY = [
       'ร้านค้าเกษตรเพิ่ม Stepper (➖/➕) เลือกจำนวน + แสดงราคารวมเรียลไทม์ คงราคาต่อชิ้นไว้',
     ],
   },
+  {
+    version: '0.34',
+    date: '16/06/2026',
+    title: 'เปลี่ยนปุ่มเพิ่มพื้นที่เป็น Dashed Add Card + รื้อถอนด้วยการกดช่อง',
+    details: [
+      'ย้ายปุ่มเพิ่มพื้นที่จากหัวข้อหมวด ลงมาเป็น "Dashed Add Card" ด้านล่างแต่ละหมวด (แสดงต้นทุนพื้นที่/เงิน/ไม้)',
+      'เอาปุ่มลบ (➖) ออก — รื้อถอนพื้นที่โดยกดที่แปลง/สวน/บ่อ/คอกที่สร้างแล้ว (ช่องว่าง) → ยืนยัน "ต้องการรื้อถอน?" แล้วคืนพื้นที่',
+      'ช่องที่มีของอยู่ต้องเก็บผลผลิตก่อนจึงรื้อถอนได้ · การลงของยังทำผ่านปุ่มสถานะ "รอลงสินค้า"/คลังสินค้า',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5313,6 +5383,9 @@ function renderFarmSections(){
   const nums = ['①','②','③','④','⑤'];
   container.innerHTML = sectionOrder.map((key, si) => {
     const m = SECTION_META[key];
+    const info = SLOT_INFO[m.slottype];
+    const b    = BUILD_INFO[m.slottype];
+    const woodTxt = b && b.wood ? ` · 🪵 ${b.wood}` : '';
     const gridTag = key==='trees'
       ? `<div id="${m.gridId}" style="${m.gridStyle}"></div>`
       : `<div class="${m.gridClass}" id="${m.gridId}"></div>`;
@@ -5322,22 +5395,24 @@ function renderFarmSections(){
           <span class="sec-order-badge" data-secidx="${si}">${nums[si]||si+1}</span>
           ${m.emoji} ${m.label}
         </div>
-        <div class="slot-controls">
-          <button class="slot-btn slot-add"    data-slottype="${m.slottype}" data-slotaction="add">➕</button>
-          <button class="slot-btn slot-remove" data-slottype="${m.slottype}" data-slotaction="remove">➖</button>
-        </div>
       </div>
       <div class="sec-area-info" data-slottype="${m.slottype}"></div>
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       <div class="sec-stock-status" data-seckey="${key}"></div>
       ${gridTag}
+      <div class="farm-add-card" data-slottype="${m.slottype}" data-slotaction="add">
+        <div class="fac-plus">＋</div>
+        <div class="fac-text">
+          <div class="fac-label">เพิ่ม${m.label}</div>
+          <div class="fac-sub">${b ? b.verb : ''} · ใช้ ${info.cost} ตร.ม. · 💵 ${b ? b.money.toLocaleString('th-TH') : 0}${woodTxt}</div>
+        </div>
+      </div>
     </div>`;
   }).join('');
-  // ผูก slot-btn delegation ใหม่ (เพราะ rebuild HTML)
-  container.querySelectorAll('[data-slotaction]').forEach(btn => {
+  // ผูกปุ่มเพิ่ม (Dashed Add Card) — สั่งก่อสร้าง
+  container.querySelectorAll('[data-slotaction="add"]').forEach(btn => {
     btn.addEventListener('click', function(){
-      if(btn.dataset.slotaction==='add') startConstruction(btn.dataset.slottype);
-      else removeSlot(btn.dataset.slottype);
+      startConstruction(btn.dataset.slottype);
     });
   });
   // ผูก sec-order-badge
@@ -5523,7 +5598,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot" style="position:relative;">${badge}<span style="font-size:0.9rem;color:rgba(255,255,255,0.4)">+</span></div>`;
+      return `<div class="plot" style="position:relative;" title="กดเพื่อรื้อถอน">${badge}<span style="font-size:0.62rem;color:rgba(255,255,255,0.55)">ว่าง</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
@@ -5548,8 +5623,8 @@ function clickPlot(i){
     renderFarm(); updateStockStatus();
     return;
   }
-  // แปลงว่าง → เปิดคลังสินค้าให้ลงเมล็ด
-  openStorage('plots');
+  // แปลงว่างที่สร้างแล้ว → ยืนยันรื้อถอน
+  openDemolish('plots', i);
 }
 
 
@@ -5563,8 +5638,8 @@ function renderTrees(){
     if(!p.tree){
       return `<div class="animal-pen" style="min-height:70px;position:relative;">
         ${badge}
-        <span style="font-size:1.5rem;color:#aaa;">🌱</span>
-        <div class="pen-name" style="color:#aaa;">ว่าง</div>
+        <span style="font-size:1.5rem;color:#aaa;">🟫</span>
+        <div class="pen-name" style="color:#aaa;">ว่าง · กดเพื่อรื้อถอน</div>
       </div>`;
     }
     const t = TREES.find(x=>x.id===p.tree);
@@ -5590,8 +5665,8 @@ function clickTree(i){
     renderTrees(); updateStockStatus();
     return;
   }
-  // ช่องว่าง → เปิดคลังสินค้าให้ลงกล้าไม้
-  openStorage('trees');
+  // ช่องว่างที่สร้างแล้ว → ยืนยันรื้อถอน
+  openDemolish('trees', i);
 }
 
 
@@ -5626,7 +5701,7 @@ function penCardHtml(pen, size, idx){
       ${badge}
       <span class="pen-emoji">${emptyEmoji}</span>
       <div class="pen-name" style="color:#999;">${sizeLabel}ว่าง</div>
-      <div class="pen-status" style="color:#bbb;">คลิกเพื่อเลี้ยงสัตว์ 🏬</div>
+      <div class="pen-status" style="color:#bbb;">กดเพื่อรื้อถอน 🧹</div>
     </div>`;
   }
   const a = ANIMALS.find(x=>x.id===pen.animal);
@@ -5652,8 +5727,8 @@ function clickPen(size, idx){
     toast(`เก็บ ${a.productEmoji} ${a.productName} จาก${a.name}แล้ว!`);
     renderAnimals(); updateStockStatus();
   } else {
-    // คอกว่าง → เปิดคลังสินค้าให้ลงสัตว์ตามขนาดคอก
-    openStorage(size==='small' ? 'small' : 'big');
+    // คอกว่างที่สร้างแล้ว → ยืนยันรื้อถอน
+    openDemolish(size==='small' ? 'small' : 'big', idx);
   }
 }
 
@@ -5671,7 +5746,7 @@ function renderFish(){
         ${badge}
         <span class="pen-emoji">🪣</span>
         <div class="pen-name" style="color:#aaa;">บ่อว่าง</div>
-        <div class="pen-status" style="color:#bbb;">กดเพื่อลงปลา 📦</div>
+        <div class="pen-status" style="color:#bbb;">กดเพื่อรื้อถอน 🧹</div>
       </div>`;
     }
     const f = FISH.find(x=>x.id===p.fish);
@@ -5688,7 +5763,7 @@ function renderFish(){
 
 function collectFish(i){
   const p = fishPonds[i];
-  if(!p.fish){ openStorage('ponds'); return; }  // บ่อว่าง → เปิดคลังให้ลงปลา
+  if(!p.fish){ openDemolish('ponds', i); return; }  // บ่อว่างที่สร้างแล้ว → ยืนยันรื้อถอน
   if(!spendEnergy(ENERGY_COST.fishCollect,'agri')) return;  // เก็บปลาใช้พลังงาน
   const f = FISH.find(x=>x.id===p.fish);
   addInv(f.product, f.productName, f.productEmoji, 1, f.sell);
@@ -5834,6 +5909,43 @@ function updateStockStatus(){
       el.textContent = `✅ รอลงสินค้า (${stock}) — กดเพื่อลงของ`;
     }
   });
+}
+
+// ============================================================
+//  รื้อถอนพื้นที่ (กดช่องว่างที่สร้างแล้ว → ยืนยัน → คืนพื้นที่)
+// ============================================================
+let demolishTarget = null;  // {type, index}
+function openDemolish(type, index){
+  const info = SLOT_INFO[type];
+  demolishTarget = { type, index };
+  document.getElementById('demolish-text').innerHTML =
+    `รื้อถอน ${info.emoji} ${info.label} นี้?<br>จะคืนพื้นที่เกษตร ${SLOT_COST[type]} ตร.ม.`;
+  document.getElementById('demolish-modal').classList.add('show');
+}
+function closeDemolish(){
+  document.getElementById('demolish-modal').classList.remove('show');
+  demolishTarget = null;
+}
+function confirmDemolish(){
+  if(!demolishTarget){ closeDemolish(); return; }
+  const { type, index } = demolishTarget;
+  let arr, occupied;
+  if(type==='plots'){ arr = plots;     occupied = p=>p.crop; }
+  if(type==='trees'){ arr = treePlots; occupied = p=>p.tree; }
+  if(type==='small'){ arr = smallPens; occupied = p=>p.animal; }
+  if(type==='big'){   arr = bigPens;   occupied = p=>p.animal; }
+  if(type==='ponds'){ arr = fishPonds; occupied = p=>p.fish; }
+  const slot = arr && arr[index];
+  if(!slot){ closeDemolish(); return; }
+  if(occupied(slot)){
+    toast('❌ ช่องนี้มีของอยู่ — เก็บผลผลิตก่อนจึงรื้อถอนได้');
+    closeDemolish(); return;
+  }
+  arr.splice(index, 1);
+  const info = SLOT_INFO[type];
+  toast(`🧹 รื้อถอน ${info.emoji} ${info.label} แล้ว — คืน ${SLOT_COST[type]} ตร.ม. (ว่าง ${freeSpace().toLocaleString('th-TH')} ตร.ม.)`, true);
+  closeDemolish();
+  rerenderFarmArea();
 }
 
 // ============================================================
@@ -8120,6 +8232,14 @@ const lsqConfirm = document.getElementById('lsq-confirm');
 const lsqCancel  = document.getElementById('lsq-cancel');
 if (lsqConfirm) lsqConfirm.addEventListener('click', confirmSellLandWithProduce);
 if (lsqCancel)  lsqCancel.addEventListener('click', cancelSellLand);
+
+// ─────────────────────────── DEMOLISH MODAL (รื้อถอนพื้นที่) ───────────────────────────
+const demConfirm = document.getElementById('demolish-confirm');
+const demCancel  = document.getElementById('demolish-cancel');
+const demModal   = document.getElementById('demolish-modal');
+if (demConfirm) demConfirm.addEventListener('click', confirmDemolish);
+if (demCancel)  demCancel.addEventListener('click', closeDemolish);
+if (demModal)   demModal.addEventListener('click', function (e) { if (e.target === this) closeDemolish(); });
 
 // ─────────────────────────── BUYER ACTIONS (ปุ่มผู้ซื้อใน sell modal) ───────────────────────────
 const buyersList = document.getElementById('buyers-list');
