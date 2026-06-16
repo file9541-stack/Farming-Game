@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>🌻 Isometric Farm</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;font-family:'Sarabun',system-ui,sans-serif;}
+  body{background:#1d2b1a;}
+
+  #game{position:fixed;inset:0;display:block;width:100%;height:100%;
+        background:linear-gradient(180deg,#aee6ff,#cfeffd 30%,#8fd16a);}
+
+  /* UI overlay */
+  #ui{position:fixed;inset:0;pointer-events:none;}
+  #ui button{pointer-events:auto;}
+
+  .iso-top{position:absolute;top:0;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+    padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;
+    background:linear-gradient(180deg,rgba(0,0,0,0.35),transparent);}
+  .iso-inv{color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+  .iso-actions{display:flex;gap:6px;}
+  .iso-actions button{width:40px;height:40px;border:none;border-radius:12px;
+    font-size:18px;background:rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.3);}
+
+  .iso-bar{position:absolute;left:0;right:0;bottom:0;
+    display:flex;gap:8px;overflow-x:auto;
+    padding:10px 12px calc(env(safe-area-inset-bottom) + 12px);
+    background:linear-gradient(0deg,rgba(0,0,0,0.4),transparent);}
+  .iso-bar button{flex:0 0 auto;min-width:64px;height:48px;padding:0 14px;
+    border:none;border-radius:14px;font-size:14px;font-weight:700;color:#3a2a12;
+    background:#fffdf5;box-shadow:0 3px 0 #d4b483;transition:transform .08s;}
+  .iso-bar button:active{transform:translateY(2px);box-shadow:0 1px 0 #d4b483;}
+  .iso-bar button.active{background:#f5c518;box-shadow:0 3px 0 #b9930f;}
+  .iso-bar button.iso-cancel{background:#e84040;color:#fff;box-shadow:0 3px 0 #a82020;}
+
+  .iso-toast{position:absolute;top:64px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:rgba(20,20,20,.9);color:#fff;padding:10px 20px;border-radius:20px;
+    font-weight:700;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:5;}
+  .iso-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    color:#fff;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6);text-align:center;}
+</style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="ui"><div class="hint" id="hint">กำลังโหลด…</div></div>
+
+  <script type="module">
+    import { Game } from './src/engine/Game.js';
+    const canvas = document.getElementById('game');
+    const ui = document.getElementById('ui');
+    const game = new Game(canvas, ui);
+    game.start().then(() => {
+      document.getElementById('hint')?.remove();
+    }).catch(err => {
+      document.getElementById('hint').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+      console.error(err);
+    });
+  </script>
+</body>
+</html>
