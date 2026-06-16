@@ -3023,10 +3023,20 @@ body { padding-bottom: 72px; }
 }
 .slot-add-cell:hover { filter:none; background:linear-gradient(135deg,#eef9e2,#e0f2d0) !important; }
 .slot-add-cell .sac-plus {
-  font-size:1.4rem; font-weight:800; color:#2f8a20; line-height:1;
+  width:26px; height:26px; border-radius:50%;
+  background:linear-gradient(135deg,#5fb83c,#2f8a20); color:#fff;
+  font-size:1.05rem; font-weight:800; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 6px rgba(60,140,30,0.35); margin-bottom:3px;
 }
+.slot-add-cell .sac-title { font-size:0.6rem; font-weight:800; color:#2f7a20; line-height:1.1; }
+.slot-add-cell .sac-sub { font-size:0.5rem; font-weight:600; color:#5a8a3a; line-height:1.15; }
 .slot-add-cell .sac-x { font-size:1.2rem; line-height:1; }
 .slot-add-cell .sac-txt { font-size:0.56rem; font-weight:700; color:#4a7a20; line-height:1.2; }
+/* การ์ดใหญ่ (คอก/สวน/บ่อ) ใช้ตัวอักษร/ปุ่มใหญ่ขึ้น */
+.animal-pen.slot-add-cell .sac-plus, .fish-pen.slot-add-cell .sac-plus { width:36px; height:36px; font-size:1.4rem; }
+.animal-pen.slot-add-cell .sac-title, .fish-pen.slot-add-cell .sac-title { font-size:0.84rem; }
+.animal-pen.slot-add-cell .sac-sub, .fish-pen.slot-add-cell .sac-sub { font-size:0.64rem; }
 .slot-add-cell.slot-add-none {
   background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important;
   border-color:#cbb89a !important; cursor:default;
@@ -4618,6 +4628,16 @@ const UPDATE_HISTORY = [
       'ปรับตัวอักษรเป็นสีขาวให้ตัดกับพื้นส้มและอ่านง่ายขึ้น',
     ],
   },
+  {
+    version: '0.40',
+    date: '16/06/2026',
+    title: 'ปรับกล่องเพิ่มพื้นที่ + ข้อความช่องว่าง ทุกหมวดเกษตร',
+    details: [
+      'กล่องเส้นประ "เพิ่มพื้นที่" ใช้ปุ่ม + วงกลมเขียว + บรรทัด "เพิ่ม[หมวด]" + "🕗 รอ[ทำหน้าดิน/ทำสวน/สร้างคอก/ขุดบ่อ] · สร้างได้อีก X หน่วย"',
+      'ลบแถบสถานะ "รอเพิ่ม...ซื้อจากร้านค้าเกษตร" (sec-stock-status) ออกจากทุกหมวด',
+      'ช่องที่ทำหน้าดิน/สร้างแล้วและว่าง เปลี่ยนคำว่า "ว่าง" เป็น "รอปลูกผัก/รอปลูกไม้ผล/รอเลี้ยงสัตว์เล็ก/รอเลี้ยงสัตว์ใหญ่/รอเลี้ยงปลา" (ตัวหนา)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5492,7 +5512,6 @@ function renderFarmSections(){
       </div>
       <div class="sec-area-info" data-slottype="${m.slottype}"></div>
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
-      <div class="sec-stock-status" data-seckey="${key}"></div>
       ${gridTag}
     </div>`;
   }).join('');
@@ -5503,17 +5522,10 @@ function renderFarmSections(){
       openSectionMoveModal(Number(badge.dataset.secidx));
     });
   });
-  // ผูกปุ่มสถานะคลัง (รอลงสินค้า → เปิดคลังกรองหมวดนั้น)
-  container.querySelectorAll('.sec-stock-status').forEach(el => {
-    el.addEventListener('click', function(){
-      if(el.dataset.act) openStorage(el.dataset.act);
-    });
-  });
   // render เนื้อหาในแต่ละหมวด
   renderFarm(); renderTrees(); renderAnimals(); renderFish();
   renderConstructions();
   updateSpaceLabels();
-  updateStockStatus();
 }
 
 // ย้ายหมวดตาม sectionOrder (insert)
@@ -5675,8 +5687,10 @@ function closeSectionMoveModal(){
 }
 
 // ─── กล่องเส้นประ "เพิ่มพื้นที่" (สี่เหลี่ยม) ต่อท้ายกริดแต่ละหมวด ───
+const ADD_LABEL = { plots:'แปลงปลูกพืช', trees:'สวนไม้ยืนต้น', small:'คอกสัตว์เล็ก', big:'คอกสัตว์ใหญ่', ponds:'บ่อเลี้ยงปลา' };
 function addCellHtml(type){
   const info = SLOT_INFO[type];
+  const b    = BUILD_INFO[type];
   const base = type==='plots' ? 'plot' : (type==='ponds' ? 'fish-pen' : 'animal-pen');
   const extra = (type==='trees') ? ' style="min-height:70px;"' : '';
   const can = Math.floor(freeSpace() / info.cost);
@@ -5688,7 +5702,8 @@ function addCellHtml(type){
   }
   return `<div class="${base} slot-add-cell" data-addtype="${type}"${extra}>
     <span class="sac-plus">＋</span>
-    <span class="sac-txt">สร้างได้อีก ${can} ${info.unit}</span>
+    <span class="sac-title">เพิ่ม${ADD_LABEL[type]||info.label}</span>
+    <span class="sac-sub">🕗 รอ${b?b.verb:''} · สร้างได้อีก ${can} ${info.unit}</span>
   </div>`;
 }
 
@@ -5697,7 +5712,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot" style="position:relative;" title="กดเพื่อรื้อถอน">${badge}<span style="font-size:0.62rem;color:rgba(255,255,255,0.55)">ว่าง</span></div>`;
+      return `<div class="plot" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span style="font-size:0.58rem;color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.4);">รอปลูกผัก</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
@@ -5738,7 +5753,7 @@ function renderTrees(){
       return `<div class="animal-pen" style="min-height:70px;position:relative;">
         ${badge}
         <span style="font-size:1.5rem;color:#aaa;">🟫</span>
-        <div class="pen-name" style="color:#aaa;">ว่าง · กดเพื่อรื้อถอน</div>
+        <div class="pen-name" style="color:#6a5a3a;font-weight:800;">รอปลูกไม้ผล</div>
       </div>`;
     }
     const t = TREES.find(x=>x.id===p.tree);
@@ -5795,8 +5810,8 @@ function penCardHtml(pen, size, idx){
     return `<div class="animal-pen" data-size="${size}" data-idx="${idx}" style="opacity:0.55;position:relative;">
       ${badge}
       <span class="pen-emoji">${emptyEmoji}</span>
-      <div class="pen-name" style="color:#999;">${sizeLabel}ว่าง</div>
-      <div class="pen-status" style="color:#bbb;">กดเพื่อรื้อถอน 🧹</div>
+      <div class="pen-name" style="color:#6a5a3a;font-weight:800;">${size==='small'?'รอเลี้ยงสัตว์เล็ก':'รอเลี้ยงสัตว์ใหญ่'}</div>
+      <div class="pen-status" style="color:#bbb;">👆 กดเพื่อจัดการ</div>
     </div>`;
   }
   const a = ANIMALS.find(x=>x.id===pen.animal);
@@ -5840,8 +5855,8 @@ function renderFish(){
       return `<div class="fish-pen" style="opacity:0.6;cursor:pointer;position:relative;">
         ${badge}
         <span class="pen-emoji">🪣</span>
-        <div class="pen-name" style="color:#aaa;">บ่อว่าง</div>
-        <div class="pen-status" style="color:#bbb;">กดเพื่อรื้อถอน 🧹</div>
+        <div class="pen-name" style="color:#6a5a3a;font-weight:800;">รอเลี้ยงปลา</div>
+        <div class="pen-status" style="color:#bbb;">👆 กดเพื่อจัดการ</div>
       </div>`;
     }
     const f = FISH.find(x=>x.id===p.fish);
