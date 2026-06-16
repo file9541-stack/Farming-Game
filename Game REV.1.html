@@ -2032,31 +2032,31 @@ body { padding-bottom: 72px; }
 /* ===== ASSET BREAKDOWN (สรุปมูลค่าทรัพย์สินแยกหมวด) ===== */
 #assets-breakdown {
   margin: 4px 16px 0;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,210,120,0.18);
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,210,120,0.35);
   border-radius: 14px;
-  padding: 8px 12px;
+  padding: 10px 13px;
 }
 .abd-title {
-  font-size: 0.72rem; font-weight: 800; color: rgba(255,220,150,0.85);
-  margin-bottom: 4px;
+  font-size: 0.8rem; font-weight: 800; color: #ffe6b0;
+  margin-bottom: 6px;
 }
 .abd-row {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 5px 0; border-bottom: 1px dashed rgba(255,210,120,0.14);
+  padding: 7px 0; border-bottom: 1px dashed rgba(255,220,150,0.25);
 }
 .abd-row:last-child { border-bottom: none; }
-.abd-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
-.abd-emoji { font-size: 1.05rem; flex-shrink: 0; }
-.abd-label { font-size: 0.8rem; color: #ffe8c0; font-weight: 600; }
-.abd-sub   { font-size: 0.62rem; color: rgba(255,210,140,0.55); }
-.abd-value { font-size: 0.85rem; font-weight: 800; color: #ffd060; white-space: nowrap; }
+.abd-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.abd-emoji { font-size: 1.2rem; flex-shrink: 0; }
+.abd-label { font-size: 0.88rem; color: #fff6e6; font-weight: 700; }
+.abd-sub   { font-size: 0.66rem; color: rgba(255,225,170,0.78); margin-top: 1px; }
+.abd-value { font-size: 0.95rem; font-weight: 800; color: #ffdf70; white-space: nowrap; }
 .abd-total {
   display: flex; align-items: center; justify-content: space-between;
-  margin-top: 5px; padding-top: 6px; border-top: 1.5px solid rgba(255,210,120,0.3);
+  margin-top: 6px; padding-top: 8px; border-top: 1.5px solid rgba(255,220,150,0.45);
 }
-.abd-total .abd-label { color: #fff0d0; font-weight: 800; font-size: 0.82rem; }
-.abd-total .abd-value { color: #ffe070; font-size: 0.95rem; }
+.abd-total .abd-label { color: #ffffff; font-weight: 800; font-size: 0.92rem; }
+.abd-total .abd-value { color: #ffe87a; font-size: 1.08rem; }
 
 /* ===== ALL RANKS MODAL (ดูฐานะทั้งหมด) ===== */
 #ranks-modal-overlay {
@@ -4599,6 +4599,14 @@ const UPDATE_HISTORY = [
       'เพิ่มรายการใต้ระดับฐานะ แสดงมูลค่าแยกหมวด: พื้นที่เกษตร / พื้นที่ใช้สอย / คลังสินค้า / เงินสด + รวมทั้งหมด',
       'ตัวเลขอัปเดตแบบเรียลไทม์ขณะเปิดหน้าทรัพย์สิน (ผูกกับ updateTopbar + รีเฟรชทุก 3 วินาที)',
       'เป็นการแสดงผลอย่างเดียว ยังกดดู/ดำเนินการไม่ได้ (ตามที่กำหนด)',
+    ],
+  },
+  {
+    version: '0.38',
+    date: '16/06/2026',
+    title: 'ปรับสรุปทรัพย์สินให้อ่านง่ายขึ้น (เพิ่มความคมชัด)',
+    details: [
+      'เพิ่มคอนทราสต์รายการสรุปทรัพย์สิน: ตัวอักษรสว่างขึ้น/ใหญ่ขึ้น พื้นกล่องเข้มทึบขึ้น เส้นคั่นชัดขึ้น',
     ],
   },
 ];
