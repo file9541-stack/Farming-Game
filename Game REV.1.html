@@ -109,6 +109,16 @@ body{
   border-color:rgba(60,160,60,0.3);
   color:#1a6020;
 }
+.topstat-ruang {
+  background:rgba(212,162,0,0.16);
+  border-color:rgba(212,162,0,0.4);
+  color:#8a5a00;
+}
+.topstat-fgold {
+  background:rgba(150,110,40,0.14);
+  border-color:rgba(150,110,40,0.34);
+  color:#6a4810;
+}
 .topstat-asset {
   background:rgba(180,120,0,0.12);
   border-color:rgba(180,130,0,0.3);
@@ -1041,6 +1051,16 @@ body{
   background:rgba(40,160,40,0.12);
   border-color:rgba(60,160,60,0.3);
   color:#1a6020;
+}
+.topstat-ruang {
+  background:rgba(212,162,0,0.16);
+  border-color:rgba(212,162,0,0.4);
+  color:#8a5a00;
+}
+.topstat-fgold {
+  background:rgba(150,110,40,0.14);
+  border-color:rgba(150,110,40,0.34);
+  color:#6a4810;
 }
 .topstat-asset {
   background:rgba(180,120,0,0.12);
@@ -2720,8 +2740,10 @@ body { padding-bottom: 72px; }
   box-shadow: 0 2px 8px rgba(80,50,10,0.25);
 }
 .space-free-label {
-  color: #ffe8b0; font-size: 0.9rem; font-weight: 800;
+  color: #ffe8b0; font-size: 0.9rem; font-weight: 800; display:block;
 }
+.space-prog{ display:block; height:7px; border-radius:5px; background:rgba(0,0,0,0.28); margin-top:6px; overflow:hidden; }
+.space-prog-fill{ display:block; height:100%; border-radius:5px; background:linear-gradient(90deg,#ffd24a,#ff9f1c); transition:width 0.4s ease; }
 .farmland-btn {
   display: inline-block; vertical-align: top; margin-left: 6px; margin-bottom: 10px;
   background: linear-gradient(135deg,#4a8b3a,#2e6b20);
@@ -3046,6 +3068,13 @@ body { padding-bottom: 72px; }
 }
 .slot-add-cell.slot-add-none .sac-txt { color:#a08860; }
 .slot-add-cell.slot-add-none:hover { background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important; }
+/* ปุ่มเพิ่ม "แปลงปลูกพืช" — ขยายกล่องกว้างขึ้น (กิน 2 ช่อง) ให้อ่านข้อความได้ครบ */
+.plot.slot-add-cell{
+  aspect-ratio:auto; grid-column:span 2; min-height:96px; padding:8px 8px;
+}
+.plot.slot-add-cell .sac-plus{ width:32px;height:32px;font-size:1.3rem; }
+.plot.slot-add-cell .sac-title{ font-size:0.82rem; }
+.plot.slot-add-cell .sac-sub{ font-size:0.62rem; }
 
 /* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
 #demolish-modal {
@@ -3374,7 +3403,7 @@ body, #login-screen{
     </div>
     <div class="navd-res-row">
       <div class="navd-res">💎 0</div>
-      <div class="navd-res">💵 0 บาท</div>
+      <div class="navd-res">🧺 0 ฟาร์มโกลด์</div>
       <div class="navd-res" id="navd-energy">⚡ 100/100</div>
     </div>
   </div>
@@ -3603,7 +3632,7 @@ body, #login-screen{
     </div>
     <div class="version-body">
       <div class="admin-block">
-        <div class="admin-title">💵 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> บาท</span></div>
+        <div class="admin-title">🧺 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> ฟาร์มโกลด์</span></div>
         <div class="admin-row">
           <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
           <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
@@ -3646,7 +3675,8 @@ body, #login-screen{
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
-    <div class="topstat topstat-cash">💵 <span id="t-gold">80</span> <span style="font-size:0.65rem;opacity:0.75;">บาท</span></div>
+    <div class="topstat topstat-ruang" title="รวงทอง — หน่วยเงินหลัก (1 รวงทอง = 1,000 ฟาร์มโกลด์)">🌾 <span id="t-ruang">0</span> <span style="font-size:0.62rem;opacity:0.78;">รวงทอง</span></div>
+    <div class="topstat topstat-fgold" title="ฟาร์มโกลด์ — หน่วยเงินย่อย (ครบ 1,000 แปลงเป็น 1 รวงทอง)">🧺 <span id="t-fgold">0</span> <span style="font-size:0.62rem;opacity:0.78;">ฟาร์มโกลด์</span></div>
     <div class="topstat topstat-energy" id="t-energy" title="กดเพื่อกินอาหารฟื้นพลังงาน">⚡ 100/100</div>
     <div class="topstat topstat-day" id="t-datetime" style="font-size:0.7rem;">📅 --</div>
   </div>
@@ -3658,7 +3688,7 @@ body, #login-screen{
 
   <!-- FARM TAB -->
   <div id="tab-farm">
-    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div><button id="farmland-btn" class="farmland-btn">🌍 ที่ดิน</button>
+    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div><button id="farmland-btn" class="farmland-btn">🌍 ขายที่ดินเกษตร</button>
     <div id="farm-sections-container"></div>
   </div>
 
@@ -4041,7 +4071,7 @@ body, #login-screen{
         <div class="mp-value" id="sm-market-val">฿0</div>
       </div>
       <div class="sm-price-input-wrap">
-        <label>💬 ราคาที่คุณต้องการขาย (บาท)</label>
+        <label>💬 ราคาที่คุณต้องการขาย (ฟาร์มโกลด์)</label>
         <div class="sm-price-row">
           <input class="sm-price-input" type="number" id="sm-price-input" placeholder="0" min="1">
         </div>
@@ -4456,7 +4486,7 @@ const NPC_PARTNERS = [
   {
     id:'wanlaya',   name:'คุณวันลยา',  avatar:'👩‍💼', gender:'f',
     job:'นักธุรกิจ', desc:'นักธุรกิจสาว มีเงินทุนและเส้นสาย',
-    dowry:150000, dowryDesc:'เงินสด 150,000 บาท + รถยนต์',
+    dowry:150000, dowryDesc:'เงินสด 150,000 ฟาร์มโกลด์ + รถยนต์',
     bonus:['💰 รายได้จากคำสั่งซื้อ +20%','📈 ราคาขายสินค้า +10%'],
     flirtCost:2000, weddingCost:20000,
     child:{ name:'น้องกำไร', avatar:'👶', role:'เพิ่มรายได้คำสั่งซื้อ +15%' },
@@ -4472,7 +4502,7 @@ const NPC_PARTNERS = [
   {
     id:'nattapong', name:'คุณณัฐพงษ์', avatar:'👨‍⚕️', gender:'m',
     job:'แพทย์', desc:'หมอหนุ่มใจดี มีรายได้มั่นคง',
-    dowry:200000, dowryDesc:'บ้านใหม่ + เงินสด 100,000 บาท',
+    dowry:200000, dowryDesc:'บ้านใหม่ + เงินสด 100,000 ฟาร์มโกลด์',
     bonus:['🏥 ลดต้นทุนสัตว์ป่วย','💰 โบนัสรายได้ +25%'],
     flirtCost:3000, weddingCost:30000,
     child:{ name:'น้องหมอ', avatar:'👶', role:'โบนัสทุกรายได้ +5%' },
@@ -4488,7 +4518,7 @@ const NPC_PARTNERS = [
   {
     id:'krit',      name:'คุณกฤต',     avatar:'👨‍💻', gender:'m',
     job:'โปรแกรมเมอร์', desc:'หนุ่มไอทีรายได้ดี ชอบเกษตรอินทรีย์',
-    dowry:120000, dowryDesc:'เงินสด 120,000 บาท + อุปกรณ์เทค',
+    dowry:120000, dowryDesc:'เงินสด 120,000 ฟาร์มโกลด์ + อุปกรณ์เทค',
     bonus:['🤖 ระบบออโตฟาร์ม','💻 คำนวณกำไรให้อัตโนมัติ'],
     flirtCost:1500, weddingCost:15000,
     child:{ name:'น้องโค้ด', avatar:'👶', role:'ลดต้นทุนซื้อเมล็ด 10%' },
@@ -4918,7 +4948,7 @@ const GAME_GUIDE = [
     lines: [
       'หลักการ: แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ ใช้เลยไม่ได้ ต้องก่อสร้างก่อนเสมอ',
       'ขั้น 1 — เตรียมที่ดิน: ต้องมีพื้นที่ว่างพอ (ดูแถบ 🌾 พื้นที่เกษตรด้านบน) ถ้าไม่พอให้ซื้อที่ดินเพิ่ม',
-      'ขั้น 2 — เตรียมต้นทุน: ก่อสร้างใช้ "เงิน 💵 + ไม้ 🪵 + พลังงาน ⚡" — ดูตัวเลขที่ป้ายใต้หัวข้อแต่ละหมวด',
+      'ขั้น 2 — เตรียมต้นทุน: ก่อสร้างใช้ "เงิน 🧺 + ไม้ 🪵 + พลังงาน ⚡" — ดูตัวเลขที่ป้ายใต้หัวข้อแต่ละหมวด',
       'ขั้น 3 — ซื้อไม้: ถ้าไม้ไม่พอ เปิดเมนู ☰ → "วัสดุก่อสร้าง" ซื้อไม้เก็บไว้ก่อน',
       'ขั้น 4 — สั่งก่อสร้าง: กดปุ่ม ➕ ในหมวดที่ต้องการ (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก) ระบบจะหักเงิน+ไม้+พลังงาน และจองพื้นที่ไว้',
       'ขั้น 5 — รอเวลา: จะขึ้นแถบ "กำลังก่อสร้าง ⏳" นับถอยหลังจริง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
@@ -5216,7 +5246,7 @@ function startConstruction(type){
   const bp = (typeof rankPerks === 'function') ? rankPerks() : { build:0, time:0 };
   const money = Math.round(b.money * (1 - bp.build));
   if(gold < money){
-    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${money.toLocaleString('th-TH')} บาท`);
+    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${money.toLocaleString('th-TH')} ฟาร์มโกลด์`);
     return;
   }
   // เฟส 5: ต้องมีวัสดุไม้พอ
@@ -5236,7 +5266,7 @@ function startConstruction(type){
   const saved = b.seconds - secs;
   const savedTxt = saved > 0 ? ` · ⏱️ ลดเวลา −${saved} วิ` : '';
   const woodTxt = woodNeed > 0 ? ` · 🪵 −${woodNeed}` : '';
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${money.toLocaleString('th-TH')} ฟาร์มโกลด์${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -5314,7 +5344,8 @@ function updateSpaceLabels(){
   const pct   = total > 0 ? Math.round((used/total)*100) : 0;
   // แถบพื้นที่เกษตร
   document.querySelectorAll('.space-free-label').forEach(el => {
-    el.innerHTML = `🌾 พื้นที่เกษตร ${used.toLocaleString('th-TH')}/${total.toLocaleString('th-TH')} ตร.ม. (${pct}%)`;
+    el.innerHTML = `🌾 พื้นที่เกษตร ${used.toLocaleString('th-TH')}/${total.toLocaleString('th-TH')} ตร.ม. · ว่าง ${free.toLocaleString('th-TH')} ตร.ม. (${pct}%)`
+      + `<span class="space-prog"><span class="space-prog-fill" style="width:${Math.min(100,pct)}%"></span></span>`;
   });
   // แถบพื้นที่ใช้สอยส่วนตัว
   const usableEl = document.getElementById('usable-area-label');
@@ -5342,7 +5373,7 @@ function updateSpaceLabels(){
     const b = BUILD_INFO[type];
     const woodTxt = b.wood ? ` + 🪵 ${b.wood}` : '';
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ)` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} ฟาร์มโกลด์${woodTxt}/${info.unit} (${b.seconds} วิ)` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -5611,7 +5642,15 @@ function fmtK(n){
 //  HELPERS — UI
 // ============================================================
 function updateTopbar(){
-  document.getElementById('t-gold').textContent = fmtK(gold);
+  // ─── ค่าเงิน: gold = ยอดรวมเป็น "ฟาร์มโกลด์" → แปลงเรียลไทม์เป็น รวงทอง + ฟาร์มโกลด์ ───
+  // ครบ 1,000 ฟาร์มโกลด์ = 1 รวงทอง (ยอดฟาร์มโกลด์ที่เกินจะม้วนขึ้นเป็นรวงทองทันที)
+  const totalFG = Math.max(0, Math.floor(gold));
+  const ruang = Math.floor(totalFG / 1000);
+  const fgold = totalFG % 1000;
+  const rEl = document.getElementById('t-ruang');
+  const fEl = document.getElementById('t-fgold');
+  if(rEl) rEl.textContent = ruang.toLocaleString('th-TH');
+  if(fEl) fEl.textContent = fgold.toLocaleString('th-TH');
   const assetVal = Object.values(assetsState).flat()
     .filter(a => !a.sold)
     .reduce((s, a) => s + a.marketValue, 0);
@@ -6433,7 +6472,7 @@ function renderSubShop(type){
             <div class="asset-tags">${tagsHtml}</div>
             ${owned
               ? '<div style="margin-top:8px;font-size:0.75rem;font-weight:800;color:#3a8020;">✓ เป็นเจ้าของแล้ว</div>'
-              : `<button class="btn-buy-asset" data-itemid="${item.id}" data-type="${type}" style="margin-top:8px;background:linear-gradient(135deg,#4abf4a,#2a8030);color:#fff;border:none;border-radius:10px;padding:6px 16px;font-family:inherit;font-weight:800;font-size:0.78rem;cursor:pointer;">💵 ซื้อ ${item.cost.toLocaleString('th-TH')} บาท</button>`
+              : `<button class="btn-buy-asset" data-itemid="${item.id}" data-type="${type}" style="margin-top:8px;background:linear-gradient(135deg,#4abf4a,#2a8030);color:#fff;border:none;border-radius:10px;padding:6px 16px;font-family:inherit;font-weight:800;font-size:0.78rem;cursor:pointer;">🧺 ซื้อ ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์</button>`
             }
           </div>
         </div>`;
@@ -6471,7 +6510,7 @@ function renderSubShop(type){
         <div class="ag-emoji">${item.emoji}</div>
         <div class="ag-info">
           <div class="ag-name">${item.name} <span style="font-size:0.6rem;color:#c8a000;">${tierLabel[item.tier||1]}</span></div>
-          <div class="ag-unit">💵 ${item.cost.toLocaleString('th-TH')} บาท/ชิ้น · ${desc}</div>
+          <div class="ag-unit">🧺 ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์/ชิ้น · ${desc}</div>
           <div class="ag-stock">${stockTxt}</div>
         </div>
         <div class="ag-right">
@@ -6480,7 +6519,7 @@ function renderSubShop(type){
             <span class="agri-qty">1</span>
             <button class="agri-step" data-d="1">+</button>
           </div>
-          <button class="agri-buy-btn">ซื้อ 💵 <span class="agri-total">${item.cost.toLocaleString('th-TH')}</span></button>
+          <button class="agri-buy-btn">ซื้อ 🧺 <span class="agri-total">${item.cost.toLocaleString('th-TH')}</span></button>
         </div>
       </div>`;
     });
@@ -6511,7 +6550,7 @@ function buyFromSubShop(type, itemId, qty){
     if(type==='usableland') pool = USABLE_LANDS;
     const item = pool.find(x=>x.id===itemId);
     if(!item) return;
-    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
 
     // ─── บ้าน/รถ/มอไซค์ → เก็บเข้าคลังพัก (ยังไม่วาง ยังไม่กินพื้นที่) ───
     if(type==='house' || type==='car' || type==='motorbike'){
@@ -6563,7 +6602,7 @@ function buyFromSubShop(type, itemId, qty){
       toast(`🎉 ซื้อ ${item.name} แล้ว! พื้นที่ใช้สอย +${item.addArea} ตร.ม. (รวม ${calcUsableTotal()} ตร.ม.)`);
     } else {
       updateSpaceLabels();
-      toast(`🎉 ซื้อ ${item.emoji} ${item.name} แล้ว! -${item.cost.toLocaleString('th-TH')} บาท`);
+      toast(`🎉 ซื้อ ${item.emoji} ${item.name} แล้ว! -${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`);
     }
     renderSubShop(type);
     return;
@@ -6584,11 +6623,11 @@ function buyFromSubShop(type, itemId, qty){
     const item = pool.find(x=>x.id===itemId);
     if(!item) return;
     const total = item.cost * qty;
-    if(gold < total){ toast(`💸 เงินไม่พอ! ต้องใช้ ${total.toLocaleString('th-TH')} บาท`); return; }
+    if(gold < total){ toast(`💸 เงินไม่พอ! ต้องใช้ ${total.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
     gold -= total;
     stockAdd(cat, item.id, qty);
     updateTopbar();
-    toast(`🛒 ซื้อ ${item.emoji} ${item.name} x${qty} เข้าคลังสินค้าแล้ว!<br>-${total.toLocaleString('th-TH')} บาท`, true);
+    toast(`🛒 ซื้อ ${item.emoji} ${item.name} x${qty} เข้าคลังสินค้าแล้ว!<br>-${total.toLocaleString('th-TH')} ฟาร์มโกลด์`, true);
     renderSubShop(type);
     updateStockStatus();
   }
@@ -6695,7 +6734,7 @@ function renderOrders(){
           <div class="order-items">${itemsHtml}</div>
           <button class="btn-fulfill" ${canFulfill?'':'disabled'} data-orderidx="${oi}">ส่งสินค้า</button>
         </div>
-        <div class="order-reward"><div class="reward-gold">💵 ${o.reward.toLocaleString('th-TH')} บาท</div></div>
+        <div class="order-reward"><div class="reward-gold">🧺 ${o.reward.toLocaleString('th-TH')} ฟาร์มโกลด์</div></div>
       </div>`;
   }).join('');
 }
@@ -6710,7 +6749,7 @@ function fulfillOrder(oi){
   gold += reward;
   addExp(15 + Math.floor(reward/10));
   orders.splice(oi,1);
-  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${reward.toLocaleString('th-TH')} บาท`);
+  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${reward.toLocaleString('th-TH')} ฟาร์มโกลด์`);
   updateTopbar();
   renderOrders();
 }
@@ -6735,7 +6774,7 @@ function renderMarket(){
       <div class="mkt-name">${item.name}</div>
       ${qBadge}
       <div class="mkt-qty">มี ${item.qty} ชิ้น${perish?` · ${unit}/ชิ้น`:''}</div>
-      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(unit*item.qty).toLocaleString('th-TH')} บาท</button>
+      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 🧺${(unit*item.qty).toLocaleString('th-TH')} ฟาร์มโกลด์</button>
     </div>`;
   }).join('');
 }
@@ -6750,7 +6789,7 @@ function sellAll(id){
   } else {
     gold += earned;
     addExp(item.qty);
-    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} ฟาร์มโกลด์!`);
   }
   removeInv(id, item.qty);
   updateTopbar();
@@ -6765,7 +6804,7 @@ function nextDay(){
     // เฟส 4: จ่ายค่าแรงคนงานรายวัน — เงินไม่พอ คนงานรายวันลาออก
     const wage = dailyWage();
     if(wage > 0){
-      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} บาท`); }
+      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} ฟาร์มโกลด์`); }
       else { workers = workers.filter(w => w.mode !== 'day'); toast('⚠️ เงินไม่พอจ่ายค่าแรง — คนงานรายวันลาออกทั้งหมด'); }
     }
     autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้เมื่อขึ้นวันใหม่
@@ -6943,7 +6982,7 @@ function renderAssetBreakdown(){
     { emoji:'🌾', label:'พื้นที่เกษตร', sub:'มูลค่าที่ดินเพื่อการเกษตร', val:farmland },
     { emoji:'🏠', label:'พื้นที่ใช้สอย', sub:'บ้าน · ยานพาหนะ · พื้นที่ขยาย', val:usable },
     { emoji:'📦', label:'คลังสินค้า',   sub:'ของในคลัง + สินค้าเกษตรรอลง', val:storage },
-    { emoji:'💵', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
+    { emoji:'🧺', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
   ];
   el.innerHTML =
     `<div class="abd-title">📊 ทรัพย์สินตอนนี้ (เรียลไทม์)</div>` +
@@ -7315,9 +7354,9 @@ function renderBuyersList(){
     const diffPct = Math.round(Math.abs(diff)/market*100);
     let diffHtml;
     if(diff > 0){
-      diffHtml = `<div class="buyer-diff plus">▲ สูงกว่าราคาตลาด ${diff.toLocaleString('th-TH')} บาท (+${diffPct}%)</div>`;
+      diffHtml = `<div class="buyer-diff plus">▲ สูงกว่าราคาตลาด ${diff.toLocaleString('th-TH')} ฟาร์มโกลด์ (+${diffPct}%)</div>`;
     } else if(diff < 0){
-      diffHtml = `<div class="buyer-diff minus">▼ ต่ำกว่าราคาตลาด ${Math.abs(diff).toLocaleString('th-TH')} บาท (-${diffPct}%)</div>`;
+      diffHtml = `<div class="buyer-diff minus">▼ ต่ำกว่าราคาตลาด ${Math.abs(diff).toLocaleString('th-TH')} ฟาร์มโกลด์ (-${diffPct}%)</div>`;
     } else {
       diffHtml = `<div class="buyer-diff zero">= เท่ากับราคาตลาดพอดี</div>`;
     }
@@ -7928,7 +7967,7 @@ function renderMarriageNPCs(){
         <div class="npc-bonus-tags">${npc.bonus.map(b=>`<span class="npc-btag">${b}</span>`).join('')}</div>
         <div class="npc-dowry" style="margin-top:4px;">🎁 ${npc.dowryDesc}</div>
         ${!isSpouse && stage < 4 && !isMarriedElsewhere ? `
-          <div class="npc-flirt-cost">💵 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} บาท</div>
+          <div class="npc-flirt-cost">🧺 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} ฟาร์มโกลด์</div>
           <button class="btn-flirt" data-npcid="${npc.id}">${stageBtnLabels[stage]}</button>
         ` : isSpouse ? '<div style="font-size:0.75rem;color:#e84080;font-weight:800;margin-top:6px;">❤️ แต่งงานแล้ว</div>' : ''}
       </div>`;
@@ -7970,7 +8009,7 @@ function openFlirt(npcId){
   document.getElementById('fm-avatar').textContent = npc.avatar;
   document.getElementById('fm-name').textContent   = npc.name;
   document.getElementById('fm-stage').textContent  = stageDescs[stage];
-  document.getElementById('fm-cost-info').textContent = `💵 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} บาท`;
+  document.getElementById('fm-cost-info').textContent = `🧺 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} ฟาร์มโกลด์`;
   document.getElementById('fm-action-btn').textContent = stageBtnLabels[stage];
   document.getElementById('fm-result').className = 'flirt-result';
   document.getElementById('fm-result').textContent = '';
@@ -7992,7 +8031,7 @@ function doFlirtAction(){
 
   if(gold < cost){
     resultEl.className = 'flirt-result show fail';
-    resultEl.textContent = `💸 เงินไม่พอ! ต้องใช้ ${cost.toLocaleString('th-TH')} บาท`;
+    resultEl.textContent = `💸 เงินไม่พอ! ต้องใช้ ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`;
     return;
   }
 
@@ -8009,7 +8048,7 @@ function doFlirtAction(){
     updateTopbar();
     // add asset if dowry has land/house
     resultEl.className = 'flirt-result show wedding';
-    resultEl.innerHTML = `💒 แต่งงานแล้ว! ได้รับสินสอด ${npc.dowryDesc}<br>💵 +${npc.dowry.toLocaleString('th-TH')} บาท`;
+    resultEl.innerHTML = `💒 แต่งงานแล้ว! ได้รับสินสอด ${npc.dowryDesc}<br>🧺 +${npc.dowry.toLocaleString('th-TH')} ฟาร์มโกลด์`;
     document.getElementById('fm-action-btn').disabled = true;
     // try to have child after 2s
     setTimeout(()=>{
@@ -8193,7 +8232,7 @@ function equipRowHtml(item, kind, owned){
       <div class="equip-name">${item.name}</div>
       <div class="equip-desc">${item.desc}</div>
     </div>
-    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">💵 ${item.cost.toLocaleString('th-TH')}</button>
+    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">🧺 ${item.cost.toLocaleString('th-TH')}</button>
   </div>`;
 }
 function renderEquipment(){
@@ -8210,7 +8249,7 @@ function buyEquip(kind, id){
   const owned = kind === 'tool' ? ownedTools : ownedMachines;
   const item  = list.find(x => x.id === id);
   if(!item || owned.includes(id)) return;
-  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= item.cost;
   owned.push(id);
   updateTopbar();
@@ -8242,7 +8281,7 @@ function renderWorkers(){
     return `<div class="equip-row">
       <span class="equip-emoji">${h.emoji}</span>
       <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
-      <button class="equip-buy-btn" data-houseid="${h.id}">💵 ${h.cost.toLocaleString('th-TH')}</button>
+      <button class="equip-buy-btn" data-houseid="${h.id}">🧺 ${h.cost.toLocaleString('th-TH')}</button>
     </div>`;
   }).join('');
   const houseBlock =
@@ -8286,7 +8325,7 @@ function hireWorker(type, mode){
     toast(`❌ คนงานเต็มแล้ว (${workers.length}/${workerCap()})<br>สร้าง "ที่พักคนงาน" เพื่อเพิ่มจำนวนสูงสุด 🏠`, true);
     return;
   }
-  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= cost;
   updateTopbar();
   if(mode==='task'){
@@ -8301,7 +8340,7 @@ function hireWorker(type, mode){
 function buyHouse(id){
   const h = WORKER_HOUSES.find(x=>x.id===id);
   if(!h || ownedHouses.includes(id)) return;
-  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= h.cost;
   ownedHouses.push(id);
   updateTopbar();
@@ -8323,14 +8362,14 @@ function renderMaterials(){
   body.innerHTML = MATERIALS.map(function(m){
     const have = getInv(m.id);
     const packs = m.packs.map(function(q){
-      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>💵 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
+      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>🧺 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
     }).join('');
     return `<div class="worker-card">
       <div class="worker-top">
         <span class="worker-emoji">${m.emoji}</span>
         <div style="flex:1;min-width:0;">
           <div class="worker-name">${m.name}</div>
-          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} บาท/หน่วย</div>
+          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} ฟาร์มโกลด์/หน่วย</div>
         </div>
       </div>
       <div class="worker-have">มีในคลัง: ${have?have.qty:0} หน่วย</div>
@@ -8343,7 +8382,7 @@ function buyMaterial(id, qty){
   if(!m) return;
   qty = Number(qty);
   const cost = m.price * qty;
-  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= cost;
   addInv(m.id, m.name, m.emoji, qty, Math.round(m.price*0.5));
   updateTopbar();
@@ -8365,7 +8404,7 @@ function adminAddMoney(amount){
   gold += amount;
   updateTopbar();
   updateAdminMoneyDisplay();
-  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
+  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} ฟาร์มโกลด์ (รวม ${gold.toLocaleString('th-TH')} ฟาร์มโกลด์)`);
 }
 function adminSkipDays(n){
   for(let k=0; k<n; k++){
