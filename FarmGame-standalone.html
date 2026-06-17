@@ -2743,7 +2743,16 @@ body { padding-bottom: 72px; }
   color: #ffe8b0; font-size: 0.9rem; font-weight: 800; display:block;
 }
 .space-prog{ display:block; height:7px; border-radius:5px; background:rgba(0,0,0,0.28); margin-top:6px; overflow:hidden; }
-.space-prog-fill{ display:block; height:100%; border-radius:5px; background:linear-gradient(90deg,#ffd24a,#ff9f1c); transition:width 0.4s ease; }
+.space-prog-fill{ display:block; height:100%; border-radius:5px; background:linear-gradient(90deg,#ffd24a,#ff9f1c); transition:width 0.4s ease, background 0.4s ease; }
+.space-icons{ display:block; margin-top:6px; font-size:0.78rem; font-weight:800; color:#ffe8b0; letter-spacing:0.3px; }
+.space-buy-btn{
+  display:block; margin-top:8px; width:100%;
+  background:linear-gradient(135deg,#ffce4a,#f5a623); color:#5a3700;
+  font-family:inherit; font-weight:800; font-size:0.82rem;
+  border:none; border-radius:10px; padding:8px 10px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(120,80,10,0.3);
+}
+.space-buy-btn:active{ transform:scale(0.97); }
 .farmland-btn {
   display: inline-block; vertical-align: top; margin-left: 6px; margin-bottom: 10px;
   background: linear-gradient(135deg,#4a8b3a,#2e6b20);
@@ -5343,9 +5352,26 @@ function updateSpaceLabels(){
   const free  = freeSpace();  // หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย
   const pct   = total > 0 ? Math.round((used/total)*100) : 0;
   // แถบพื้นที่เกษตร
+  // สีแถบตามความเต็ม: เขียว < 70% · เหลือง 70–89% · แดง ≥ 90%
+  const barColor = pct >= 90 ? 'linear-gradient(90deg,#ff6a4a,#e83a2a)'
+                 : pct >= 70 ? 'linear-gradient(90deg,#ffd24a,#ff9f1c)'
+                 : 'linear-gradient(90deg,#7fd24a,#3f9a2c)';
+  // สรุปจำนวนสิ่งที่สร้างแล้วเป็นไอคอน (โชว์เฉพาะที่มี > 0)
+  const iconParts = [];
+  if(plots.length)     iconParts.push(`🌱 ${plots.length}`);
+  if(treePlots.length) iconParts.push(`🌳 ${treePlots.length}`);
+  if(smallPens.length) iconParts.push(`🐔 ${smallPens.length}`);
+  if(bigPens.length)   iconParts.push(`🐮 ${bigPens.length}`);
+  if(fishPonds.length) iconParts.push(`🐟 ${fishPonds.length}`);
+  const iconSummary = iconParts.length
+    ? `<span class="space-icons">${iconParts.join(' · ')}</span>` : '';
+  // ปุ่มลัดซื้อที่ดิน — โผล่เมื่อพื้นที่ใกล้เต็ม (สร้างแปลงเล็กสุดไม่ได้แล้ว)
+  const lowSpaceBtn = (total > 0 && free < 100)
+    ? `<button class="space-buy-btn" onclick="openSubShop('land')">🛒 ซื้อที่ดินเพิ่ม</button>` : '';
   document.querySelectorAll('.space-free-label').forEach(el => {
     el.innerHTML = `🌾 พื้นที่เกษตร ${used.toLocaleString('th-TH')}/${total.toLocaleString('th-TH')} ตร.ม. · ว่าง ${free.toLocaleString('th-TH')} ตร.ม. (${pct}%)`
-      + `<span class="space-prog"><span class="space-prog-fill" style="width:${Math.min(100,pct)}%"></span></span>`;
+      + `<span class="space-prog"><span class="space-prog-fill" style="width:${Math.min(100,pct)}%;background:${barColor}"></span></span>`
+      + iconSummary + lowSpaceBtn;
   });
   // แถบพื้นที่ใช้สอยส่วนตัว
   const usableEl = document.getElementById('usable-area-label');
