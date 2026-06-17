@@ -170,9 +170,13 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  min-height:340px;
   margin-top: 130px;
   margin-bottom: 96px;
+  /* ตรึงกรอบ: สูงคงที่ = จอ ลบแถบบน(130) + แถบล่าง(96) แล้วเลื่อนภายในกล่องเอง */
+  height: calc(100vh - 226px);
+  height: calc(100dvh - 226px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== FARM VIEW ===== */
@@ -1102,9 +1106,13 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  min-height:340px;
   margin-top: 130px;
   margin-bottom: 96px;
+  /* ตรึงกรอบ: สูงคงที่ = จอ ลบแถบบน(130) + แถบล่าง(96) แล้วเลื่อนภายในกล่องเอง */
+  height: calc(100vh - 226px);
+  height: calc(100dvh - 226px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== FARM VIEW ===== */
@@ -3080,6 +3088,8 @@ body{
   max-width:560px;
   margin-left:auto; margin-right:auto;
   min-height:100vh;
+  height:100vh; height:100dvh;
+  overflow:hidden;            /* ปิดการเลื่อนของทั้งหน้า ให้เลื่อนภายใน #main แทน */
   position:relative;
   box-shadow:0 0 50px rgba(0,0,0,0.45);
 }
