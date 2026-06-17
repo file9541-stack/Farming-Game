@@ -3137,9 +3137,10 @@ body { padding-bottom: 72px; }
 }
 .plot-menu-bar:active{ transform:scale(0.97); }
 .plot-zoom-overlay{
-  display:none; position:fixed; inset:0; z-index:3600;
+  display:none; position:fixed; inset:0; z-index:100100;  /* สูงกว่าทุก UI (แชท/ล็อกอิน) กันเส้นโผล่ทับ */
   align-items:center; justify-content:center;
-  background:rgba(8,16,4,0.97); padding:16px; backdrop-filter:blur(6px);
+  background:rgba(12,24,6,0.45); padding:16px;
+  -webkit-backdrop-filter:blur(9px); backdrop-filter:blur(9px);
 }
 .plot-zoom-overlay.show{ display:flex; animation:popIn 0.2s ease; }
 .plot-zoom-card{ width:100%; max-width:280px; text-align:center; }
