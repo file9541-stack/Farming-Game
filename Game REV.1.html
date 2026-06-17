@@ -3077,8 +3077,18 @@ body { padding-bottom: 72px; }
 
 <!-- ===== LOGIN SCREEN (หน้าล็อกอิน - ทดสอบในเครื่อง ยังไม่ต่อเซิร์ฟเวอร์) ===== -->
 <style>
+/* ===== กรอบแอปความกว้างคงที่ (เปิดบน PC ก็ไม่ยืด เหมือนมือถือ) ===== */
+html{ background:#0d1f08; }
+body{
+  max-width:560px;
+  margin-left:auto; margin-right:auto;
+  min-height:100vh;
+  position:relative;
+  box-shadow:0 0 50px rgba(0,0,0,0.45);
+}
 #login-screen{
-  position:fixed; inset:0; z-index:100000;
+  position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:560px; z-index:100000;
   display:flex; align-items:center; justify-content:center;
   padding:20px;
   background:
