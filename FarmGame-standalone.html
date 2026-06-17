@@ -70,7 +70,7 @@ body{
   .factory-grid{grid-template-columns:1fr 1fr;}
   .animals-grid{grid-template-columns:1fr 1fr;}
   .market-grid{grid-template-columns:1fr 1fr;}
-  .plots-grid{grid-template-columns:repeat(4,1fr);}
+  .plots-grid{grid-template-columns:repeat(2,1fr);}
 }
 
 /* ===== TOPBAR ===== */
@@ -208,7 +208,7 @@ body{
   display: flex; align-items: center; gap: 5px;
 }
 
-.plots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -1153,7 +1153,7 @@ body{
   display: flex; align-items: center; gap: 5px;
 }
 
-.plots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -1326,7 +1326,7 @@ body{
   .factory-grid{grid-template-columns:1fr 1fr;}
   .animals-grid{grid-template-columns:1fr 1fr;}
   .market-grid{grid-template-columns:1fr 1fr;}
-  .plots-grid{grid-template-columns:repeat(4,1fr);}
+  .plots-grid{grid-template-columns:repeat(2,1fr);}
 }
 
 /* ===== BOTTOM NAV ===== */
@@ -3070,11 +3070,11 @@ body { padding-bottom: 72px; }
 .slot-add-cell.slot-add-none:hover { background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important; }
 /* ปุ่มเพิ่ม "แปลงปลูกพืช" — ขยายกล่องกว้างขึ้น (กิน 2 ช่อง) ให้อ่านข้อความได้ครบ */
 .plot.slot-add-cell{
-  aspect-ratio:auto; grid-column:span 2; min-height:96px; padding:8px 8px;
+  aspect-ratio:1; grid-column:span 1; padding:8px; gap:4px;
 }
-.plot.slot-add-cell .sac-plus{ width:32px;height:32px;font-size:1.3rem; }
-.plot.slot-add-cell .sac-title{ font-size:0.82rem; }
-.plot.slot-add-cell .sac-sub{ font-size:0.62rem; }
+.plot.slot-add-cell .sac-plus{ width:40px;height:40px;font-size:1.6rem; }
+.plot.slot-add-cell .sac-title{ font-size:0.95rem; }
+.plot.slot-add-cell .sac-sub{ font-size:0.72rem; }
 
 /* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
 #demolish-modal {
@@ -6019,7 +6019,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span style="font-size:0.58rem;color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.4);">รอปลูกผัก</span></div>`;
+      return `<div class="plot" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span style="font-size:0.95rem;color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.4);">รอปลูกผัก</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
