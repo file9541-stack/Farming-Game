@@ -3219,6 +3219,26 @@ body { padding-bottom: 72px; }
     }
   }
 
+  // เปิดให้ส่วนอื่น (เช่น ปุ่มออกจากระบบ) เรียกกลับมาหน้าล็อกอินได้
+  window.showLogin = function(){
+    try{ window.CURRENT_PLAYER = null; }catch(e){}
+    // เคลียร์ช่องกรอกและข้อความเตือน
+    ['login-user','login-pass','reg-user','reg-pass','reg-pass2'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.value = '';
+    });
+    document.getElementById('login-error').classList.remove('show');
+    document.getElementById('register-error').classList.remove('show');
+    document.getElementById('register-ok').classList.remove('show');
+    // กลับมาที่แท็บเข้าสู่ระบบเสมอ
+    document.querySelectorAll('.login-tab').forEach(function(t){
+      t.classList.toggle('active', t.dataset.tab === 'login');
+    });
+    document.querySelectorAll('.login-pane').forEach(function(p){
+      p.classList.toggle('active', p.id === 'pane-login');
+    });
+    screen.classList.remove('hidden');
+  };
+
   function showErr(el, msg){ el.textContent = '⚠️ ' + msg; el.classList.add('show'); }
 
   // ----- สลับแท็บ -----
@@ -8438,6 +8458,14 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'admin'){ closeNav(); openAdmin(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
+  // ปุ่มออกจากระบบ — กลับไปหน้าล็อกอิน
+  var logoutBtn = document.querySelector('.navd-logout');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', function(){
+      closeNav();
+      if(typeof window.showLogin === 'function') window.showLogin();
+    });
+  }
   // ปิดหน้าต่างประวัติการอัพเดต
   document.getElementById('version-close').addEventListener('click', closeVersionHistory);
   document.getElementById('version-overlay').addEventListener('click', function(e){
