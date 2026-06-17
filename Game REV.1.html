@@ -3075,6 +3075,121 @@ body { padding-bottom: 72px; }
 </style>
 <body>
 
+<!-- ===== LOGIN SCREEN (หน้าล็อกอิน - ทดสอบในเครื่อง ยังไม่ต่อเซิร์ฟเวอร์) ===== -->
+<style>
+#login-screen{
+  position:fixed; inset:0; z-index:100000;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 18% 88%, rgba(255,255,255,0.30), transparent 42%),
+    radial-gradient(circle at 85% 12%, rgba(255,255,180,0.35), transparent 38%),
+    linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%);
+}
+#login-screen.hidden{ display:none; }
+.login-card{
+  width:100%; max-width:380px;
+  background:var(--panel,#fffdf5);
+  border:1.5px solid var(--border,#d4b483);
+  border-radius:28px;
+  padding:30px 26px 26px;
+  box-shadow:0 14px 40px rgba(120,80,20,0.28), 0 1px 0 rgba(255,255,255,0.9) inset;
+  text-align:center;
+  animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1);
+}
+.login-logo{ font-size:3rem; line-height:1; margin-bottom:6px; }
+.login-title{ font-size:1.4rem; font-weight:800; color:#7a4a00; margin-bottom:2px; }
+.login-sub{ font-size:0.85rem; color:#a07a40; margin-bottom:20px; }
+.login-field{ text-align:left; margin-bottom:14px; }
+.login-field label{ display:block; font-size:0.8rem; font-weight:700; color:#7a4a00; margin-bottom:5px; }
+.login-field input{
+  width:100%; padding:12px 14px;
+  border:1.5px solid var(--border,#d4b483);
+  border-radius:14px; font-family:inherit; font-size:0.95rem;
+  background:#fffefb; color:#5a3a10; outline:none;
+}
+.login-field input:focus{ border-color:#f5c518; box-shadow:0 0 0 3px rgba(245,197,24,0.25); }
+.login-error{
+  display:none; color:var(--red,#e84040); font-size:0.82rem;
+  font-weight:700; margin-bottom:12px; text-align:left;
+}
+.login-error.show{ display:block; }
+.login-btn{
+  width:100%; padding:13px; border:none; border-radius:16px;
+  font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer;
+  transition:transform 0.1s, filter 0.15s; margin-bottom:10px;
+}
+.login-btn:active{ transform:scale(0.97); }
+.login-btn.primary{ background:linear-gradient(135deg,#7cc04a,#55a030); color:#fff; box-shadow:0 4px 0 #3f7a22; }
+.login-btn.admin{ background:linear-gradient(135deg,#f5c518,#e0a800); color:#5a3a00; box-shadow:0 4px 0 #b88600; }
+.login-btn.ghost{ background:transparent; color:#a07a40; box-shadow:none; font-weight:700; font-size:0.85rem; margin-bottom:0; }
+.login-divider{ display:flex; align-items:center; gap:10px; color:#c0a060; font-size:0.78rem; margin:14px 0; }
+.login-divider::before, .login-divider::after{ content:""; flex:1; height:1px; background:rgba(200,160,80,0.4); }
+.login-hint{ font-size:0.72rem; color:#b09060; margin-top:14px; line-height:1.5; }
+</style>
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🌻</div>
+    <div class="login-title">ฟาร์มมีชีวิต</div>
+    <div class="login-sub">เข้าสู่ระบบเพื่อเริ่มเล่น</div>
+
+    <form id="login-form" autocomplete="off">
+      <div class="login-field">
+        <label for="login-user">ชื่อผู้ใช้</label>
+        <input type="text" id="login-user" placeholder="กรอกชื่อผู้ใช้" />
+      </div>
+      <div class="login-field">
+        <label for="login-pass">รหัสผ่าน</label>
+        <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
+      </div>
+      <div class="login-error" id="login-error">⚠️ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน</div>
+      <button type="submit" class="login-btn primary">🚪 เข้าสู่ระบบ</button>
+    </form>
+
+    <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
+
+    <div class="login-divider">หรือ</div>
+
+    <button type="button" class="login-btn admin" id="login-admin">👑 เข้าระบบผู้ดูแล (เข้าทันที)</button>
+
+    <div class="login-hint">โหมดทดสอบ — ยังไม่เชื่อมต่อเซิร์ฟเวอร์<br>ชื่อผู้ใช้/รหัสผ่านใดก็ได้ใช้เข้าได้</div>
+  </div>
+</div>
+<script>
+(function(){
+  var screen = document.getElementById('login-screen');
+  var form   = document.getElementById('login-form');
+  var userEl = document.getElementById('login-user');
+  var passEl = document.getElementById('login-pass');
+  var errEl  = document.getElementById('login-error');
+
+  function enterGame(name){
+    try{ window.CURRENT_PLAYER = name; }catch(e){}
+    screen.classList.add('hidden');
+    if(typeof window.toast === 'function'){
+      window.toast('ยินดีต้อนรับ ' + name + ' 🌻');
+    }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var u = userEl.value.trim();
+    var p = passEl.value.trim();
+    if(!u || !p){ errEl.classList.add('show'); return; }
+    errEl.classList.remove('show');
+    enterGame(u);
+  });
+
+  document.getElementById('login-guest').addEventListener('click', function(){
+    enterGame('ผู้เยี่ยมชม');
+  });
+
+  document.getElementById('login-admin').addEventListener('click', function(){
+    enterGame('ผู้ดูแลระบบ');
+  });
+})();
+</script>
+
 <!-- ===== CHAT PANEL (แถบแชทออนไลน์ซ่อนด้านซ้าย) ===== -->
 <button id="chat-toggle">💬<span class="chat-badge" id="chat-badge">0</span></button>
 <div id="chat-overlay"></div>
