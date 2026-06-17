@@ -995,12 +995,6 @@ body{
 body{
   font-family:'Sarabun',sans-serif;
   background-color:#bfe3a8;
-  background-image:
-    linear-gradient(180deg, rgba(255,253,245,0.32), rgba(255,253,245,0.22)),
-    var(--bg-farm, linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%));
-  background-size: cover, cover;
-  background-position: center top, center top;
-  background-attachment: fixed, fixed;
   min-height:100vh;
   display:flex;flex-direction:column;align-items:center;
   overflow-x:hidden;
@@ -3076,8 +3070,6 @@ body { padding-bottom: 72px; }
 
 <!-- ===== LOGIN SCREEN (หน้าล็อกอิน - ทดสอบในเครื่อง ยังไม่ต่อเซิร์ฟเวอร์) ===== -->
 <style>
-/* รูปพื้นหลังฟาร์ม (ใช้ร่วมกันทั้งหน้าล็อกอินและพื้นหลังเกมทุกหน้า) */
-:root{ --bg-farm: url('ภาพหน้าจอ/001.png'); }
 /* ===== กรอบแอปความกว้างคงที่ (เปิดบน PC ก็ไม่ยืด เหมือนมือถือ) ===== */
 html{ background:#0d1f08; }
 body{
@@ -3087,20 +3079,28 @@ body{
   position:relative;
   box-shadow:0 0 50px rgba(0,0,0,0.45);
 }
+/* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
+body, #login-screen{
+  background-image: url('ภาพหน้าจอ/001.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
   width:100%; max-width:560px; z-index:100000;
   display:flex; align-items:center; justify-content:center;
   padding:20px;
-  background:
-    linear-gradient(180deg, rgba(20,40,10,0.45) 0%, rgba(20,40,10,0.25) 40%, rgba(20,40,10,0.55) 100%),
-    var(--bg-farm);
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
+}
+/* เลเยอร์มืดของหน้าล็อกอิน (อยู่เหนือรูป ใต้การ์ด) */
+#login-screen::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(20,40,10,0.45) 0%, rgba(20,40,10,0.25) 40%, rgba(20,40,10,0.55) 100%);
 }
 #login-screen.hidden{ display:none; }
 .login-card{
+  position:relative; z-index:1;
   width:100%; max-width:380px;
   /* โปร่งใสมองเห็นฟาร์มจาง ๆ + เบลอเพื่อให้อ่านตัวหนังสือชัด */
   background:rgba(255,250,240,0.40);
