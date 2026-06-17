@@ -3121,6 +3121,44 @@ body { padding-bottom: 72px; }
 .plot.slot-add-cell .sac-title{ font-size:0.95rem; }
 .plot.slot-add-cell .sac-sub{ font-size:0.72rem; }
 
+/* ===== PLOT FLOATING MENU + ZOOM ===== */
+.plot-menu{
+  position:fixed; z-index:2500; display:none;
+  flex-direction:column; gap:5px;
+}
+.plot-menu.show{ display:flex; animation:popIn 0.16s ease; }
+.plot-menu-bar{
+  background:linear-gradient(135deg,#4a8b3a,#2e6b20); color:#eaffd8;
+  font-family:inherit; font-size:0.9rem; font-weight:800; white-space:nowrap;
+  border:none; border-radius:12px; padding:7px 14px; cursor:pointer;
+  box-shadow:0 3px 12px rgba(20,60,10,0.4);
+}
+.plot-menu-bar:active{ transform:scale(0.97); }
+.plot-zoom-overlay{
+  display:none; position:fixed; inset:0; z-index:3600;
+  align-items:center; justify-content:center;
+  background:rgba(10,20,5,0.85); padding:16px; backdrop-filter:blur(3px);
+}
+.plot-zoom-overlay.show{ display:flex; animation:popIn 0.2s ease; }
+.plot-zoom-card{ width:100%; max-width:520px; text-align:center; }
+.plot-zoom-img{
+  width:100%; aspect-ratio:1.4;
+  background-image:url('ภาพหน้าจอ/plot-soil.png');
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 18px rgba(120,70,20,0.75));
+}
+.plot-zoom-label{
+  margin-top:10px; color:#fff; font-size:1.2rem; font-weight:800;
+  text-shadow:0 2px 6px rgba(0,0,0,0.6);
+}
+.plot-zoom-close{
+  position:absolute; top:18px; right:18px; width:44px; height:44px;
+  border-radius:50%; border:none; background:rgba(255,255,255,0.92); color:#5a3a10;
+  font-size:1.3rem; font-weight:800; cursor:pointer; z-index:1;
+  box-shadow:0 4px 14px rgba(0,0,0,0.45);
+}
+.plot-zoom-close:active{ transform:scale(0.94); }
+
 /* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
 #demolish-modal {
   display:none; position:fixed; inset:0;
@@ -3839,6 +3877,21 @@ body, #login-screen{
       <button class="dem-confirm" id="demolish-confirm">🧹 รื้อถอน</button>
       <button class="dem-cancel" id="demolish-cancel">ยกเลิก</button>
     </div>
+  </div>
+</div>
+
+<!-- PLOT FLOATING MENU (กดแปลง → เด้งเมนูลอย 2 แถบ เฉียงขึ้นขวา) -->
+<div id="plot-menu" class="plot-menu">
+  <button class="plot-menu-bar" id="plot-menu-view">🔍 ดูแปลงใกล้ๆ</button>
+  <button class="plot-menu-bar" id="plot-menu-manage">🌱 ปลูกพืช / รื้อถอน</button>
+</div>
+
+<!-- PLOT ZOOM (ดูแปลงใกล้ ๆ — ภาพขยายเกือบเต็มจอ) -->
+<div id="plot-zoom-overlay" class="plot-zoom-overlay">
+  <button class="plot-zoom-close" id="plot-zoom-close">✕</button>
+  <div class="plot-zoom-card">
+    <div class="plot-zoom-img"></div>
+    <div class="plot-zoom-label">แปลงปลูกพืช</div>
   </div>
 </div>
 
@@ -6081,7 +6134,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">รอปลูกพืช</span></div>`;
+      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อดูแปลง">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">ดูแปลง</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
@@ -6094,7 +6147,7 @@ function renderFarm(){
   }).join('') + addCellHtml('plots');
 }
 
-function clickPlot(i){
+function clickPlot(i, el){
   const p = plots[i];
   if(p.crop){
     if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
@@ -6106,8 +6159,36 @@ function clickPlot(i){
     renderFarm(); updateStockStatus();
     return;
   }
-  // แปลงว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openSlotAction('plots', i);
+  // แปลงว่างที่สร้างแล้ว → เด้งเมนูลอย (ดูแปลง / ปลูกพืช-รื้อถอน)
+  openPlotMenu(i, el);
+}
+
+// ─── เมนูลอยของแปลง (เด้งเฉียงขึ้นขวา 45°) ───
+let plotMenuIdx = null;
+function openPlotMenu(i, el){
+  plotMenuIdx = i;
+  const menu = document.getElementById('plot-menu');
+  menu.classList.add('show');
+  const r  = el.getBoundingClientRect();
+  const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  // วางเฉียงขึ้น-ขวา (ตะวันออกเฉียงเหนือ) จากมุมขวาบนของแปลง
+  let left = r.left + r.width * 0.55;
+  let top  = r.top - mh - 6;
+  left = Math.min(left, window.innerWidth  - mw - 8);
+  left = Math.max(8, left);
+  if(top < 8) top = r.bottom + 6;   // ชนขอบบน → วางใต้แปลงแทน
+  menu.style.left = left + 'px';
+  menu.style.top  = top  + 'px';
+}
+function closePlotMenu(){ document.getElementById('plot-menu').classList.remove('show'); }
+function plotMenuView(){
+  closePlotMenu();
+  document.getElementById('plot-zoom-overlay').classList.add('show');
+}
+function plotMenuManage(){
+  const i = plotMenuIdx;
+  closePlotMenu();
+  if(i != null) openSlotAction('plots', i);
 }
 
 
@@ -8835,6 +8916,26 @@ if (demConfirm) demConfirm.addEventListener('click', confirmDemolish);
 if (demCancel)  demCancel.addEventListener('click', closeDemolish);
 if (demModal)   demModal.addEventListener('click', function (e) { if (e.target === this) closeDemolish(); });
 
+// ─────────────────────────── PLOT FLOATING MENU + ZOOM ───────────────────────────
+document.getElementById('plot-menu-view')?.addEventListener('click', plotMenuView);
+document.getElementById('plot-menu-manage')?.addEventListener('click', plotMenuManage);
+document.getElementById('plot-zoom-close')?.addEventListener('click', function(){
+  document.getElementById('plot-zoom-overlay').classList.remove('show');
+});
+document.getElementById('plot-zoom-overlay')?.addEventListener('click', function(e){
+  if(e.target === this) this.classList.remove('show');
+});
+// คลิกนอกเมนู → ปิด (ยกเว้นคลิกในเมนูเอง หรือคลิกแปลงอื่นซึ่งจะเปิดใหม่)
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('plot-menu');
+  if(!menu || !menu.classList.contains('show')) return;
+  if(menu.contains(e.target)) return;
+  if(e.target.closest('.plot-empty')) return;
+  closePlotMenu();
+});
+// เลื่อนกล่องเนื้อหา → ปิดเมนูลอย (ตำแหน่งจะไม่ตามแล้ว)
+document.getElementById('main')?.addEventListener('scroll', closePlotMenu);
+
 // ─────────────────────────── BUYER ACTIONS (ปุ่มผู้ซื้อใน sell modal) ───────────────────────────
 const buyersList = document.getElementById('buyers-list');
 if (buyersList) buyersList.addEventListener('click', function (e) {
@@ -8897,7 +8998,7 @@ farmContainer.addEventListener('click', function(e){
   const plot = e.target.closest('.plot');
   if(plot){
     const idx = [...plot.parentElement.children].indexOf(plot);
-    clickPlot(idx); return;
+    clickPlot(idx, plot); return;
   }
   // ไม้ยืนต้น (tree-grid ใช้ animal-pen class)
   const pen = e.target.closest('.animal-pen');
