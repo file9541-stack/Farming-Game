@@ -233,11 +233,12 @@ body{
   width:100%; aspect-ratio:1.4;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
-  filter:drop-shadow(0 0 7px rgba(255,214,120,0.6)) drop-shadow(0 2px 4px rgba(120,80,0,0.4));
+  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
 }
 .plot-wait-label{
-  font-size:0.74rem; color:#fff; font-weight:800; margin-top:-6px;
-  text-shadow:0 1px 3px rgba(0,0,0,0.85), 0 0 6px rgba(0,0,0,0.5);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:0.66rem; color:#fff; font-weight:800; white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.6);
 }
 
 .plot-bar{
@@ -1195,11 +1196,12 @@ body{
   width:100%; aspect-ratio:1.4;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
-  filter:drop-shadow(0 0 7px rgba(255,214,120,0.6)) drop-shadow(0 2px 4px rgba(120,80,0,0.4));
+  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
 }
 .plot-wait-label{
-  font-size:0.74rem; color:#fff; font-weight:800; margin-top:-6px;
-  text-shadow:0 1px 3px rgba(0,0,0,0.85), 0 0 6px rgba(0,0,0,0.5);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:0.66rem; color:#fff; font-weight:800; white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.6);
 }
 
 .plot-bar{
@@ -6079,7 +6081,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">รอปลูกผัก</span></div>`;
+      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">รอปลูกพืช</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
