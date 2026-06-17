@@ -3126,42 +3126,90 @@ body { padding-bottom: 72px; }
 .login-divider{ display:flex; align-items:center; gap:10px; color:#c0a060; font-size:0.78rem; margin:14px 0; }
 .login-divider::before, .login-divider::after{ content:""; flex:1; height:1px; background:rgba(200,160,80,0.4); }
 .login-hint{ font-size:0.72rem; color:#b09060; margin-top:14px; line-height:1.5; }
+.login-tabs{ display:flex; gap:6px; margin-bottom:20px; background:rgba(200,160,80,0.12); padding:5px; border-radius:16px; }
+.login-tab{
+  flex:1; padding:9px; border:none; border-radius:12px; cursor:pointer;
+  font-family:inherit; font-size:0.9rem; font-weight:800; color:#a07a40;
+  background:transparent; transition:all 0.15s;
+}
+.login-tab.active{ background:#fff; color:#7a4a00; box-shadow:0 2px 6px rgba(120,80,20,0.15); }
+.login-pane{ display:none; }
+.login-pane.active{ display:block; animation:popIn 0.3s ease; }
+.login-ok{
+  display:none; color:var(--green,#3cad3c); font-size:0.82rem;
+  font-weight:700; margin-bottom:12px; text-align:left;
+}
+.login-ok.show{ display:block; }
 </style>
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">🌻</div>
     <div class="login-title">ฟาร์มมีชีวิต</div>
-    <div class="login-sub">เข้าสู่ระบบเพื่อเริ่มเล่น</div>
+    <div class="login-sub">เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเริ่มเล่น</div>
 
-    <form id="login-form" autocomplete="off">
-      <div class="login-field">
-        <label for="login-user">ชื่อผู้ใช้</label>
-        <input type="text" id="login-user" placeholder="กรอกชื่อผู้ใช้" />
-      </div>
-      <div class="login-field">
-        <label for="login-pass">รหัสผ่าน</label>
-        <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
-      </div>
-      <div class="login-error" id="login-error">⚠️ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน</div>
-      <button type="submit" class="login-btn primary">🚪 เข้าสู่ระบบ</button>
-    </form>
+    <div class="login-tabs">
+      <button type="button" class="login-tab active" data-tab="login">เข้าสู่ระบบ</button>
+      <button type="button" class="login-tab" data-tab="register">สมัครสมาชิก</button>
+    </div>
 
-    <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
+    <!-- แท็บเข้าสู่ระบบ -->
+    <div class="login-pane active" id="pane-login">
+      <form id="login-form" autocomplete="off">
+        <div class="login-field">
+          <label for="login-user">ชื่อผู้ใช้</label>
+          <input type="text" id="login-user" placeholder="กรอกชื่อผู้ใช้" />
+        </div>
+        <div class="login-field">
+          <label for="login-pass">รหัสผ่าน</label>
+          <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
+        </div>
+        <div class="login-error" id="login-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
+        <button type="submit" class="login-btn primary">🚪 เข้าสู่ระบบ</button>
+      </form>
+      <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
+    </div>
+
+    <!-- แท็บสมัครสมาชิก -->
+    <div class="login-pane" id="pane-register">
+      <form id="register-form" autocomplete="off">
+        <div class="login-field">
+          <label for="reg-user">ตั้งชื่อผู้ใช้</label>
+          <input type="text" id="reg-user" placeholder="อย่างน้อย 3 ตัวอักษร" />
+        </div>
+        <div class="login-field">
+          <label for="reg-pass">ตั้งรหัสผ่าน</label>
+          <input type="password" id="reg-pass" placeholder="อย่างน้อย 4 ตัวอักษร" />
+        </div>
+        <div class="login-field">
+          <label for="reg-pass2">ยืนยันรหัสผ่าน</label>
+          <input type="password" id="reg-pass2" placeholder="กรอกรหัสผ่านอีกครั้ง" />
+        </div>
+        <div class="login-error" id="register-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
+        <div class="login-ok" id="register-ok">✅ สมัครสำเร็จ! เข้าสู่เกม...</div>
+        <button type="submit" class="login-btn primary">✨ สมัครสมาชิก</button>
+      </form>
+    </div>
 
     <div class="login-divider">หรือ</div>
 
     <button type="button" class="login-btn admin" id="login-admin">👑 เข้าระบบผู้ดูแล (เข้าทันที)</button>
 
-    <div class="login-hint">โหมดทดสอบ — ยังไม่เชื่อมต่อเซิร์ฟเวอร์<br>ชื่อผู้ใช้/รหัสผ่านใดก็ได้ใช้เข้าได้</div>
+    <div class="login-hint">โหมดทดสอบ — เก็บบัญชีไว้ในเครื่อง (ยังไม่เชื่อมต่อเซิร์ฟเวอร์)</div>
   </div>
 </div>
 <script>
 (function(){
   var screen = document.getElementById('login-screen');
-  var form   = document.getElementById('login-form');
-  var userEl = document.getElementById('login-user');
-  var passEl = document.getElementById('login-pass');
-  var errEl  = document.getElementById('login-error');
+  var STORE_KEY = 'farm_accounts';
+
+  // ----- จัดการบัญชีใน LocalStorage -----
+  function loadAccounts(){
+    try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveAccounts(a){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(a)); }catch(e){}
+  }
 
   function enterGame(name){
     try{ window.CURRENT_PLAYER = name; }catch(e){}
@@ -3171,15 +3219,62 @@ body { padding-bottom: 72px; }
     }
   }
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var u = userEl.value.trim();
-    var p = passEl.value.trim();
-    if(!u || !p){ errEl.classList.add('show'); return; }
-    errEl.classList.remove('show');
-    enterGame(u);
+  function showErr(el, msg){ el.textContent = '⚠️ ' + msg; el.classList.add('show'); }
+
+  // ----- สลับแท็บ -----
+  var tabs = document.querySelectorAll('.login-tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      document.querySelectorAll('.login-pane').forEach(function(p){ p.classList.remove('active'); });
+      document.getElementById('pane-' + tab.dataset.tab).classList.add('active');
+      document.getElementById('login-error').classList.remove('show');
+      document.getElementById('register-error').classList.remove('show');
+    });
   });
 
+  // ----- เข้าสู่ระบบ -----
+  var loginForm = document.getElementById('login-form');
+  var loginErr  = document.getElementById('login-error');
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var u = document.getElementById('login-user').value.trim();
+    var p = document.getElementById('login-pass').value;
+    if(!u || !p){ showErr(loginErr, 'กรุณากรอกข้อมูลให้ครบ'); return; }
+    var accounts = loadAccounts();
+    var key = u.toLowerCase();
+    if(!accounts[key]){ showErr(loginErr, 'ไม่พบบัญชีนี้ กรุณาสมัครสมาชิกก่อน'); return; }
+    if(accounts[key].pass !== p){ showErr(loginErr, 'รหัสผ่านไม่ถูกต้อง'); return; }
+    loginErr.classList.remove('show');
+    enterGame(accounts[key].name);
+  });
+
+  // ----- สมัครสมาชิก -----
+  var regForm = document.getElementById('register-form');
+  var regErr  = document.getElementById('register-error');
+  var regOk   = document.getElementById('register-ok');
+  regForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    regOk.classList.remove('show');
+    var u  = document.getElementById('reg-user').value.trim();
+    var p  = document.getElementById('reg-pass').value;
+    var p2 = document.getElementById('reg-pass2').value;
+    if(!u || !p || !p2){ showErr(regErr, 'กรุณากรอกข้อมูลให้ครบ'); return; }
+    if(u.length < 3){ showErr(regErr, 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร'); return; }
+    if(p.length < 4){ showErr(regErr, 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+    if(p !== p2){ showErr(regErr, 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'); return; }
+    var accounts = loadAccounts();
+    var key = u.toLowerCase();
+    if(accounts[key]){ showErr(regErr, 'ชื่อผู้ใช้นี้ถูกใช้แล้ว'); return; }
+    accounts[key] = { name: u, pass: p, created: Date.now() };
+    saveAccounts(accounts);
+    regErr.classList.remove('show');
+    regOk.classList.add('show');
+    setTimeout(function(){ enterGame(u); }, 700);
+  });
+
+  // ----- เล่นเป็นผู้เยี่ยมชม -----
   document.getElementById('login-guest').addEventListener('click', function(){
     enterGame('ผู้เยี่ยมชม');
   });
