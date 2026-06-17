@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>🌻 Millionaire Farm Wars — สงครามฟาร์มมหาเศรษฐี</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
@@ -226,7 +226,8 @@ body{
 .plot.plot-empty{
   background:none !important; border:none !important; box-shadow:none !important;
   aspect-ratio:auto; padding:0; gap:0; overflow:visible;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  align-self:center;   /* จัดแปลงให้อยู่กลางช่องแนวตั้ง (ไม่ถูกยืดเต็มแถว) */
 }
 .plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
 .plot-soil-img{
@@ -1189,7 +1190,8 @@ body{
 .plot.plot-empty{
   background:none !important; border:none !important; box-shadow:none !important;
   aspect-ratio:auto; padding:0; gap:0; overflow:visible;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  align-self:center;   /* จัดแปลงให้อยู่กลางช่องแนวตั้ง (ไม่ถูกยืดเต็มแถว) */
 }
 .plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
 .plot-soil-img{
@@ -3140,7 +3142,7 @@ body { padding-bottom: 72px; }
   background:rgba(10,20,5,0.85); padding:16px; backdrop-filter:blur(3px);
 }
 .plot-zoom-overlay.show{ display:flex; animation:popIn 0.2s ease; }
-.plot-zoom-card{ width:100%; max-width:520px; text-align:center; }
+.plot-zoom-card{ width:100%; max-width:360px; text-align:center; }
 .plot-zoom-img{
   width:100%; aspect-ratio:1.4;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
