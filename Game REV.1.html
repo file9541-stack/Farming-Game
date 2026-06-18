@@ -3217,8 +3217,8 @@ body, #login-screen{
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
   width:100%; max-width:560px; z-index:100000;
-  display:flex; overflow-y:auto;       /* การ์ดสูงเกินจอ → เลื่อนได้ ไม่ตัดส่วนบน */
-  padding:20px;
+  display:flex; align-items:center; justify-content:center;
+  padding:14px;
 }
 /* เลเยอร์มืดของหน้าล็อกอิน (อยู่เหนือรูป ใต้การ์ด) */
 #login-screen::before{
@@ -3228,51 +3228,50 @@ body, #login-screen{
 #login-screen.hidden{ display:none; }
 .login-card{
   position:relative; z-index:1;
-  margin:auto;   /* จัดกึ่งกลางเมื่อมีที่ว่าง · เลื่อนได้เมื่อสูงเกินจอ */
-  width:100%; max-width:380px;
+  width:100%; max-width:370px;
   /* โปร่งใสมองเห็นฟาร์มจาง ๆ + เบลอเพื่อให้อ่านตัวหนังสือชัด */
   background:rgba(255,250,240,0.40);
   -webkit-backdrop-filter:blur(1px) saturate(112%);
   backdrop-filter:blur(1px) saturate(112%);
   border:1.5px solid rgba(255,255,255,0.55);
-  border-radius:28px;
-  padding:30px 26px 26px;
+  border-radius:22px;
+  padding:16px 22px 18px;
   box-shadow:0 14px 40px rgba(60,35,5,0.32), 0 1px 0 rgba(255,255,255,0.85) inset;
   text-align:center;
   animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1);
 }
 .login-logo{
-  width:132px; aspect-ratio:1.55; margin:0 auto 8px;
+  width:78px; aspect-ratio:1.55; margin:0 auto 2px;
   background:url('ภาพหน้าจอ/logo-crown.png') center/contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4));
 }
-.login-title{ font-size:1.5rem; font-weight:800; color:#5e3700; margin-bottom:0; line-height:1.15; letter-spacing:0.3px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
-.login-name-th{ font-size:1rem; font-weight:800; color:#b96e1f; margin-bottom:4px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
-.login-sub{ font-size:0.82rem; font-weight:700; color:#7a5520; margin-bottom:20px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
-.login-field{ text-align:left; margin-bottom:14px; }
-.login-field label{ display:block; font-size:0.8rem; font-weight:800; color:#5e3700; margin-bottom:5px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-title{ font-size:1.22rem; font-weight:800; color:#5e3700; margin-bottom:0; line-height:1.12; letter-spacing:0.3px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
+.login-name-th{ font-size:0.86rem; font-weight:800; color:#b96e1f; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
+.login-sub{ font-size:0.72rem; font-weight:700; color:#7a5520; margin-bottom:10px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-field{ text-align:left; margin-bottom:7px; }
+.login-field label{ display:block; font-size:0.74rem; font-weight:800; color:#5e3700; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
 .login-field input{
-  width:100%; padding:12px 14px;
+  width:100%; padding:8px 12px;
   border:1.5px solid rgba(180,135,60,0.7);
-  border-radius:14px; font-family:inherit; font-size:0.95rem;
+  border-radius:11px; font-family:inherit; font-size:0.88rem;
   background:rgba(255,254,250,0.92); color:#4a2f0c; outline:none;
 }
 .login-field input:focus{ border-color:#f5c518; box-shadow:0 0 0 3px rgba(245,197,24,0.25); }
 .login-error{
-  display:none; color:var(--red,#e84040); font-size:0.82rem;
-  font-weight:700; margin-bottom:12px; text-align:left;
+  display:none; color:var(--red,#e84040); font-size:0.76rem;
+  font-weight:700; margin-bottom:6px; text-align:left;
 }
 .login-error.show{ display:block; }
 .login-btn{
-  width:100%; padding:13px; border:none; border-radius:16px;
-  font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer;
-  transition:transform 0.1s, filter 0.15s; margin-bottom:10px;
+  width:100%; padding:9px; border:none; border-radius:12px;
+  font-family:inherit; font-size:0.95rem; font-weight:800; cursor:pointer;
+  transition:transform 0.1s, filter 0.15s; margin-bottom:7px;
 }
 .login-btn:active{ transform:scale(0.97); }
 /* ไอคอนรูปบนปุ่มล็อกอิน (แทนอีโมจิ) */
 .login-ico{
-  display:inline-block; width:2.15em; height:2.15em; margin-right:5px;
-  vertical-align:-0.72em; background-size:contain; background-position:center;
+  display:inline-block; width:1.9em; height:1.9em; margin-right:4px;
+  vertical-align:-0.62em; background-size:contain; background-position:center;
   background-repeat:no-repeat;
   filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25));
 }
@@ -3281,22 +3280,22 @@ body, #login-screen{
 .ico-sprout{ background-image:url('ภาพหน้าจอ/icon-sprout.png'); }
 .login-btn.primary{ background:linear-gradient(135deg,#7cc04a,#55a030); color:#fff; box-shadow:0 4px 0 #3f7a22; }
 .login-btn.admin{ background:linear-gradient(135deg,#f5c518,#e0a800); color:#5a3a00; box-shadow:0 4px 0 #b88600; }
-.login-btn.ghost{ background:transparent; color:#7a5520; box-shadow:none; font-weight:800; font-size:0.85rem; margin-bottom:0; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
-.login-divider{ display:flex; align-items:center; gap:10px; color:#8a6a30; font-size:0.78rem; font-weight:700; margin:14px 0; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-btn.ghost{ background:transparent; color:#7a5520; box-shadow:none; font-weight:800; font-size:0.82rem; margin-bottom:0; padding:5px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-divider{ display:flex; align-items:center; gap:10px; color:#8a6a30; font-size:0.74rem; font-weight:700; margin:8px 0; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
 .login-divider::before, .login-divider::after{ content:""; flex:1; height:1px; background:rgba(120,80,20,0.35); }
-.login-hint{ font-size:0.72rem; color:#7a5520; font-weight:600; margin-top:14px; line-height:1.5; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
-.login-tabs{ display:flex; gap:6px; margin-bottom:20px; background:rgba(120,80,20,0.16); padding:5px; border-radius:16px; }
+.login-hint{ font-size:0.66rem; color:#7a5520; font-weight:600; margin-top:8px; line-height:1.4; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-tabs{ display:flex; gap:6px; margin-bottom:10px; background:rgba(120,80,20,0.16); padding:4px; border-radius:14px; }
 .login-tab{
-  flex:1; padding:9px; border:none; border-radius:12px; cursor:pointer;
-  font-family:inherit; font-size:0.9rem; font-weight:800; color:#6a4a18;
+  flex:1; padding:7px; border:none; border-radius:10px; cursor:pointer;
+  font-family:inherit; font-size:0.86rem; font-weight:800; color:#6a4a18;
   background:transparent; transition:all 0.15s;
 }
 .login-tab.active{ background:#fff; color:#7a4a00; box-shadow:0 2px 6px rgba(120,80,20,0.15); }
 .login-pane{ display:none; }
 .login-pane.active{ display:block; animation:popIn 0.3s ease; }
 .login-ok{
-  display:none; color:var(--green,#3cad3c); font-size:0.82rem;
-  font-weight:700; margin-bottom:12px; text-align:left;
+  display:none; color:var(--green,#3cad3c); font-size:0.78rem;
+  font-weight:700; margin-bottom:6px; text-align:left;
 }
 .login-ok.show{ display:block; }
 </style>
@@ -5138,6 +5137,14 @@ const UPDATE_HISTORY = [
     details: [
       'เพิ่มขนาดไอคอนบนปุ่มล็อกอินให้ใหญ่ขึ้น',
       'ทำหน้าล็อกอินเลื่อน (scroll) ได้เมื่อการ์ดสูงเกินจอ (แท็บสมัครสมาชิก) — โลโก้ส่วนบนไม่ถูกตัดอีก',
+    ],
+  },
+  {
+    version: '0.52',
+    date: '17/06/2026',
+    title: 'ย่อการ์ดล็อกอินให้พอดีหน้าเดียว (เอา scroll ออก)',
+    details: [
+      'เอาการ scroll ออก แล้วย่อโลโก้/หัวข้อ/ช่องกรอก/ปุ่ม/ระยะห่าง ให้แสดงครบทั้งหมดในหน้าเดียวโดยไม่ต้องเลื่อน (ทั้งแท็บเข้าสู่ระบบและสมัครสมาชิก)',
     ],
   },
 ];
