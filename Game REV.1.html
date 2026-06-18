@@ -3244,6 +3244,13 @@ body, #login-screen{
   width:78px; aspect-ratio:1.55; margin:0 auto 2px;
   background:url('ภาพหน้าจอ/logo-crown.png') center/contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4));
+  animation: loginLogoFloat 3s ease-in-out infinite;
+  transform-origin:center bottom;
+}
+/* โลโก้มงกุฎ: ลอยขึ้น-ลง + เรืองแสง (วิบวับนุ่ม ๆ) ให้ดูมีชีวิต */
+@keyframes loginLogoFloat{
+  0%,100%{ transform:translateY(0) scale(1); filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4)) brightness(1); }
+  50%{ transform:translateY(-5px) scale(1.045); filter:drop-shadow(0 9px 14px rgba(150,100,0,0.5)) brightness(1.14); }
 }
 .login-title{ font-size:1.22rem; font-weight:800; color:#5e3700; margin-bottom:0; line-height:1.12; letter-spacing:0.3px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
 .login-name-th{ font-size:0.86rem; font-weight:800; color:#b96e1f; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
@@ -5145,6 +5152,14 @@ const UPDATE_HISTORY = [
     title: 'ย่อการ์ดล็อกอินให้พอดีหน้าเดียว (เอา scroll ออก)',
     details: [
       'เอาการ scroll ออก แล้วย่อโลโก้/หัวข้อ/ช่องกรอก/ปุ่ม/ระยะห่าง ให้แสดงครบทั้งหมดในหน้าเดียวโดยไม่ต้องเลื่อน (ทั้งแท็บเข้าสู่ระบบและสมัครสมาชิก)',
+    ],
+  },
+  {
+    version: '0.53',
+    date: '17/06/2026',
+    title: 'เพิ่ม Animation โลโก้มงกุฎหน้าล็อกอิน',
+    details: [
+      'โลโก้มงกุฎลอยขึ้น-ลง + เรืองแสงวิบวับนุ่ม ๆ ด้วย CSS keyframes (ไม่ใช้ GIF)',
     ],
   },
 ];
