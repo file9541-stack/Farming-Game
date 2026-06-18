@@ -9401,6 +9401,32 @@ openFlirt(btn.dataset.npcid);
 //       เหนือแชท/ล็อกอิน) กัน UI อื่นลอยทับเป็นเส้น, มีปุ่มปิด ✕ + กดนอกภาพปิดได้,
 //       โชว์เฉพาะรูปวัตถุที่ crop แล้ว + ชื่อกำกับใต้ภาพ, ขนาดพอเหมาะไม่เต็มจอเกินไป
 //     - ปิด pinch-zoom ของทั้งเกมที่ viewport (maximum-scale=1.0, user-scalable=no)
+//
+// 17. มาตรฐาน "Prompt ออกแบบภาพ (อีโมจิ/ไอคอน/รูป/ตัวละคร)" — เมื่อผู้ใช้ขอให้ช่วยคิด
+//     Prompt สำหรับสร้างภาพไปให้ GPT/ตัวสร้างภาพ → ต้องเขียน Prompt ภาษาอังกฤษ และใช้
+//     "สไตล์เดียวกันทั้งเกม" ให้เข้าชุดกัน (3D cartoon การ์ตูนฟาร์มแบบ Hay Day/Township/
+//     Family Farm เข้าชุดกับโลโก้มงกุฎทานตะวัน) โดยแนบ Shared style block ต่อท้าย Prompt
+//     ทุกอันเสมอ:
+//     ── ตัวอย่างโครง Prompt (ส่วนเฉพาะวัตถุ) ──
+//     "A charming <object> icon for a <use> ... <mood/details>, small green leaves or a
+//      sunflower accent ... friendly farm feeling."
+//     ── Shared style (วางท้ายทุก Prompt) ──
+//     "Style: cute 3D cartoon mobile farming game icon, glossy and polished, warm golden
+//      tones, soft studio lighting, rounded chunky shapes, thick clean outlines, vibrant
+//      saturated colors, subtle sparkle highlights, high detail, centered single object,
+//      isolated on transparent background (PNG), game UI asset, app icon quality, similar
+//      art style to Hay Day / Township / Family Farm. No text, no letters, no watermark,
+//      no background scene."
+//     - แนะนำให้ผู้ใช้สั่งทีละอัน + ขอ transparent PNG + ถ้าต้องการชุดให้บอก "keep the
+//       exact same art style/lighting/gold palette as the previous icon"
+//
+// 18. ทำ Animation ด้วย CSS ให้เสมอ (ไม่ใช้ GIF) — เมื่อผู้ใช้ขอให้ทำภาพ/ไอคอน/โลโก้
+//     เคลื่อนไหว → ใช้ CSS @keyframes + animation เท่านั้น (เช่น ลอยขึ้น-ลง translateY,
+//     เรืองแสง drop-shadow/brightness, เพชรเรืองแสง radial-gradient + mix-blend-mode,
+//     ดาวกระพริบ opacity/scale/rotate พร้อม animation-delay สลับจังหวะ)
+//     - ทำให้นุ่มนวลสมจริง (ease-in-out, infinite), ไม่ใช้ไฟล์ GIF/วิดีโอ
+//     - element ที่ต้องเคลื่อนไหวซ้อน (แสง/ดาว) ใส่เป็น child ที่ position:absolute
+//       ภายในกล่องที่ position:relative
 // ============================================================
 // ============================================================
 //  DATA — ย้ายไป data.js แล้ว (Phase 2)
