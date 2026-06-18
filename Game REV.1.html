@@ -3268,6 +3268,16 @@ body, #login-screen{
   transition:transform 0.1s, filter 0.15s; margin-bottom:10px;
 }
 .login-btn:active{ transform:scale(0.97); }
+/* ไอคอนรูปบนปุ่มล็อกอิน (แทนอีโมจิ) */
+.login-ico{
+  display:inline-block; width:1.7em; height:1.7em; margin-right:3px;
+  vertical-align:-0.5em; background-size:contain; background-position:center;
+  background-repeat:no-repeat;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+.ico-door{   background-image:url('ภาพหน้าจอ/icon-door.png'); }
+.ico-crown{  background-image:url('ภาพหน้าจอ/icon-crown.png'); }
+.ico-sprout{ background-image:url('ภาพหน้าจอ/icon-sprout.png'); }
 .login-btn.primary{ background:linear-gradient(135deg,#7cc04a,#55a030); color:#fff; box-shadow:0 4px 0 #3f7a22; }
 .login-btn.admin{ background:linear-gradient(135deg,#f5c518,#e0a800); color:#5a3a00; box-shadow:0 4px 0 #b88600; }
 .login-btn.ghost{ background:transparent; color:#7a5520; box-shadow:none; font-weight:800; font-size:0.85rem; margin-bottom:0; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
@@ -3313,7 +3323,7 @@ body, #login-screen{
           <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
         </div>
         <div class="login-error" id="login-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
-        <button type="submit" class="login-btn primary">🚪 เข้าสู่ระบบ</button>
+        <button type="submit" class="login-btn primary"><span class="login-ico ico-door"></span>เข้าสู่ระบบ</button>
       </form>
       <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
     </div>
@@ -3335,13 +3345,13 @@ body, #login-screen{
         </div>
         <div class="login-error" id="register-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
         <div class="login-ok" id="register-ok">✅ สมัครสำเร็จ! เข้าสู่เกม...</div>
-        <button type="submit" class="login-btn primary">✨ สมัครสมาชิก</button>
+        <button type="submit" class="login-btn primary"><span class="login-ico ico-sprout"></span>สมัครสมาชิก</button>
       </form>
     </div>
 
     <div class="login-divider">หรือ</div>
 
-    <button type="button" class="login-btn admin" id="login-admin">👑 เข้าระบบผู้ดูแล (เข้าทันที)</button>
+    <button type="button" class="login-btn admin" id="login-admin"><span class="login-ico ico-crown"></span>เข้าระบบผู้ดูแล (เข้าทันที)</button>
 
     <div class="login-hint">โหมดทดสอบ — เก็บบัญชีไว้ในเครื่อง (ยังไม่เชื่อมต่อเซิร์ฟเวอร์)</div>
   </div>
@@ -5110,6 +5120,14 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนโลโก้หน้าล็อกอินเป็นมงกุฎทานตะวัน',
     details: [
       'แทนอีโมจิ 🌻 ด้วยรูปโลโก้มงกุฎทานตะวัน (crop ขอบโปร่ง + บีบ + ฝัง base64) มีเงาใต้โลโก้',
+    ],
+  },
+  {
+    version: '0.50',
+    date: '17/06/2026',
+    title: 'เปลี่ยนอีโมจิปุ่มล็อกอินเป็นไอคอนรูปภาพ',
+    details: [
+      'แทนอีโมจิบนปุ่มด้วยไอคอนการ์ตูน 3D: เข้าสู่ระบบ (ประตูฟาร์ม) · ผู้ดูแล (มงกุฎอัญมณี) · สมัครสมาชิก (เมล็ดงอกวิบวับ) — crop/บีบ/ฝัง base64',
     ],
   },
 ];
