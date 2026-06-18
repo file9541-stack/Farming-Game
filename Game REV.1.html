@@ -3139,8 +3139,9 @@ body { padding-bottom: 72px; }
 .plot-zoom-overlay{
   display:none; position:fixed; inset:0; z-index:100100;  /* สูงกว่าทุก UI (แชท/ล็อกอิน) กันเส้นโผล่ทับ */
   align-items:center; justify-content:center;
-  background:rgba(12,24,6,0.45); padding:16px;
-  -webkit-backdrop-filter:blur(9px); backdrop-filter:blur(9px);
+  /* พื้นหลังทุ่งหญ้า (แทนเบลอเดิม) + ชั้นมืดจางทับให้แปลง/ตัวอักษรอ่านชัด */
+  background:linear-gradient(rgba(15,30,8,0.32),rgba(15,30,8,0.32)), url('ภาพหน้าจอ/plot-field-bg.jpg');
+  background-size:cover; background-position:center; padding:16px;
 }
 .plot-zoom-overlay.show{ display:flex; animation:popIn 0.2s ease; }
 .plot-zoom-card{ width:100%; max-width:280px; text-align:center; }
@@ -5201,6 +5202,14 @@ const UPDATE_HISTORY = [
     title: 'เอฟเฟกต์โลโก้มงกุฎ: ดาวกระพริบ + เพชรเรืองแสง + มงกุฎเรืองแสง',
     details: [
       'เพิ่มดาวกระพริบรอบมงกุฎ (twinkle), เพชรสีน้ำเงินเรืองแสงเต้นกลางมงกุฎ, และมงกุฎเรืองแสงทอง — ทำด้วย CSS ล้วน',
+    ],
+  },
+  {
+    version: '0.55',
+    date: '18/06/2026',
+    title: 'เปลี่ยนพื้นหลังภาพขยายแปลงจากเบลอ → รูปทุ่งหญ้า',
+    details: [
+      'หน้าจอ "ดูแปลงใกล้ๆ" เปลี่ยนพื้นหลังเบลอเดิมเป็นรูปทุ่งหญ้าฟาร์ม (บีบ JPEG + ฝัง base64) มีชั้นมืดจางทับให้แปลงดิน/ตัวอักษรอ่านชัด',
     ],
   },
 ];
