@@ -3241,16 +3241,43 @@ body, #login-screen{
   animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1);
 }
 .login-logo{
-  width:78px; aspect-ratio:1.55; margin:0 auto 2px;
+  position:relative;
+  width:84px; aspect-ratio:1.55; margin:0 auto 4px;
   background:url('ภาพหน้าจอ/logo-crown.png') center/contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4));
   animation: loginLogoFloat 3s ease-in-out infinite;
   transform-origin:center bottom;
 }
-/* โลโก้มงกุฎ: ลอยขึ้น-ลง + เรืองแสง (วิบวับนุ่ม ๆ) ให้ดูมีชีวิต */
+/* โลโก้มงกุฎ: ลอยขึ้น-ลง + เรืองแสงทองวิบวับ ให้ดูมีชีวิต */
 @keyframes loginLogoFloat{
-  0%,100%{ transform:translateY(0) scale(1); filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4)) brightness(1); }
-  50%{ transform:translateY(-5px) scale(1.045); filter:drop-shadow(0 9px 14px rgba(150,100,0,0.5)) brightness(1.14); }
+  0%,100%{ transform:translateY(0) scale(1); filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4)) drop-shadow(0 0 3px rgba(255,205,70,0.35)) brightness(1); }
+  50%{ transform:translateY(-5px) scale(1.05); filter:drop-shadow(0 9px 14px rgba(150,100,0,0.5)) drop-shadow(0 0 12px rgba(255,210,80,0.85)) brightness(1.16); }
+}
+/* เพชรสีน้ำเงินเรืองแสง (อยู่กลางมงกุฎ) */
+.logo-gem-glow{
+  position:absolute; left:50%; top:46%; width:30%; aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(120,200,255,0.95) 0%, rgba(60,150,255,0.45) 42%, transparent 70%);
+  border-radius:50%; pointer-events:none; mix-blend-mode:screen;
+  animation:gemPulse 1.7s ease-in-out infinite;
+}
+@keyframes gemPulse{
+  0%,100%{ opacity:0.4; transform:translate(-50%,-50%) scale(0.8); }
+  50%{ opacity:1; transform:translate(-50%,-50%) scale(1.2); }
+}
+/* ดาวกระพริบรอบมงกุฎ */
+.logo-star{
+  position:absolute; line-height:1; pointer-events:none; font-size:0.66rem;
+  filter:drop-shadow(0 0 3px rgba(255,240,160,0.95));
+  animation:starTwinkle 1.6s ease-in-out infinite;
+}
+.logo-star.s1{ top:-7px; left:4%; animation-delay:0s; }
+.logo-star.s2{ top:-11px; right:8%; font-size:0.82rem; animation-delay:0.55s; }
+.logo-star.s3{ bottom:0; left:-5px; animation-delay:0.95s; }
+.logo-star.s4{ top:34%; right:-7px; animation-delay:1.25s; }
+@keyframes starTwinkle{
+  0%,100%{ opacity:0.15; transform:scale(0.55) rotate(0deg); }
+  50%{ opacity:1; transform:scale(1.15) rotate(22deg); }
 }
 .login-title{ font-size:1.22rem; font-weight:800; color:#5e3700; margin-bottom:0; line-height:1.12; letter-spacing:0.3px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
 .login-name-th{ font-size:0.86rem; font-weight:800; color:#b96e1f; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
@@ -3308,7 +3335,13 @@ body, #login-screen{
 </style>
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo"></div>
+    <div class="login-logo">
+      <span class="logo-gem-glow"></span>
+      <span class="logo-star s1">✨</span>
+      <span class="logo-star s2">⭐</span>
+      <span class="logo-star s3">✨</span>
+      <span class="logo-star s4">✨</span>
+    </div>
     <div class="login-title">Millionaire Farm Wars</div>
     <div class="login-name-th">สงครามฟาร์มมหาเศรษฐี</div>
     <div class="login-sub">เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเริ่มเล่น</div>
@@ -5160,6 +5193,14 @@ const UPDATE_HISTORY = [
     title: 'เพิ่ม Animation โลโก้มงกุฎหน้าล็อกอิน',
     details: [
       'โลโก้มงกุฎลอยขึ้น-ลง + เรืองแสงวิบวับนุ่ม ๆ ด้วย CSS keyframes (ไม่ใช้ GIF)',
+    ],
+  },
+  {
+    version: '0.54',
+    date: '17/06/2026',
+    title: 'เอฟเฟกต์โลโก้มงกุฎ: ดาวกระพริบ + เพชรเรืองแสง + มงกุฎเรืองแสง',
+    details: [
+      'เพิ่มดาวกระพริบรอบมงกุฎ (twinkle), เพชรสีน้ำเงินเรืองแสงเต้นกลางมงกุฎ, และมงกุฎเรืองแสงทอง — ทำด้วย CSS ล้วน',
     ],
   },
 ];
