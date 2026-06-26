@@ -2,8 +2,8 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌻 ฟาร์มมีชีวิต</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🌻 Millionaire Farm Wars — สงครามฟาร์มมหาเศรษฐี</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
 
@@ -70,7 +70,7 @@ body{
   .factory-grid{grid-template-columns:1fr 1fr;}
   .animals-grid{grid-template-columns:1fr 1fr;}
   .market-grid{grid-template-columns:1fr 1fr;}
-  .plots-grid{grid-template-columns:repeat(4,1fr);}
+  .plots-grid{grid-template-columns:repeat(2,1fr);}
 }
 
 /* ===== TOPBAR ===== */
@@ -108,6 +108,16 @@ body{
   background:rgba(40,160,40,0.12);
   border-color:rgba(60,160,60,0.3);
   color:#1a6020;
+}
+.topstat-ruang {
+  background:rgba(212,162,0,0.16);
+  border-color:rgba(212,162,0,0.4);
+  color:#8a5a00;
+}
+.topstat-fgold {
+  background:rgba(150,110,40,0.14);
+  border-color:rgba(150,110,40,0.34);
+  color:#6a4810;
 }
 .topstat-asset {
   background:rgba(180,120,0,0.12);
@@ -163,14 +173,19 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:100%;max-width:960px;
+  width:calc(100% - 44px);max-width:500px;
+  margin-left:auto;margin-right:auto;
   background:var(--panel);
   border:2px solid var(--border);
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  min-height:340px;
-  margin-top: 130px;
+  margin-top: 100px;
+  margin-bottom: 80px;
+  height: calc(100vh - 180px);
+  height: calc(100dvh - 180px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== FARM VIEW ===== */
@@ -193,7 +208,7 @@ body{
   display: flex; align-items: center; gap: 5px;
 }
 
-.plots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -207,6 +222,25 @@ body{
 .plot:hover{transform:scale(1.06);filter:brightness(1.1);}
 .plot.watered{background:#7a4830;border-color:#4a2010;}
 .plot.ready{box-shadow:0 0 0 2px var(--gold),0 0 8px var(--gold);}
+/* ช่องว่าง (รอปลูกผัก): แปลงดินลอยบนแถบหมวด ไม่มีกรอบกล่อง + ขอบเรืองแสง + ป้ายอยู่ใต้แปลง */
+.plot.plot-empty{
+  background:none !important; border:none !important; box-shadow:none !important;
+  aspect-ratio:auto; padding:0; gap:0; overflow:visible;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  align-self:center;   /* จัดแปลงให้อยู่กลางช่องแนวตั้ง (ไม่ถูกยืดเต็มแถว) */
+}
+.plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
+.plot-soil-img{
+  width:100%; aspect-ratio:1.52;
+  background-image:url('ภาพหน้าจอ/plot-soil.png');
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
+}
+.plot-wait-label{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:0.66rem; color:#fff; font-weight:800; white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.6);
+}
 
 .plot-bar{
   position:absolute;bottom:0;left:0;height:5px;
@@ -995,13 +1029,6 @@ body{
 body{
   font-family:'Sarabun',sans-serif;
   background-color:#bfe3a8;
-  background-image:
-    radial-gradient(circle at 16% 90%, rgba(255,255,255,0.30), transparent 42%),
-    radial-gradient(circle at 85% 12%, rgba(255,255,180,0.35), transparent 38%),
-    linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%);
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
   min-height:100vh;
   display:flex;flex-direction:column;align-items:center;
   overflow-x:hidden;
@@ -1043,6 +1070,16 @@ body{
   background:rgba(40,160,40,0.12);
   border-color:rgba(60,160,60,0.3);
   color:#1a6020;
+}
+.topstat-ruang {
+  background:rgba(212,162,0,0.16);
+  border-color:rgba(212,162,0,0.4);
+  color:#8a5a00;
+}
+.topstat-fgold {
+  background:rgba(150,110,40,0.14);
+  border-color:rgba(150,110,40,0.34);
+  color:#6a4810;
 }
 .topstat-asset {
   background:rgba(180,120,0,0.12);
@@ -1100,14 +1137,19 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:100%;max-width:960px;
+  width:calc(100% - 44px);max-width:500px;
+  margin-left:auto;margin-right:auto;
   background:var(--panel);
   border:2px solid var(--border);
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  min-height:340px;
-  margin-top: 130px;
+  margin-top: 100px;
+  margin-bottom: 80px;
+  height: calc(100vh - 180px);
+  height: calc(100dvh - 180px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== FARM VIEW ===== */
@@ -1130,7 +1172,7 @@ body{
   display: flex; align-items: center; gap: 5px;
 }
 
-.plots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -1144,6 +1186,25 @@ body{
 .plot:hover{transform:scale(1.06);filter:brightness(1.1);}
 .plot.watered{background:#7a4830;border-color:#4a2010;}
 .plot.ready{box-shadow:0 0 0 2px var(--gold),0 0 8px var(--gold);}
+/* ช่องว่าง (รอปลูกผัก): แปลงดินลอยบนแถบหมวด ไม่มีกรอบกล่อง + ขอบเรืองแสง + ป้ายอยู่ใต้แปลง */
+.plot.plot-empty{
+  background:none !important; border:none !important; box-shadow:none !important;
+  aspect-ratio:auto; padding:0; gap:0; overflow:visible;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  align-self:center;   /* จัดแปลงให้อยู่กลางช่องแนวตั้ง (ไม่ถูกยืดเต็มแถว) */
+}
+.plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
+.plot-soil-img{
+  width:100%; aspect-ratio:1.52;
+  background-image:url('ภาพหน้าจอ/plot-soil.png');
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
+}
+.plot-wait-label{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:0.66rem; color:#fff; font-weight:800; white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.6);
+}
 
 .plot-bar{
   position:absolute;bottom:0;left:0;height:5px;
@@ -1303,7 +1364,7 @@ body{
   .factory-grid{grid-template-columns:1fr 1fr;}
   .animals-grid{grid-template-columns:1fr 1fr;}
   .market-grid{grid-template-columns:1fr 1fr;}
-  .plots-grid{grid-template-columns:repeat(4,1fr);}
+  .plots-grid{grid-template-columns:repeat(2,1fr);}
 }
 
 /* ===== BOTTOM NAV ===== */
@@ -2717,8 +2778,19 @@ body { padding-bottom: 72px; }
   box-shadow: 0 2px 8px rgba(80,50,10,0.25);
 }
 .space-free-label {
-  color: #ffe8b0; font-size: 0.9rem; font-weight: 800;
+  color: #ffe8b0; font-size: 0.9rem; font-weight: 800; display:block;
 }
+.space-prog{ display:block; height:7px; border-radius:5px; background:rgba(0,0,0,0.28); margin-top:6px; overflow:hidden; }
+.space-prog-fill{ display:block; height:100%; border-radius:5px; background:linear-gradient(90deg,#ffd24a,#ff9f1c); transition:width 0.4s ease, background 0.4s ease; }
+.space-icons{ display:block; margin-top:6px; font-size:0.78rem; font-weight:800; color:#ffe8b0; letter-spacing:0.3px; }
+.space-buy-btn{
+  display:block; margin-top:8px; width:100%;
+  background:linear-gradient(135deg,#ffce4a,#f5a623); color:#5a3700;
+  font-family:inherit; font-weight:800; font-size:0.82rem;
+  border:none; border-radius:10px; padding:8px 10px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(120,80,10,0.3);
+}
+.space-buy-btn:active{ transform:scale(0.97); }
 .farmland-btn {
   display: inline-block; vertical-align: top; margin-left: 6px; margin-bottom: 10px;
   background: linear-gradient(135deg,#4a8b3a,#2e6b20);
@@ -3043,6 +3115,53 @@ body { padding-bottom: 72px; }
 }
 .slot-add-cell.slot-add-none .sac-txt { color:#a08860; }
 .slot-add-cell.slot-add-none:hover { background:linear-gradient(135deg,#f6f2ec,#efe9e0) !important; }
+/* ปุ่มเพิ่ม "แปลงปลูกพืช" — ขยายกล่องกว้างขึ้น (กิน 2 ช่อง) ให้อ่านข้อความได้ครบ */
+.plot.slot-add-cell{
+  aspect-ratio:1; grid-column:span 1; padding:8px; gap:4px;
+}
+.plot.slot-add-cell .sac-plus{ width:40px;height:40px;font-size:1.6rem; }
+.plot.slot-add-cell .sac-title{ font-size:0.95rem; }
+.plot.slot-add-cell .sac-sub{ font-size:0.72rem; }
+
+/* ===== PLOT FLOATING MENU + ZOOM ===== */
+.plot-menu{
+  position:fixed; z-index:2500; display:none;
+  flex-direction:column; gap:5px;
+}
+.plot-menu.show{ display:flex; animation:popIn 0.16s ease; }
+.plot-menu-bar{
+  background:linear-gradient(135deg,#4a8b3a,#2e6b20); color:#eaffd8;
+  font-family:inherit; font-size:0.9rem; font-weight:800; white-space:nowrap;
+  border:none; border-radius:12px; padding:7px 14px; cursor:pointer;
+  box-shadow:0 3px 12px rgba(20,60,10,0.4);
+}
+.plot-menu-bar:active{ transform:scale(0.97); }
+.plot-zoom-overlay{
+  display:none; position:fixed; inset:0; z-index:100100;  /* สูงกว่าทุก UI (แชท/ล็อกอิน) กันเส้นโผล่ทับ */
+  align-items:center; justify-content:center;
+  /* พื้นหลังทุ่งหญ้า (แทนเบลอเดิม) + ชั้นมืดจางทับให้แปลง/ตัวอักษรอ่านชัด */
+  background:linear-gradient(rgba(15,30,8,0.32),rgba(15,30,8,0.32)), url('ภาพหน้าจอ/plot-field-bg.jpg');
+  background-size:cover; background-position:center; padding:16px;
+}
+.plot-zoom-overlay.show{ display:flex; animation:popIn 0.2s ease; }
+.plot-zoom-card{ width:100%; max-width:280px; text-align:center; }
+.plot-zoom-img{
+  width:100%; aspect-ratio:1.52;
+  background-image:url('ภาพหน้าจอ/plot-soil.png');
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 18px rgba(120,70,20,0.75));
+}
+.plot-zoom-label{
+  margin-top:10px; color:#fff; font-size:1.2rem; font-weight:800;
+  text-shadow:0 2px 6px rgba(0,0,0,0.6);
+}
+.plot-zoom-close{
+  position:absolute; top:18px; right:18px; width:44px; height:44px;
+  border-radius:50%; border:none; background:rgba(255,255,255,0.92); color:#5a3a10;
+  font-size:1.3rem; font-weight:800; cursor:pointer; z-index:1;
+  box-shadow:0 4px 14px rgba(0,0,0,0.45);
+}
+.plot-zoom-close:active{ transform:scale(0.94); }
 
 /* ===== DEMOLISH MODAL (ยืนยันรื้อถอนพื้นที่) ===== */
 #demolish-modal {
@@ -3077,91 +3196,220 @@ body { padding-bottom: 72px; }
 
 <!-- ===== LOGIN SCREEN (หน้าล็อกอิน - ทดสอบในเครื่อง ยังไม่ต่อเซิร์ฟเวอร์) ===== -->
 <style>
+/* ===== กรอบแอปความกว้างคงที่ (เปิดบน PC ก็ไม่ยืด เหมือนมือถือ) ===== */
+html{ background:#0d1f08; }
+body{
+  max-width:560px;
+  margin-left:auto; margin-right:auto;
+  min-height:100vh;
+  height:100vh; height:100dvh;
+  overflow:hidden;            /* ปิดการเลื่อนของทั้งหน้า ให้เลื่อนภายใน #main แทน */
+  position:relative;
+  box-shadow:0 0 50px rgba(0,0,0,0.45);
+}
+/* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
+body, #login-screen{
+  background-image: url('ภาพหน้าจอ/001.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 #login-screen{
-  position:fixed; inset:0; z-index:100000;
+  position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:560px; z-index:100000;
   display:flex; align-items:center; justify-content:center;
-  padding:20px;
-  background:
-    radial-gradient(circle at 18% 88%, rgba(255,255,255,0.30), transparent 42%),
-    radial-gradient(circle at 85% 12%, rgba(255,255,180,0.35), transparent 38%),
-    linear-gradient(180deg,#aee6ff 0%,#cfeffd 22%,#e9f6d0 46%,#aadd72 72%,#7cc04a 100%);
+  padding:14px;
+}
+/* เลเยอร์มืดของหน้าล็อกอิน (อยู่เหนือรูป ใต้การ์ด) */
+#login-screen::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(20,40,10,0.45) 0%, rgba(20,40,10,0.25) 40%, rgba(20,40,10,0.55) 100%);
 }
 #login-screen.hidden{ display:none; }
 .login-card{
-  width:100%; max-width:380px;
-  background:var(--panel,#fffdf5);
-  border:1.5px solid var(--border,#d4b483);
-  border-radius:28px;
-  padding:30px 26px 26px;
-  box-shadow:0 14px 40px rgba(120,80,20,0.28), 0 1px 0 rgba(255,255,255,0.9) inset;
+  position:relative; z-index:1;
+  width:100%; max-width:370px;
+  /* โปร่งใสมองเห็นฟาร์มจาง ๆ + เบลอเพื่อให้อ่านตัวหนังสือชัด */
+  background:rgba(255,250,240,0.40);
+  -webkit-backdrop-filter:blur(1px) saturate(112%);
+  backdrop-filter:blur(1px) saturate(112%);
+  border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:22px;
+  padding:16px 22px 18px;
+  box-shadow:0 14px 40px rgba(60,35,5,0.32), 0 1px 0 rgba(255,255,255,0.85) inset;
   text-align:center;
   animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1);
 }
-.login-logo{ font-size:3rem; line-height:1; margin-bottom:6px; }
-.login-title{ font-size:1.4rem; font-weight:800; color:#7a4a00; margin-bottom:2px; }
-.login-sub{ font-size:0.85rem; color:#a07a40; margin-bottom:20px; }
-.login-field{ text-align:left; margin-bottom:14px; }
-.login-field label{ display:block; font-size:0.8rem; font-weight:700; color:#7a4a00; margin-bottom:5px; }
+.login-logo{
+  position:relative;
+  width:84px; aspect-ratio:1.55; margin:0 auto 4px;
+  background:url('ภาพหน้าจอ/logo-crown.png') center/contain no-repeat;
+  filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4));
+  animation: loginLogoFloat 3s ease-in-out infinite;
+  transform-origin:center bottom;
+}
+/* โลโก้มงกุฎ: ลอยขึ้น-ลง + เรืองแสงทองวิบวับ ให้ดูมีชีวิต */
+@keyframes loginLogoFloat{
+  0%,100%{ transform:translateY(0) scale(1); filter:drop-shadow(0 3px 6px rgba(80,50,0,0.4)) drop-shadow(0 0 3px rgba(255,205,70,0.35)) brightness(1); }
+  50%{ transform:translateY(-5px) scale(1.05); filter:drop-shadow(0 9px 14px rgba(150,100,0,0.5)) drop-shadow(0 0 12px rgba(255,210,80,0.85)) brightness(1.16); }
+}
+/* เพชรสีน้ำเงินเรืองแสง (อยู่กลางมงกุฎ) */
+.logo-gem-glow{
+  position:absolute; left:50%; top:46%; width:30%; aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(120,200,255,0.95) 0%, rgba(60,150,255,0.45) 42%, transparent 70%);
+  border-radius:50%; pointer-events:none; mix-blend-mode:screen;
+  animation:gemPulse 1.7s ease-in-out infinite;
+}
+@keyframes gemPulse{
+  0%,100%{ opacity:0.4; transform:translate(-50%,-50%) scale(0.8); }
+  50%{ opacity:1; transform:translate(-50%,-50%) scale(1.2); }
+}
+/* ดาวกระพริบรอบมงกุฎ */
+.logo-star{
+  position:absolute; line-height:1; pointer-events:none; font-size:0.66rem;
+  filter:drop-shadow(0 0 3px rgba(255,240,160,0.95));
+  animation:starTwinkle 1.6s ease-in-out infinite;
+}
+.logo-star.s1{ top:-7px; left:4%; animation-delay:0s; }
+.logo-star.s2{ top:-11px; right:8%; font-size:0.82rem; animation-delay:0.55s; }
+.logo-star.s3{ bottom:0; left:-5px; animation-delay:0.95s; }
+.logo-star.s4{ top:34%; right:-7px; animation-delay:1.25s; }
+@keyframes starTwinkle{
+  0%,100%{ opacity:0.15; transform:scale(0.55) rotate(0deg); }
+  50%{ opacity:1; transform:scale(1.15) rotate(22deg); }
+}
+.login-title{ font-size:1.22rem; font-weight:800; color:#5e3700; margin-bottom:0; line-height:1.12; letter-spacing:0.3px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
+.login-name-th{ font-size:0.86rem; font-weight:800; color:#b96e1f; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.3); }
+.login-sub{ font-size:0.72rem; font-weight:700; color:#7a5520; margin-bottom:10px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-field{ text-align:left; margin-bottom:7px; }
+.login-field label{ display:block; font-size:0.74rem; font-weight:800; color:#5e3700; margin-bottom:2px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
 .login-field input{
-  width:100%; padding:12px 14px;
-  border:1.5px solid var(--border,#d4b483);
-  border-radius:14px; font-family:inherit; font-size:0.95rem;
-  background:#fffefb; color:#5a3a10; outline:none;
+  width:100%; padding:8px 12px;
+  border:1.5px solid rgba(180,135,60,0.7);
+  border-radius:11px; font-family:inherit; font-size:0.88rem;
+  background:rgba(255,254,250,0.92); color:#4a2f0c; outline:none;
 }
 .login-field input:focus{ border-color:#f5c518; box-shadow:0 0 0 3px rgba(245,197,24,0.25); }
 .login-error{
-  display:none; color:var(--red,#e84040); font-size:0.82rem;
-  font-weight:700; margin-bottom:12px; text-align:left;
+  display:none; color:var(--red,#e84040); font-size:0.76rem;
+  font-weight:700; margin-bottom:6px; text-align:left;
 }
 .login-error.show{ display:block; }
 .login-btn{
-  width:100%; padding:13px; border:none; border-radius:16px;
-  font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer;
-  transition:transform 0.1s, filter 0.15s; margin-bottom:10px;
+  width:100%; padding:9px; border:none; border-radius:12px;
+  font-family:inherit; font-size:0.95rem; font-weight:800; cursor:pointer;
+  transition:transform 0.1s, filter 0.15s; margin-bottom:7px;
 }
 .login-btn:active{ transform:scale(0.97); }
+/* ไอคอนรูปบนปุ่มล็อกอิน (แทนอีโมจิ) */
+.login-ico{
+  display:inline-block; width:1.9em; height:1.9em; margin-right:4px;
+  vertical-align:-0.62em; background-size:contain; background-position:center;
+  background-repeat:no-repeat;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+.ico-door{   background-image:url('ภาพหน้าจอ/icon-door.png'); }
+.ico-crown{  background-image:url('ภาพหน้าจอ/icon-crown.png'); }
+.ico-sprout{ background-image:url('ภาพหน้าจอ/icon-sprout.png'); }
 .login-btn.primary{ background:linear-gradient(135deg,#7cc04a,#55a030); color:#fff; box-shadow:0 4px 0 #3f7a22; }
 .login-btn.admin{ background:linear-gradient(135deg,#f5c518,#e0a800); color:#5a3a00; box-shadow:0 4px 0 #b88600; }
-.login-btn.ghost{ background:transparent; color:#a07a40; box-shadow:none; font-weight:700; font-size:0.85rem; margin-bottom:0; }
-.login-divider{ display:flex; align-items:center; gap:10px; color:#c0a060; font-size:0.78rem; margin:14px 0; }
-.login-divider::before, .login-divider::after{ content:""; flex:1; height:1px; background:rgba(200,160,80,0.4); }
-.login-hint{ font-size:0.72rem; color:#b09060; margin-top:14px; line-height:1.5; }
+.login-btn.ghost{ background:transparent; color:#7a5520; box-shadow:none; font-weight:800; font-size:0.82rem; margin-bottom:0; padding:5px; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-divider{ display:flex; align-items:center; gap:10px; color:#8a6a30; font-size:0.74rem; font-weight:700; margin:8px 0; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-divider::before, .login-divider::after{ content:""; flex:1; height:1px; background:rgba(120,80,20,0.35); }
+.login-hint{ font-size:0.66rem; color:#7a5520; font-weight:600; margin-top:8px; line-height:1.4; text-shadow:0 1px 1px rgba(255,255,255,0.28); }
+.login-tabs{ display:flex; gap:6px; margin-bottom:10px; background:rgba(120,80,20,0.16); padding:4px; border-radius:14px; }
+.login-tab{
+  flex:1; padding:7px; border:none; border-radius:10px; cursor:pointer;
+  font-family:inherit; font-size:0.86rem; font-weight:800; color:#6a4a18;
+  background:transparent; transition:all 0.15s;
+}
+.login-tab.active{ background:#fff; color:#7a4a00; box-shadow:0 2px 6px rgba(120,80,20,0.15); }
+.login-pane{ display:none; }
+.login-pane.active{ display:block; animation:popIn 0.3s ease; }
+.login-ok{
+  display:none; color:var(--green,#3cad3c); font-size:0.78rem;
+  font-weight:700; margin-bottom:6px; text-align:left;
+}
+.login-ok.show{ display:block; }
 </style>
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">🌻</div>
-    <div class="login-title">ฟาร์มมีชีวิต</div>
-    <div class="login-sub">เข้าสู่ระบบเพื่อเริ่มเล่น</div>
+    <div class="login-logo">
+      <span class="logo-gem-glow"></span>
+      <span class="logo-star s1">✨</span>
+      <span class="logo-star s2">⭐</span>
+      <span class="logo-star s3">✨</span>
+      <span class="logo-star s4">✨</span>
+    </div>
+    <div class="login-title">Millionaire Farm Wars</div>
+    <div class="login-name-th">สงครามฟาร์มมหาเศรษฐี</div>
+    <div class="login-sub">เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเริ่มเล่น</div>
 
-    <form id="login-form" autocomplete="off">
-      <div class="login-field">
-        <label for="login-user">ชื่อผู้ใช้</label>
-        <input type="text" id="login-user" placeholder="กรอกชื่อผู้ใช้" />
-      </div>
-      <div class="login-field">
-        <label for="login-pass">รหัสผ่าน</label>
-        <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
-      </div>
-      <div class="login-error" id="login-error">⚠️ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน</div>
-      <button type="submit" class="login-btn primary">🚪 เข้าสู่ระบบ</button>
-    </form>
+    <div class="login-tabs">
+      <button type="button" class="login-tab active" data-tab="login">เข้าสู่ระบบ</button>
+      <button type="button" class="login-tab" data-tab="register">สมัครสมาชิก</button>
+    </div>
 
-    <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
+    <!-- แท็บเข้าสู่ระบบ -->
+    <div class="login-pane active" id="pane-login">
+      <form id="login-form" autocomplete="off">
+        <div class="login-field">
+          <label for="login-user">ชื่อผู้ใช้</label>
+          <input type="text" id="login-user" placeholder="กรอกชื่อผู้ใช้" />
+        </div>
+        <div class="login-field">
+          <label for="login-pass">รหัสผ่าน</label>
+          <input type="password" id="login-pass" placeholder="กรอกรหัสผ่าน" />
+        </div>
+        <div class="login-error" id="login-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
+        <button type="submit" class="login-btn primary"><span class="login-ico ico-door"></span>เข้าสู่ระบบ</button>
+      </form>
+      <button type="button" class="login-btn ghost" id="login-guest">เล่นเป็นผู้เยี่ยมชม (Guest)</button>
+    </div>
+
+    <!-- แท็บสมัครสมาชิก -->
+    <div class="login-pane" id="pane-register">
+      <form id="register-form" autocomplete="off">
+        <div class="login-field">
+          <label for="reg-user">ตั้งชื่อผู้ใช้</label>
+          <input type="text" id="reg-user" placeholder="อย่างน้อย 3 ตัวอักษร" />
+        </div>
+        <div class="login-field">
+          <label for="reg-pass">ตั้งรหัสผ่าน</label>
+          <input type="password" id="reg-pass" placeholder="อย่างน้อย 4 ตัวอักษร" />
+        </div>
+        <div class="login-field">
+          <label for="reg-pass2">ยืนยันรหัสผ่าน</label>
+          <input type="password" id="reg-pass2" placeholder="กรอกรหัสผ่านอีกครั้ง" />
+        </div>
+        <div class="login-error" id="register-error">⚠️ กรุณากรอกข้อมูลให้ครบ</div>
+        <div class="login-ok" id="register-ok">✅ สมัครสำเร็จ! เข้าสู่เกม...</div>
+        <button type="submit" class="login-btn primary"><span class="login-ico ico-sprout"></span>สมัครสมาชิก</button>
+      </form>
+    </div>
 
     <div class="login-divider">หรือ</div>
 
-    <button type="button" class="login-btn admin" id="login-admin">👑 เข้าระบบผู้ดูแล (เข้าทันที)</button>
+    <button type="button" class="login-btn admin" id="login-admin"><span class="login-ico ico-crown"></span>เข้าระบบผู้ดูแล (เข้าทันที)</button>
 
-    <div class="login-hint">โหมดทดสอบ — ยังไม่เชื่อมต่อเซิร์ฟเวอร์<br>ชื่อผู้ใช้/รหัสผ่านใดก็ได้ใช้เข้าได้</div>
+    <div class="login-hint">โหมดทดสอบ — เก็บบัญชีไว้ในเครื่อง (ยังไม่เชื่อมต่อเซิร์ฟเวอร์)</div>
   </div>
 </div>
 <script>
 (function(){
   var screen = document.getElementById('login-screen');
-  var form   = document.getElementById('login-form');
-  var userEl = document.getElementById('login-user');
-  var passEl = document.getElementById('login-pass');
-  var errEl  = document.getElementById('login-error');
+  var STORE_KEY = 'farm_accounts';
+
+  // ----- จัดการบัญชีใน LocalStorage -----
+  function loadAccounts(){
+    try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveAccounts(a){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(a)); }catch(e){}
+  }
 
   function enterGame(name){
     try{ window.CURRENT_PLAYER = name; }catch(e){}
@@ -3171,15 +3419,82 @@ body { padding-bottom: 72px; }
     }
   }
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var u = userEl.value.trim();
-    var p = passEl.value.trim();
-    if(!u || !p){ errEl.classList.add('show'); return; }
-    errEl.classList.remove('show');
-    enterGame(u);
+  // เปิดให้ส่วนอื่น (เช่น ปุ่มออกจากระบบ) เรียกกลับมาหน้าล็อกอินได้
+  window.showLogin = function(){
+    try{ window.CURRENT_PLAYER = null; }catch(e){}
+    // เคลียร์ช่องกรอกและข้อความเตือน
+    ['login-user','login-pass','reg-user','reg-pass','reg-pass2'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.value = '';
+    });
+    document.getElementById('login-error').classList.remove('show');
+    document.getElementById('register-error').classList.remove('show');
+    document.getElementById('register-ok').classList.remove('show');
+    // กลับมาที่แท็บเข้าสู่ระบบเสมอ
+    document.querySelectorAll('.login-tab').forEach(function(t){
+      t.classList.toggle('active', t.dataset.tab === 'login');
+    });
+    document.querySelectorAll('.login-pane').forEach(function(p){
+      p.classList.toggle('active', p.id === 'pane-login');
+    });
+    screen.classList.remove('hidden');
+  };
+
+  function showErr(el, msg){ el.textContent = '⚠️ ' + msg; el.classList.add('show'); }
+
+  // ----- สลับแท็บ -----
+  var tabs = document.querySelectorAll('.login-tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      document.querySelectorAll('.login-pane').forEach(function(p){ p.classList.remove('active'); });
+      document.getElementById('pane-' + tab.dataset.tab).classList.add('active');
+      document.getElementById('login-error').classList.remove('show');
+      document.getElementById('register-error').classList.remove('show');
+    });
   });
 
+  // ----- เข้าสู่ระบบ -----
+  var loginForm = document.getElementById('login-form');
+  var loginErr  = document.getElementById('login-error');
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var u = document.getElementById('login-user').value.trim();
+    var p = document.getElementById('login-pass').value;
+    if(!u || !p){ showErr(loginErr, 'กรุณากรอกข้อมูลให้ครบ'); return; }
+    var accounts = loadAccounts();
+    var key = u.toLowerCase();
+    if(!accounts[key]){ showErr(loginErr, 'ไม่พบบัญชีนี้ กรุณาสมัครสมาชิกก่อน'); return; }
+    if(accounts[key].pass !== p){ showErr(loginErr, 'รหัสผ่านไม่ถูกต้อง'); return; }
+    loginErr.classList.remove('show');
+    enterGame(accounts[key].name);
+  });
+
+  // ----- สมัครสมาชิก -----
+  var regForm = document.getElementById('register-form');
+  var regErr  = document.getElementById('register-error');
+  var regOk   = document.getElementById('register-ok');
+  regForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    regOk.classList.remove('show');
+    var u  = document.getElementById('reg-user').value.trim();
+    var p  = document.getElementById('reg-pass').value;
+    var p2 = document.getElementById('reg-pass2').value;
+    if(!u || !p || !p2){ showErr(regErr, 'กรุณากรอกข้อมูลให้ครบ'); return; }
+    if(u.length < 3){ showErr(regErr, 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร'); return; }
+    if(p.length < 4){ showErr(regErr, 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+    if(p !== p2){ showErr(regErr, 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'); return; }
+    var accounts = loadAccounts();
+    var key = u.toLowerCase();
+    if(accounts[key]){ showErr(regErr, 'ชื่อผู้ใช้นี้ถูกใช้แล้ว'); return; }
+    accounts[key] = { name: u, pass: p, created: Date.now() };
+    saveAccounts(accounts);
+    regErr.classList.remove('show');
+    regOk.classList.add('show');
+    setTimeout(function(){ enterGame(u); }, 700);
+  });
+
+  // ----- เล่นเป็นผู้เยี่ยมชม -----
   document.getElementById('login-guest').addEventListener('click', function(){
     enterGame('ผู้เยี่ยมชม');
   });
@@ -3229,7 +3544,7 @@ body { padding-bottom: 72px; }
     </div>
     <div class="navd-res-row">
       <div class="navd-res">💎 0</div>
-      <div class="navd-res">💵 0 บาท</div>
+      <div class="navd-res">🧺 0 ฟาร์มโกลด์</div>
       <div class="navd-res" id="navd-energy">⚡ 100/100</div>
     </div>
   </div>
@@ -3458,7 +3773,7 @@ body { padding-bottom: 72px; }
     </div>
     <div class="version-body">
       <div class="admin-block">
-        <div class="admin-title">💵 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> บาท</span></div>
+        <div class="admin-title">🧺 เพิ่มจำนวนเงิน <span class="admin-money-current">มีตอนนี้: <b id="admin-money-current">0</b> ฟาร์มโกลด์</span></div>
         <div class="admin-row">
           <input type="number" id="admin-money-input" class="admin-input" placeholder="ระบุจำนวนเงิน" min="1">
           <button class="admin-btn" id="admin-money-btn">เพิ่มเงิน</button>
@@ -3501,7 +3816,8 @@ body { padding-bottom: 72px; }
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="topbar-row1">
-    <div class="topstat topstat-cash">💵 <span id="t-gold">80</span> <span style="font-size:0.65rem;opacity:0.75;">บาท</span></div>
+    <div class="topstat topstat-ruang" title="รวงทอง — หน่วยเงินหลัก (1 รวงทอง = 1,000 ฟาร์มโกลด์)">🌾 <span id="t-ruang">0</span> <span style="font-size:0.62rem;opacity:0.78;">รวงทอง</span></div>
+    <div class="topstat topstat-fgold" title="ฟาร์มโกลด์ — หน่วยเงินย่อย (ครบ 1,000 แปลงเป็น 1 รวงทอง)">🧺 <span id="t-fgold">0</span> <span style="font-size:0.62rem;opacity:0.78;">ฟาร์มโกลด์</span></div>
     <div class="topstat topstat-energy" id="t-energy" title="กดเพื่อกินอาหารฟื้นพลังงาน">⚡ 100/100</div>
     <div class="topstat topstat-day" id="t-datetime" style="font-size:0.7rem;">📅 --</div>
   </div>
@@ -3513,7 +3829,7 @@ body { padding-bottom: 72px; }
 
   <!-- FARM TAB -->
   <div id="tab-farm">
-    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div><button id="farmland-btn" class="farmland-btn">🌍 ที่ดิน</button>
+    <div class="space-bar-inline"><span class="space-free-label">🌾 พื้นที่เกษตร 0/0 ตร.ม.</span></div><button id="farmland-btn" class="farmland-btn">🌍 ขายที่ดินเกษตร</button>
     <div id="farm-sections-container"></div>
   </div>
 
@@ -3619,6 +3935,21 @@ body { padding-bottom: 72px; }
       <button class="dem-confirm" id="demolish-confirm">🧹 รื้อถอน</button>
       <button class="dem-cancel" id="demolish-cancel">ยกเลิก</button>
     </div>
+  </div>
+</div>
+
+<!-- PLOT FLOATING MENU (กดแปลง → เด้งเมนูลอย 2 แถบ เฉียงขึ้นขวา) -->
+<div id="plot-menu" class="plot-menu">
+  <button class="plot-menu-bar" id="plot-menu-view">🔍 ดูแปลงใกล้ๆ</button>
+  <button class="plot-menu-bar" id="plot-menu-manage">🌱 ปลูกพืช / รื้อถอน</button>
+</div>
+
+<!-- PLOT ZOOM (ดูแปลงใกล้ ๆ — ภาพขยายเกือบเต็มจอ) -->
+<div id="plot-zoom-overlay" class="plot-zoom-overlay">
+  <button class="plot-zoom-close" id="plot-zoom-close">✕</button>
+  <div class="plot-zoom-card">
+    <div class="plot-zoom-img"></div>
+    <div class="plot-zoom-label">แปลงเปล่ารอปลูกพืช</div>
   </div>
 </div>
 
@@ -3896,7 +4227,7 @@ body { padding-bottom: 72px; }
         <div class="mp-value" id="sm-market-val">฿0</div>
       </div>
       <div class="sm-price-input-wrap">
-        <label>💬 ราคาที่คุณต้องการขาย (บาท)</label>
+        <label>💬 ราคาที่คุณต้องการขาย (ฟาร์มโกลด์)</label>
         <div class="sm-price-row">
           <input class="sm-price-input" type="number" id="sm-price-input" placeholder="0" min="1">
         </div>
@@ -4311,7 +4642,7 @@ const NPC_PARTNERS = [
   {
     id:'wanlaya',   name:'คุณวันลยา',  avatar:'👩‍💼', gender:'f',
     job:'นักธุรกิจ', desc:'นักธุรกิจสาว มีเงินทุนและเส้นสาย',
-    dowry:150000, dowryDesc:'เงินสด 150,000 บาท + รถยนต์',
+    dowry:150000, dowryDesc:'เงินสด 150,000 ฟาร์มโกลด์ + รถยนต์',
     bonus:['💰 รายได้จากคำสั่งซื้อ +20%','📈 ราคาขายสินค้า +10%'],
     flirtCost:2000, weddingCost:20000,
     child:{ name:'น้องกำไร', avatar:'👶', role:'เพิ่มรายได้คำสั่งซื้อ +15%' },
@@ -4327,7 +4658,7 @@ const NPC_PARTNERS = [
   {
     id:'nattapong', name:'คุณณัฐพงษ์', avatar:'👨‍⚕️', gender:'m',
     job:'แพทย์', desc:'หมอหนุ่มใจดี มีรายได้มั่นคง',
-    dowry:200000, dowryDesc:'บ้านใหม่ + เงินสด 100,000 บาท',
+    dowry:200000, dowryDesc:'บ้านใหม่ + เงินสด 100,000 ฟาร์มโกลด์',
     bonus:['🏥 ลดต้นทุนสัตว์ป่วย','💰 โบนัสรายได้ +25%'],
     flirtCost:3000, weddingCost:30000,
     child:{ name:'น้องหมอ', avatar:'👶', role:'โบนัสทุกรายได้ +5%' },
@@ -4343,7 +4674,7 @@ const NPC_PARTNERS = [
   {
     id:'krit',      name:'คุณกฤต',     avatar:'👨‍💻', gender:'m',
     job:'โปรแกรมเมอร์', desc:'หนุ่มไอทีรายได้ดี ชอบเกษตรอินทรีย์',
-    dowry:120000, dowryDesc:'เงินสด 120,000 บาท + อุปกรณ์เทค',
+    dowry:120000, dowryDesc:'เงินสด 120,000 ฟาร์มโกลด์ + อุปกรณ์เทค',
     bonus:['🤖 ระบบออโตฟาร์ม','💻 คำนวณกำไรให้อัตโนมัติ'],
     flirtCost:1500, weddingCost:15000,
     child:{ name:'น้องโค้ด', avatar:'👶', role:'ลดต้นทุนซื้อเมล็ด 10%' },
@@ -4761,6 +5092,126 @@ const UPDATE_HISTORY = [
       'ปรับโทนสีให้เข้มลง (ไม่แสบตา) และแต่ละกล่องมีเฉดต่างกันพอแยกได้: มูลค่าสุทธิ (ทองอำพัน) · ระดับฐานะ (ส้ม-น้ำตาล) · ทรัพย์สินตอนนี้ (น้ำตาลทองเข้ม)',
     ],
   },
+  {
+    version: '0.42',
+    date: '17/06/2026',
+    title: 'ระบบล็อกอิน/สมัครสมาชิก (ทดสอบในเครื่อง)',
+    details: [
+      'เพิ่มหน้าล็อกอินเต็มจอ: เข้าสู่ระบบ / สมัครสมาชิก (เก็บบัญชีใน LocalStorage) / เล่นเป็น Guest / ปุ่มผู้ดูแลเข้าทันที',
+      'ต่อปุ่ม "ออกจากระบบ" ในเมนูให้กลับมาหน้าล็อกอิน + เคลียร์ฟอร์ม',
+    ],
+  },
+  {
+    version: '0.43',
+    date: '17/06/2026',
+    title: 'ภาพพื้นหลังฟาร์ม + กรอบมือถือความกว้างคงที่',
+    details: [
+      'ใช้ภาพฟาร์มเป็นพื้นหลังทั้งหน้าล็อกอินและทุกหน้าในเกม (ฝัง base64 ชุดเดียว)',
+      'ล็อกความกว้างเป็นกรอบมือถือ 560px เปิดบน PC ไม่ยืด · การ์ดล็อกอินโปร่งใสเห็นพื้นหลังจาง ๆ',
+    ],
+  },
+  {
+    version: '0.44',
+    date: '17/06/2026',
+    title: 'เปลี่ยนชื่อเกม + จัดกล่องเนื้อหาหลัก',
+    details: [
+      'เปลี่ยนชื่อเป็น Millionaire Farm Wars (สงครามฟาร์มมหาเศรษฐี)',
+      'ย่อกล่อง #main ให้แคบลงเห็นพื้นหลังซ้าย-ขวา + ตรึงกรอบสูงคงที่ เลื่อนภายในกล่องเอง (ปิดเลื่อนทั้งหน้า)',
+    ],
+  },
+  {
+    version: '0.45',
+    date: '17/06/2026',
+    title: 'เปลี่ยนระบบค่าเงินเป็น ฟาร์มโกลด์ / รวงทอง',
+    details: [
+      'หน่วยเงินใหม่: 🧺 ฟาร์มโกลด์ (ย่อย) + 🌾 รวงทอง (หลัก) · 1,000 ฟาร์มโกลด์ = 1 รวงทอง (ม้วนขึ้นเรียลไทม์)',
+      'แสดง 2 หน่วยบนแถบบน เอา "บาท" ออก · เปลี่ยนหน่วยเงินทุกจุดในเกม (💵→🧺)',
+    ],
+  },
+  {
+    version: '0.46',
+    date: '17/06/2026',
+    title: 'ปรับหัวข้อพื้นที่เกษตร + ปุ่มลัด',
+    details: [
+      'แถบความคืบหน้าเปลี่ยนสีตามความเต็ม (เขียว/เหลือง/แดง) + สรุปไอคอนสิ่งปลูกสร้าง',
+      'ปุ่มลัด "ซื้อที่ดินเพิ่ม" โผล่อัตโนมัติเมื่อพื้นที่ใกล้เต็ม · เปลี่ยนปุ่มเป็น "ขายที่ดินเกษตร"',
+    ],
+  },
+  {
+    version: '0.47',
+    date: '17/06/2026',
+    title: 'แปลงปลูกพืชแบบรูปภาพ (2 ช่องใหญ่/แถว)',
+    details: [
+      'รวมเป็น 2 คอลัมน์ใหญ่ · ช่องว่างใช้รูปแปลงดิน (crop ตัด glow, ฝัง base64) ลอยไม่มีกรอบกล่อง + glow น้ำตาล',
+      'ป้าย "ดูแปลง" กลางแปลง · ปิด pinch-zoom ทั้งเกม',
+    ],
+  },
+  {
+    version: '0.48',
+    date: '17/06/2026',
+    title: 'เมนูลอย + ภาพขยายเมื่อกดแปลง',
+    details: [
+      'กดแปลง → เมนูลอยเฉียงขึ้น-ขวา 45° 2 แถบ: "ดูแปลงใกล้ๆ" (ภาพขยาย overlay z-index สูงกว่าทุก UI, พื้นหลังเบลอโปร่ง, ปุ่มปิด) และ "ปลูกพืช/รื้อถอน" (หน้าจัดการเดิม)',
+      'เพิ่ม DEV RULES ข้อ 16: มาตรฐานช่อง/แปลงแบบรูปภาพ + การโต้ตอบ',
+    ],
+  },
+  {
+    version: '0.49',
+    date: '17/06/2026',
+    title: 'เปลี่ยนโลโก้หน้าล็อกอินเป็นมงกุฎทานตะวัน',
+    details: [
+      'แทนอีโมจิ 🌻 ด้วยรูปโลโก้มงกุฎทานตะวัน (crop ขอบโปร่ง + บีบ + ฝัง base64) มีเงาใต้โลโก้',
+    ],
+  },
+  {
+    version: '0.50',
+    date: '17/06/2026',
+    title: 'เปลี่ยนอีโมจิปุ่มล็อกอินเป็นไอคอนรูปภาพ',
+    details: [
+      'แทนอีโมจิบนปุ่มด้วยไอคอนการ์ตูน 3D: เข้าสู่ระบบ (ประตูฟาร์ม) · ผู้ดูแล (มงกุฎอัญมณี) · สมัครสมาชิก (เมล็ดงอกวิบวับ) — crop/บีบ/ฝัง base64',
+    ],
+  },
+  {
+    version: '0.51',
+    date: '17/06/2026',
+    title: 'ขยายไอคอนปุ่ม + หน้าล็อกอินเลื่อนได้',
+    details: [
+      'เพิ่มขนาดไอคอนบนปุ่มล็อกอินให้ใหญ่ขึ้น',
+      'ทำหน้าล็อกอินเลื่อน (scroll) ได้เมื่อการ์ดสูงเกินจอ (แท็บสมัครสมาชิก) — โลโก้ส่วนบนไม่ถูกตัดอีก',
+    ],
+  },
+  {
+    version: '0.52',
+    date: '17/06/2026',
+    title: 'ย่อการ์ดล็อกอินให้พอดีหน้าเดียว (เอา scroll ออก)',
+    details: [
+      'เอาการ scroll ออก แล้วย่อโลโก้/หัวข้อ/ช่องกรอก/ปุ่ม/ระยะห่าง ให้แสดงครบทั้งหมดในหน้าเดียวโดยไม่ต้องเลื่อน (ทั้งแท็บเข้าสู่ระบบและสมัครสมาชิก)',
+    ],
+  },
+  {
+    version: '0.53',
+    date: '17/06/2026',
+    title: 'เพิ่ม Animation โลโก้มงกุฎหน้าล็อกอิน',
+    details: [
+      'โลโก้มงกุฎลอยขึ้น-ลง + เรืองแสงวิบวับนุ่ม ๆ ด้วย CSS keyframes (ไม่ใช้ GIF)',
+    ],
+  },
+  {
+    version: '0.54',
+    date: '17/06/2026',
+    title: 'เอฟเฟกต์โลโก้มงกุฎ: ดาวกระพริบ + เพชรเรืองแสง + มงกุฎเรืองแสง',
+    details: [
+      'เพิ่มดาวกระพริบรอบมงกุฎ (twinkle), เพชรสีน้ำเงินเรืองแสงเต้นกลางมงกุฎ, และมงกุฎเรืองแสงทอง — ทำด้วย CSS ล้วน',
+    ],
+  },
+  {
+    version: '0.55',
+    date: '18/06/2026',
+    title: 'เปลี่ยนพื้นหลังภาพขยายแปลงจากเบลอ → รูปทุ่งหญ้า',
+    details: [
+      'หน้าจอ "ดูแปลงใกล้ๆ" เปลี่ยนพื้นหลังเบลอเดิมเป็นรูปทุ่งหญ้าฟาร์ม (บีบ JPEG + ฝัง base64) มีชั้นมืดจางทับให้แปลงดิน/ตัวอักษรอ่านชัด',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -4773,7 +5224,7 @@ const GAME_GUIDE = [
     lines: [
       'หลักการ: แปลงผัก/สวนไม้ผล/บ่อปลา/คอกสัตว์ ใช้เลยไม่ได้ ต้องก่อสร้างก่อนเสมอ',
       'ขั้น 1 — เตรียมที่ดิน: ต้องมีพื้นที่ว่างพอ (ดูแถบ 🌾 พื้นที่เกษตรด้านบน) ถ้าไม่พอให้ซื้อที่ดินเพิ่ม',
-      'ขั้น 2 — เตรียมต้นทุน: ก่อสร้างใช้ "เงิน 💵 + ไม้ 🪵 + พลังงาน ⚡" — ดูตัวเลขที่ป้ายใต้หัวข้อแต่ละหมวด',
+      'ขั้น 2 — เตรียมต้นทุน: ก่อสร้างใช้ "เงิน 🧺 + ไม้ 🪵 + พลังงาน ⚡" — ดูตัวเลขที่ป้ายใต้หัวข้อแต่ละหมวด',
       'ขั้น 3 — ซื้อไม้: ถ้าไม้ไม่พอ เปิดเมนู ☰ → "วัสดุก่อสร้าง" ซื้อไม้เก็บไว้ก่อน',
       'ขั้น 4 — สั่งก่อสร้าง: กดปุ่ม ➕ ในหมวดที่ต้องการ (ทำหน้าดิน/ทำสวน/ขุดบ่อ/สร้างคอก) ระบบจะหักเงิน+ไม้+พลังงาน และจองพื้นที่ไว้',
       'ขั้น 5 — รอเวลา: จะขึ้นแถบ "กำลังก่อสร้าง ⏳" นับถอยหลังจริง เมื่อครบเวลาสิ่งปลูกสร้างพร้อมใช้งานอัตโนมัติ',
@@ -5071,7 +5522,7 @@ function startConstruction(type){
   const bp = (typeof rankPerks === 'function') ? rankPerks() : { build:0, time:0 };
   const money = Math.round(b.money * (1 - bp.build));
   if(gold < money){
-    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${money.toLocaleString('th-TH')} บาท`);
+    toast(`❌ เงินทุนไม่พอ! ${b.verb} ${info.label} ใช้ ${money.toLocaleString('th-TH')} ฟาร์มโกลด์`);
     return;
   }
   // เฟส 5: ต้องมีวัสดุไม้พอ
@@ -5091,7 +5542,7 @@ function startConstruction(type){
   const saved = b.seconds - secs;
   const savedTxt = saved > 0 ? ` · ⏱️ ลดเวลา −${saved} วิ` : '';
   const woodTxt = woodNeed > 0 ? ` · 🪵 −${woodNeed}` : '';
-  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${money.toLocaleString('th-TH')} บาท${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
+  toast(`🏗️ เริ่ม${b.verb} ${info.emoji} ${info.label}<br>(−${money.toLocaleString('th-TH')} ฟาร์มโกลด์${woodTxt} · ใช้เวลา ${secs} วินาที${savedTxt})`, true);
   rerenderFarmArea();
   startConstructionTimer();
 }
@@ -5168,8 +5619,26 @@ function updateSpaceLabels(){
   const free  = freeSpace();  // หักพื้นที่ที่จองไว้สำหรับงานก่อสร้างด้วย
   const pct   = total > 0 ? Math.round((used/total)*100) : 0;
   // แถบพื้นที่เกษตร
+  // สีแถบตามความเต็ม: เขียว < 70% · เหลือง 70–89% · แดง ≥ 90%
+  const barColor = pct >= 90 ? 'linear-gradient(90deg,#ff6a4a,#e83a2a)'
+                 : pct >= 70 ? 'linear-gradient(90deg,#ffd24a,#ff9f1c)'
+                 : 'linear-gradient(90deg,#7fd24a,#3f9a2c)';
+  // สรุปจำนวนสิ่งที่สร้างแล้วเป็นไอคอน (โชว์เฉพาะที่มี > 0)
+  const iconParts = [];
+  if(plots.length)     iconParts.push(`🌱 ${plots.length}`);
+  if(treePlots.length) iconParts.push(`🌳 ${treePlots.length}`);
+  if(smallPens.length) iconParts.push(`🐔 ${smallPens.length}`);
+  if(bigPens.length)   iconParts.push(`🐮 ${bigPens.length}`);
+  if(fishPonds.length) iconParts.push(`🐟 ${fishPonds.length}`);
+  const iconSummary = iconParts.length
+    ? `<span class="space-icons">${iconParts.join(' · ')}</span>` : '';
+  // ปุ่มลัดซื้อที่ดิน — โผล่เมื่อพื้นที่ใกล้เต็ม (สร้างแปลงเล็กสุดไม่ได้แล้ว)
+  const lowSpaceBtn = (total > 0 && free < 100)
+    ? `<button class="space-buy-btn" onclick="openSubShop('land')">🛒 ซื้อที่ดินเพิ่ม</button>` : '';
   document.querySelectorAll('.space-free-label').forEach(el => {
-    el.innerHTML = `🌾 พื้นที่เกษตร ${used.toLocaleString('th-TH')}/${total.toLocaleString('th-TH')} ตร.ม. (${pct}%)`;
+    el.innerHTML = `🌾 พื้นที่เกษตร ${used.toLocaleString('th-TH')}/${total.toLocaleString('th-TH')} ตร.ม. · ว่าง ${free.toLocaleString('th-TH')} ตร.ม. (${pct}%)`
+      + `<span class="space-prog"><span class="space-prog-fill" style="width:${Math.min(100,pct)}%;background:${barColor}"></span></span>`
+      + iconSummary + lowSpaceBtn;
   });
   // แถบพื้นที่ใช้สอยส่วนตัว
   const usableEl = document.getElementById('usable-area-label');
@@ -5197,7 +5666,7 @@ function updateSpaceLabels(){
     const b = BUILD_INFO[type];
     const woodTxt = b.wood ? ` + 🪵 ${b.wood}` : '';
     el.innerHTML =
-      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} บาท${woodTxt}/${info.unit} (${b.seconds} วิ)` +
+      `${info.cost} ตร.ม./${info.unit} · 🏗️ ${b.verb} ${b.money.toLocaleString('th-TH')} ฟาร์มโกลด์${woodTxt}/${info.unit} (${b.seconds} วิ)` +
       `<br><span class="sec-area-built">สร้างแล้ว ${count} ${info.unit} · ${usedArea.toLocaleString('th-TH')} ตร.ม. · ${pctOfFarm}% ของพื้นที่เกษตร</span>`;
   });
 }
@@ -5466,7 +5935,15 @@ function fmtK(n){
 //  HELPERS — UI
 // ============================================================
 function updateTopbar(){
-  document.getElementById('t-gold').textContent = fmtK(gold);
+  // ─── ค่าเงิน: gold = ยอดรวมเป็น "ฟาร์มโกลด์" → แปลงเรียลไทม์เป็น รวงทอง + ฟาร์มโกลด์ ───
+  // ครบ 1,000 ฟาร์มโกลด์ = 1 รวงทอง (ยอดฟาร์มโกลด์ที่เกินจะม้วนขึ้นเป็นรวงทองทันที)
+  const totalFG = Math.max(0, Math.floor(gold));
+  const ruang = Math.floor(totalFG / 1000);
+  const fgold = totalFG % 1000;
+  const rEl = document.getElementById('t-ruang');
+  const fEl = document.getElementById('t-fgold');
+  if(rEl) rEl.textContent = ruang.toLocaleString('th-TH');
+  if(fEl) fEl.textContent = fgold.toLocaleString('th-TH');
   const assetVal = Object.values(assetsState).flat()
     .filter(a => !a.sold)
     .reduce((s, a) => s + a.marketValue, 0);
@@ -5835,7 +6312,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot" style="position:relative;" title="กดเพื่อจัดการ">${badge}<span style="font-size:0.58rem;color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.4);">รอปลูกผัก</span></div>`;
+      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อดูแปลง">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">ดูแปลง</span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
@@ -5848,7 +6325,7 @@ function renderFarm(){
   }).join('') + addCellHtml('plots');
 }
 
-function clickPlot(i){
+function clickPlot(i, el){
   const p = plots[i];
   if(p.crop){
     if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
@@ -5860,8 +6337,36 @@ function clickPlot(i){
     renderFarm(); updateStockStatus();
     return;
   }
-  // แปลงว่างที่สร้างแล้ว → ยืนยันรื้อถอน
-  openSlotAction('plots', i);
+  // แปลงว่างที่สร้างแล้ว → เด้งเมนูลอย (ดูแปลง / ปลูกพืช-รื้อถอน)
+  openPlotMenu(i, el);
+}
+
+// ─── เมนูลอยของแปลง (เด้งเฉียงขึ้นขวา 45°) ───
+let plotMenuIdx = null;
+function openPlotMenu(i, el){
+  plotMenuIdx = i;
+  const menu = document.getElementById('plot-menu');
+  menu.classList.add('show');
+  const r  = el.getBoundingClientRect();
+  const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  // วางเฉียงขึ้น-ขวา (ตะวันออกเฉียงเหนือ) จากมุมขวาบนของแปลง
+  let left = r.left + r.width * 0.55;
+  let top  = r.top - mh - 6;
+  left = Math.min(left, window.innerWidth  - mw - 8);
+  left = Math.max(8, left);
+  if(top < 8) top = r.bottom + 6;   // ชนขอบบน → วางใต้แปลงแทน
+  menu.style.left = left + 'px';
+  menu.style.top  = top  + 'px';
+}
+function closePlotMenu(){ document.getElementById('plot-menu').classList.remove('show'); }
+function plotMenuView(){
+  closePlotMenu();
+  document.getElementById('plot-zoom-overlay').classList.add('show');
+}
+function plotMenuManage(){
+  const i = plotMenuIdx;
+  closePlotMenu();
+  if(i != null) openSlotAction('plots', i);
 }
 
 
@@ -6288,7 +6793,7 @@ function renderSubShop(type){
             <div class="asset-tags">${tagsHtml}</div>
             ${owned
               ? '<div style="margin-top:8px;font-size:0.75rem;font-weight:800;color:#3a8020;">✓ เป็นเจ้าของแล้ว</div>'
-              : `<button class="btn-buy-asset" data-itemid="${item.id}" data-type="${type}" style="margin-top:8px;background:linear-gradient(135deg,#4abf4a,#2a8030);color:#fff;border:none;border-radius:10px;padding:6px 16px;font-family:inherit;font-weight:800;font-size:0.78rem;cursor:pointer;">💵 ซื้อ ${item.cost.toLocaleString('th-TH')} บาท</button>`
+              : `<button class="btn-buy-asset" data-itemid="${item.id}" data-type="${type}" style="margin-top:8px;background:linear-gradient(135deg,#4abf4a,#2a8030);color:#fff;border:none;border-radius:10px;padding:6px 16px;font-family:inherit;font-weight:800;font-size:0.78rem;cursor:pointer;">🧺 ซื้อ ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์</button>`
             }
           </div>
         </div>`;
@@ -6326,7 +6831,7 @@ function renderSubShop(type){
         <div class="ag-emoji">${item.emoji}</div>
         <div class="ag-info">
           <div class="ag-name">${item.name} <span style="font-size:0.6rem;color:#c8a000;">${tierLabel[item.tier||1]}</span></div>
-          <div class="ag-unit">💵 ${item.cost.toLocaleString('th-TH')} บาท/ชิ้น · ${desc}</div>
+          <div class="ag-unit">🧺 ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์/ชิ้น · ${desc}</div>
           <div class="ag-stock">${stockTxt}</div>
         </div>
         <div class="ag-right">
@@ -6335,7 +6840,7 @@ function renderSubShop(type){
             <span class="agri-qty">1</span>
             <button class="agri-step" data-d="1">+</button>
           </div>
-          <button class="agri-buy-btn">ซื้อ 💵 <span class="agri-total">${item.cost.toLocaleString('th-TH')}</span></button>
+          <button class="agri-buy-btn">ซื้อ 🧺 <span class="agri-total">${item.cost.toLocaleString('th-TH')}</span></button>
         </div>
       </div>`;
     });
@@ -6366,7 +6871,7 @@ function buyFromSubShop(type, itemId, qty){
     if(type==='usableland') pool = USABLE_LANDS;
     const item = pool.find(x=>x.id===itemId);
     if(!item) return;
-    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+    if(gold < item.cost){ toast(`💸 เงินไม่พอ! ต้องใช้ ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
 
     // ─── บ้าน/รถ/มอไซค์ → เก็บเข้าคลังพัก (ยังไม่วาง ยังไม่กินพื้นที่) ───
     if(type==='house' || type==='car' || type==='motorbike'){
@@ -6418,7 +6923,7 @@ function buyFromSubShop(type, itemId, qty){
       toast(`🎉 ซื้อ ${item.name} แล้ว! พื้นที่ใช้สอย +${item.addArea} ตร.ม. (รวม ${calcUsableTotal()} ตร.ม.)`);
     } else {
       updateSpaceLabels();
-      toast(`🎉 ซื้อ ${item.emoji} ${item.name} แล้ว! -${item.cost.toLocaleString('th-TH')} บาท`);
+      toast(`🎉 ซื้อ ${item.emoji} ${item.name} แล้ว! -${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`);
     }
     renderSubShop(type);
     return;
@@ -6439,11 +6944,11 @@ function buyFromSubShop(type, itemId, qty){
     const item = pool.find(x=>x.id===itemId);
     if(!item) return;
     const total = item.cost * qty;
-    if(gold < total){ toast(`💸 เงินไม่พอ! ต้องใช้ ${total.toLocaleString('th-TH')} บาท`); return; }
+    if(gold < total){ toast(`💸 เงินไม่พอ! ต้องใช้ ${total.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
     gold -= total;
     stockAdd(cat, item.id, qty);
     updateTopbar();
-    toast(`🛒 ซื้อ ${item.emoji} ${item.name} x${qty} เข้าคลังสินค้าแล้ว!<br>-${total.toLocaleString('th-TH')} บาท`, true);
+    toast(`🛒 ซื้อ ${item.emoji} ${item.name} x${qty} เข้าคลังสินค้าแล้ว!<br>-${total.toLocaleString('th-TH')} ฟาร์มโกลด์`, true);
     renderSubShop(type);
     updateStockStatus();
   }
@@ -6550,7 +7055,7 @@ function renderOrders(){
           <div class="order-items">${itemsHtml}</div>
           <button class="btn-fulfill" ${canFulfill?'':'disabled'} data-orderidx="${oi}">ส่งสินค้า</button>
         </div>
-        <div class="order-reward"><div class="reward-gold">💵 ${o.reward.toLocaleString('th-TH')} บาท</div></div>
+        <div class="order-reward"><div class="reward-gold">🧺 ${o.reward.toLocaleString('th-TH')} ฟาร์มโกลด์</div></div>
       </div>`;
   }).join('');
 }
@@ -6565,7 +7070,7 @@ function fulfillOrder(oi){
   gold += reward;
   addExp(15 + Math.floor(reward/10));
   orders.splice(oi,1);
-  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${reward.toLocaleString('th-TH')} บาท`);
+  toast(`✅ ส่งสินค้าแล้ว! ได้รับ ${reward.toLocaleString('th-TH')} ฟาร์มโกลด์`);
   updateTopbar();
   renderOrders();
 }
@@ -6590,7 +7095,7 @@ function renderMarket(){
       <div class="mkt-name">${item.name}</div>
       ${qBadge}
       <div class="mkt-qty">มี ${item.qty} ชิ้น${perish?` · ${unit}/ชิ้น`:''}</div>
-      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 💵${(unit*item.qty).toLocaleString('th-TH')} บาท</button>
+      <button class="btn-sell-mkt" data-itemid="${item.id}">ขายทั้งหมด 🧺${(unit*item.qty).toLocaleString('th-TH')} ฟาร์มโกลด์</button>
     </div>`;
   }).join('');
 }
@@ -6605,7 +7110,7 @@ function sellAll(id){
   } else {
     gold += earned;
     addExp(item.qty);
-    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} บาท!`);
+    toast(`ขาย ${item.emoji} ${item.name} ×${item.qty} ได้ ${earned.toLocaleString('th-TH')} ฟาร์มโกลด์!`);
   }
   removeInv(id, item.qty);
   updateTopbar();
@@ -6620,7 +7125,7 @@ function nextDay(){
     // เฟส 4: จ่ายค่าแรงคนงานรายวัน — เงินไม่พอ คนงานรายวันลาออก
     const wage = dailyWage();
     if(wage > 0){
-      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} บาท`); }
+      if(gold >= wage){ gold -= wage; toast(`💸 จ่ายค่าแรงรายวัน ${wage.toLocaleString('th-TH')} ฟาร์มโกลด์`); }
       else { workers = workers.filter(w => w.mode !== 'day'); toast('⚠️ เงินไม่พอจ่ายค่าแรง — คนงานรายวันลาออกทั้งหมด'); }
     }
     autoHarvest();  // คนงานเกษตรเก็บผลผลิตให้เมื่อขึ้นวันใหม่
@@ -6798,7 +7303,7 @@ function renderAssetBreakdown(){
     { emoji:'🌾', label:'พื้นที่เกษตร', sub:'มูลค่าที่ดินเพื่อการเกษตร', val:farmland },
     { emoji:'🏠', label:'พื้นที่ใช้สอย', sub:'บ้าน · ยานพาหนะ · พื้นที่ขยาย', val:usable },
     { emoji:'📦', label:'คลังสินค้า',   sub:'ของในคลัง + สินค้าเกษตรรอลง', val:storage },
-    { emoji:'💵', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
+    { emoji:'🧺', label:'เงินสด',       sub:'เงินที่ถืออยู่ตอนนี้', val:cash },
   ];
   el.innerHTML =
     `<div class="abd-title">📊 ทรัพย์สินตอนนี้ (เรียลไทม์)</div>` +
@@ -7170,9 +7675,9 @@ function renderBuyersList(){
     const diffPct = Math.round(Math.abs(diff)/market*100);
     let diffHtml;
     if(diff > 0){
-      diffHtml = `<div class="buyer-diff plus">▲ สูงกว่าราคาตลาด ${diff.toLocaleString('th-TH')} บาท (+${diffPct}%)</div>`;
+      diffHtml = `<div class="buyer-diff plus">▲ สูงกว่าราคาตลาด ${diff.toLocaleString('th-TH')} ฟาร์มโกลด์ (+${diffPct}%)</div>`;
     } else if(diff < 0){
-      diffHtml = `<div class="buyer-diff minus">▼ ต่ำกว่าราคาตลาด ${Math.abs(diff).toLocaleString('th-TH')} บาท (-${diffPct}%)</div>`;
+      diffHtml = `<div class="buyer-diff minus">▼ ต่ำกว่าราคาตลาด ${Math.abs(diff).toLocaleString('th-TH')} ฟาร์มโกลด์ (-${diffPct}%)</div>`;
     } else {
       diffHtml = `<div class="buyer-diff zero">= เท่ากับราคาตลาดพอดี</div>`;
     }
@@ -7783,7 +8288,7 @@ function renderMarriageNPCs(){
         <div class="npc-bonus-tags">${npc.bonus.map(b=>`<span class="npc-btag">${b}</span>`).join('')}</div>
         <div class="npc-dowry" style="margin-top:4px;">🎁 ${npc.dowryDesc}</div>
         ${!isSpouse && stage < 4 && !isMarriedElsewhere ? `
-          <div class="npc-flirt-cost">💵 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} บาท</div>
+          <div class="npc-flirt-cost">🧺 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} ฟาร์มโกลด์</div>
           <button class="btn-flirt" data-npcid="${npc.id}">${stageBtnLabels[stage]}</button>
         ` : isSpouse ? '<div style="font-size:0.75rem;color:#e84080;font-weight:800;margin-top:6px;">❤️ แต่งงานแล้ว</div>' : ''}
       </div>`;
@@ -7825,7 +8330,7 @@ function openFlirt(npcId){
   document.getElementById('fm-avatar').textContent = npc.avatar;
   document.getElementById('fm-name').textContent   = npc.name;
   document.getElementById('fm-stage').textContent  = stageDescs[stage];
-  document.getElementById('fm-cost-info').textContent = `💵 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} บาท`;
+  document.getElementById('fm-cost-info').textContent = `🧺 ใช้ ${stageCosts[stage].toLocaleString('th-TH')} ฟาร์มโกลด์`;
   document.getElementById('fm-action-btn').textContent = stageBtnLabels[stage];
   document.getElementById('fm-result').className = 'flirt-result';
   document.getElementById('fm-result').textContent = '';
@@ -7847,7 +8352,7 @@ function doFlirtAction(){
 
   if(gold < cost){
     resultEl.className = 'flirt-result show fail';
-    resultEl.textContent = `💸 เงินไม่พอ! ต้องใช้ ${cost.toLocaleString('th-TH')} บาท`;
+    resultEl.textContent = `💸 เงินไม่พอ! ต้องใช้ ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`;
     return;
   }
 
@@ -7864,7 +8369,7 @@ function doFlirtAction(){
     updateTopbar();
     // add asset if dowry has land/house
     resultEl.className = 'flirt-result show wedding';
-    resultEl.innerHTML = `💒 แต่งงานแล้ว! ได้รับสินสอด ${npc.dowryDesc}<br>💵 +${npc.dowry.toLocaleString('th-TH')} บาท`;
+    resultEl.innerHTML = `💒 แต่งงานแล้ว! ได้รับสินสอด ${npc.dowryDesc}<br>🧺 +${npc.dowry.toLocaleString('th-TH')} ฟาร์มโกลด์`;
     document.getElementById('fm-action-btn').disabled = true;
     // try to have child after 2s
     setTimeout(()=>{
@@ -8048,7 +8553,7 @@ function equipRowHtml(item, kind, owned){
       <div class="equip-name">${item.name}</div>
       <div class="equip-desc">${item.desc}</div>
     </div>
-    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">💵 ${item.cost.toLocaleString('th-TH')}</button>
+    <button class="equip-buy-btn" data-equipkind="${kind}" data-equipid="${item.id}">🧺 ${item.cost.toLocaleString('th-TH')}</button>
   </div>`;
 }
 function renderEquipment(){
@@ -8065,7 +8570,7 @@ function buyEquip(kind, id){
   const owned = kind === 'tool' ? ownedTools : ownedMachines;
   const item  = list.find(x => x.id === id);
   if(!item || owned.includes(id)) return;
-  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < item.cost){ toast(`❌ เงินไม่พอ! ${item.emoji} ${item.name} ราคา ${item.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= item.cost;
   owned.push(id);
   updateTopbar();
@@ -8097,7 +8602,7 @@ function renderWorkers(){
     return `<div class="equip-row">
       <span class="equip-emoji">${h.emoji}</span>
       <div class="equip-info"><div class="equip-name">${h.name}</div><div class="equip-desc">${h.desc}</div></div>
-      <button class="equip-buy-btn" data-houseid="${h.id}">💵 ${h.cost.toLocaleString('th-TH')}</button>
+      <button class="equip-buy-btn" data-houseid="${h.id}">🧺 ${h.cost.toLocaleString('th-TH')}</button>
     </div>`;
   }).join('');
   const houseBlock =
@@ -8141,7 +8646,7 @@ function hireWorker(type, mode){
     toast(`❌ คนงานเต็มแล้ว (${workers.length}/${workerCap()})<br>สร้าง "ที่พักคนงาน" เพื่อเพิ่มจำนวนสูงสุด 🏠`, true);
     return;
   }
-  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < cost){ toast(`❌ เงินไม่พอ! จ้าง${wt.name} ใช้ ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= cost;
   updateTopbar();
   if(mode==='task'){
@@ -8156,7 +8661,7 @@ function hireWorker(type, mode){
 function buyHouse(id){
   const h = WORKER_HOUSES.find(x=>x.id===id);
   if(!h || ownedHouses.includes(id)) return;
-  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < h.cost){ toast(`❌ เงินไม่พอ! ${h.emoji} ${h.name} ราคา ${h.cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= h.cost;
   ownedHouses.push(id);
   updateTopbar();
@@ -8178,14 +8683,14 @@ function renderMaterials(){
   body.innerHTML = MATERIALS.map(function(m){
     const have = getInv(m.id);
     const packs = m.packs.map(function(q){
-      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>💵 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
+      return `<button class="equip-buy-btn" data-matid="${m.id}" data-matqty="${q}">x${q}<b>🧺 ${(m.price*q).toLocaleString('th-TH')}</b></button>`;
     }).join('');
     return `<div class="worker-card">
       <div class="worker-top">
         <span class="worker-emoji">${m.emoji}</span>
         <div style="flex:1;min-width:0;">
           <div class="worker-name">${m.name}</div>
-          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} บาท/หน่วย</div>
+          <div class="worker-desc">ใช้เป็นวัสดุก่อสร้าง · ${m.price.toLocaleString('th-TH')} ฟาร์มโกลด์/หน่วย</div>
         </div>
       </div>
       <div class="worker-have">มีในคลัง: ${have?have.qty:0} หน่วย</div>
@@ -8198,7 +8703,7 @@ function buyMaterial(id, qty){
   if(!m) return;
   qty = Number(qty);
   const cost = m.price * qty;
-  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} บาท`); return; }
+  if(gold < cost){ toast(`❌ เงินไม่พอ! ${m.emoji} ${m.name} x${qty} ราคา ${cost.toLocaleString('th-TH')} ฟาร์มโกลด์`); return; }
   gold -= cost;
   addInv(m.id, m.name, m.emoji, qty, Math.round(m.price*0.5));
   updateTopbar();
@@ -8220,7 +8725,7 @@ function adminAddMoney(amount){
   gold += amount;
   updateTopbar();
   updateAdminMoneyDisplay();
-  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} บาท (รวม ${gold.toLocaleString('th-TH')} บาท)`);
+  toast(`🛠️ เพิ่มเงิน +${amount.toLocaleString('th-TH')} ฟาร์มโกลด์ (รวม ${gold.toLocaleString('th-TH')} ฟาร์มโกลด์)`);
 }
 function adminSkipDays(n){
   for(let k=0; k<n; k++){
@@ -8343,6 +8848,14 @@ document.getElementById('chat-input').addEventListener('keydown', function(e){
     if(item.dataset.nav === 'admin'){ closeNav(); openAdmin(); return; }
     // TODO: ใส่การทำงานของปุ่มอื่น ๆ ตาม data-nav ในภายหลัง
   });
+  // ปุ่มออกจากระบบ — กลับไปหน้าล็อกอิน
+  var logoutBtn = document.querySelector('.navd-logout');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', function(){
+      closeNav();
+      if(typeof window.showLogin === 'function') window.showLogin();
+    });
+  }
   // ปิดหน้าต่างประวัติการอัพเดต
   document.getElementById('version-close').addEventListener('click', closeVersionHistory);
   document.getElementById('version-overlay').addEventListener('click', function(e){
@@ -8581,6 +9094,26 @@ if (demConfirm) demConfirm.addEventListener('click', confirmDemolish);
 if (demCancel)  demCancel.addEventListener('click', closeDemolish);
 if (demModal)   demModal.addEventListener('click', function (e) { if (e.target === this) closeDemolish(); });
 
+// ─────────────────────────── PLOT FLOATING MENU + ZOOM ───────────────────────────
+document.getElementById('plot-menu-view')?.addEventListener('click', plotMenuView);
+document.getElementById('plot-menu-manage')?.addEventListener('click', plotMenuManage);
+document.getElementById('plot-zoom-close')?.addEventListener('click', function(){
+  document.getElementById('plot-zoom-overlay').classList.remove('show');
+});
+document.getElementById('plot-zoom-overlay')?.addEventListener('click', function(e){
+  if(e.target === this) this.classList.remove('show');
+});
+// คลิกนอกเมนู → ปิด (ยกเว้นคลิกในเมนูเอง หรือคลิกแปลงอื่นซึ่งจะเปิดใหม่)
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('plot-menu');
+  if(!menu || !menu.classList.contains('show')) return;
+  if(menu.contains(e.target)) return;
+  if(e.target.closest('.plot-empty')) return;
+  closePlotMenu();
+});
+// เลื่อนกล่องเนื้อหา → ปิดเมนูลอย (ตำแหน่งจะไม่ตามแล้ว)
+document.getElementById('main')?.addEventListener('scroll', closePlotMenu);
+
 // ─────────────────────────── BUYER ACTIONS (ปุ่มผู้ซื้อใน sell modal) ───────────────────────────
 const buyersList = document.getElementById('buyers-list');
 if (buyersList) buyersList.addEventListener('click', function (e) {
@@ -8643,7 +9176,7 @@ farmContainer.addEventListener('click', function(e){
   const plot = e.target.closest('.plot');
   if(plot){
     const idx = [...plot.parentElement.children].indexOf(plot);
-    clickPlot(idx); return;
+    clickPlot(idx, plot); return;
   }
   // ไม้ยืนต้น (tree-grid ใช้ animal-pen class)
   const pen = e.target.closest('.animal-pen');
@@ -8858,6 +9391,51 @@ openFlirt(btn.dataset.npcid);
 // 15. รายงานหลังอัพเดต + ระบุสิ่งที่ต้องทดสอบ — ทุกครั้งที่อัพเดตเสร็จ
 //     → ต้องบอกว่า "อัพเดตอะไรไปบ้าง" (สรุปการเปลี่ยนแปลง)
 //     → และต้องบอกด้วยว่า "ให้ผู้ใช้เช็ค/ทดสอบฟังก์ชันอะไรบ้าง" เพื่อยืนยันว่าใช้งานได้จริง
+//
+// 16. มาตรฐาน "ช่อง/แปลงแบบรูปภาพ + การโต้ตอบ" — เมื่อผู้ใช้ให้นำรูปมาแทนกล่องช่อง
+//     (แปลง/คอก/บ่อ/สวน ฯลฯ) ให้ทำตามนี้ทุกครั้ง:
+//     - รูป: เก็บใน ภาพหน้าจอ/ อ้าง url ครั้งเดียวในซอร์ส แล้ว build แปลงเป็น base64
+//       (ฝังชุดเดียว ไม่ฝังซ้ำ) · ถ้ารูปมี glow/เงาจางรอบนอก → crop เหลือเฉพาะตัววัตถุจริง
+//       (Pillow: alpha > ~185 หา bbox แล้ว crop) เพื่อตัดขอบ glow ที่ทำให้เกิด "เส้นจาง"
+//       ตอนขยาย แล้วใส่ glow กลับด้วย CSS drop-shadow (สีน้ำตาล) · ย่อ+บีบให้เล็ก
+//       (PNG โปร่ง=optimize / ภาพทึบ=JPEG q~82)
+//     - ช่องว่าง: ลอยบนแถบหมวด ไม่มีกรอบกล่อง (เอา border/bg/box-shadow ออก)
+//       ใช้ background-size:contain, aspect-ratio ตรงสัดส่วนรูปที่ crop แล้ว,
+//       align-self:center ให้อยู่กลางช่อง, glow ขอบด้วย filter:drop-shadow,
+//       ป้ายชื่อช่องวางทับกลางรูป ตัวเล็ก มีเงาตัวอักษร
+//     - กดช่องว่าง → เด้งเมนูลอยตำแหน่งเฉียงขึ้น-ขวา 45° (NE) ของช่อง (clamp ไม่ให้ล้นจอ)
+//       ขนาดแถบเท่าปุ่มหลัก มี 2 แถบบน-ล่าง: บน "🔍 ดูแปลงใกล้ๆ" → เปิดภาพขยาย(overlay) ·
+//       ล่าง "🌱 ปลูก/รื้อถอน" → เปิดหน้าจัดการเดิม · ปิดเมนูเมื่อกดนอกเมนู/เลื่อนกล่อง
+//     - ภาพขยาย(zoom overlay): พื้นหลังเบลอโปร่ง, z-index สูงกว่าทุก UI (เช่น 100100
+//       เหนือแชท/ล็อกอิน) กัน UI อื่นลอยทับเป็นเส้น, มีปุ่มปิด ✕ + กดนอกภาพปิดได้,
+//       โชว์เฉพาะรูปวัตถุที่ crop แล้ว + ชื่อกำกับใต้ภาพ, ขนาดพอเหมาะไม่เต็มจอเกินไป
+//     - ปิด pinch-zoom ของทั้งเกมที่ viewport (maximum-scale=1.0, user-scalable=no)
+//
+// 17. มาตรฐาน "Prompt ออกแบบภาพ (อีโมจิ/ไอคอน/รูป/ตัวละคร)" — เมื่อผู้ใช้ขอให้ช่วยคิด
+//     Prompt สำหรับสร้างภาพไปให้ GPT/ตัวสร้างภาพ → ต้องเขียน Prompt ภาษาอังกฤษ และใช้
+//     "สไตล์เดียวกันทั้งเกม" ให้เข้าชุดกัน (3D cartoon การ์ตูนฟาร์มแบบ Hay Day/Township/
+//     Family Farm เข้าชุดกับโลโก้มงกุฎทานตะวัน) โดยแนบ Shared style block ต่อท้าย Prompt
+//     ทุกอันเสมอ:
+//     ── ตัวอย่างโครง Prompt (ส่วนเฉพาะวัตถุ) ──
+//     "A charming <object> icon for a <use> ... <mood/details>, small green leaves or a
+//      sunflower accent ... friendly farm feeling."
+//     ── Shared style (วางท้ายทุก Prompt) ──
+//     "Style: cute 3D cartoon mobile farming game icon, glossy and polished, warm golden
+//      tones, soft studio lighting, rounded chunky shapes, thick clean outlines, vibrant
+//      saturated colors, subtle sparkle highlights, high detail, centered single object,
+//      isolated on transparent background (PNG), game UI asset, app icon quality, similar
+//      art style to Hay Day / Township / Family Farm. No text, no letters, no watermark,
+//      no background scene."
+//     - แนะนำให้ผู้ใช้สั่งทีละอัน + ขอ transparent PNG + ถ้าต้องการชุดให้บอก "keep the
+//       exact same art style/lighting/gold palette as the previous icon"
+//
+// 18. ทำ Animation ด้วย CSS ให้เสมอ (ไม่ใช้ GIF) — เมื่อผู้ใช้ขอให้ทำภาพ/ไอคอน/โลโก้
+//     เคลื่อนไหว → ใช้ CSS @keyframes + animation เท่านั้น (เช่น ลอยขึ้น-ลง translateY,
+//     เรืองแสง drop-shadow/brightness, เพชรเรืองแสง radial-gradient + mix-blend-mode,
+//     ดาวกระพริบ opacity/scale/rotate พร้อม animation-delay สลับจังหวะ)
+//     - ทำให้นุ่มนวลสมจริง (ease-in-out, infinite), ไม่ใช้ไฟล์ GIF/วิดีโอ
+//     - element ที่ต้องเคลื่อนไหวซ้อน (แสง/ดาว) ใส่เป็น child ที่ position:absolute
+//       ภายในกล่องที่ position:relative
 // ============================================================
 // ============================================================
 //  DATA — ย้ายไป data.js แล้ว (Phase 2)
