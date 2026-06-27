@@ -3220,7 +3220,7 @@ body{
 }
 /* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
 body, #login-screen{
-  background-image: url('ภาพหน้าจอ/001.png');
+  background-image: url('ภาพหน้าจอ/001.jpg');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -5253,6 +5253,14 @@ const UPDATE_HISTORY = [
     title: 'ซ่อน scrollbar ของกล่อง #main',
     details: [
       'ซ่อนแถบเลื่อน (scrollbar) ของ #main ทุกเบราว์เซอร์ (scrollbar-width none + ::-webkit-scrollbar display none) — ยังเลื่อนได้ปกติ แค่ไม่เห็นแถบ',
+    ],
+  },
+  {
+    version: '0.60',
+    date: '27/06/2026',
+    title: 'บีบรูปพื้นหลัง 001 (PNG→JPEG) ลดขนาดเกม',
+    details: [
+      'แปลงพื้นหลังฟาร์มหลัก 001.png (2.92 MB) เป็น JPEG q82 (~430 KB เล็กลง 7 เท่า) — ไฟล์เกม standalone/index.html ลดจาก ~5.9 MB เหลือ ~3.4 MB เว็บโหลดเร็วขึ้นเกือบเท่าตัว',
     ],
   },
 ];
