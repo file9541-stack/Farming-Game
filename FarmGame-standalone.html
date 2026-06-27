@@ -214,6 +214,26 @@ body{
 }
 
 .plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+/* ===== แปลงปลูกพืช: กล่องสูงคงที่ (3 แถว) เลื่อนแนวนอนดูแปลงที่เกิน + ปุ่มเพิ่มลอย ===== */
+.plots-viewport{ position:relative; }
+.plots-scroll{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:2px 0 6px; }
+.plots-scroll::-webkit-scrollbar{ display:none; }
+#plots-grid{
+  display:grid; grid-template-columns:none;
+  grid-auto-flow:column;
+  grid-template-rows:repeat(3, auto);
+  grid-auto-columns:min(230px, calc(50vw - 28px));
+  gap:12px; width:max-content;
+}
+.plots-add-fab{
+  position:absolute; right:8px; bottom:14px; z-index:6;
+  width:52px; height:52px; border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(135deg,#5bc24a,#2f7a20); color:#fff;
+  font-size:1.8rem; line-height:1; font-family:inherit;
+  box-shadow:0 5px 16px rgba(40,100,20,0.5), 0 0 0 3px rgba(255,255,255,0.7);
+  display:flex; align-items:center; justify-content:center;
+}
+.plots-add-fab:active{ transform:scale(0.9); }
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -5288,6 +5308,15 @@ const UPDATE_HISTORY = [
       'เลิกใช้ innerHTML เปลี่ยนเป็น DOM API + event delegation (ตาม DEV-001 ข้อ 10) · กันสแปม 0.8 วิ · escape อัตโนมัติด้วย textContent',
     ],
   },
+  {
+    version: '0.62',
+    date: '27/06/2026',
+    title: 'แปลงปลูกพืช: กล่องสูงคงที่ 3 แถว เลื่อนแนวนอน + ปุ่มเพิ่มลอย',
+    details: [
+      'เปลี่ยนเลย์เอาต์แปลงพืชจากกริด 2 คอลัมน์ยืดลงล่าง → กล่องสูงคงที่ 3 แถว แสดง 2 คอลัมน์ (6 แปลง) ต่อหน้า เลื่อนแนวนอนอิสระเพื่อดูแปลงที่เกินทางขวา',
+      'ย้ายปุ่ม "เพิ่มแปลง" ออกจากกริด → เป็นปุ่มลอยคงที่มุมขวาล่าง (.plots-add-fab) กดเพิ่มได้ตลอดไม่ว่าเลื่อนไปไหน · ใช้กับแปลงพืชก่อน หมวดอื่นคงเดิม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6178,6 +6207,8 @@ function renderFarmSections(){
     const m = SECTION_META[key];
     const gridTag = key==='trees'
       ? `<div id="${m.gridId}" style="${m.gridStyle}"></div>`
+      : key==='plots'
+      ? `<div class="plots-viewport"><div class="plots-scroll"><div class="${m.gridClass}" id="${m.gridId}"></div></div><button class="plots-add-fab" data-addtype="plots" type="button" aria-label="เพิ่มแปลง">＋</button></div>`
       : `<div class="${m.gridClass}" id="${m.gridId}"></div>`;
     return `<div class="farm-section" data-seckey="${key}">
       <div class="farm-section-head">
@@ -6398,7 +6429,7 @@ function renderFarm(){
         <span class="plot-time">เก็บได้!</span>
         <div class="plot-badge">✓</div>
       </div>`;
-  }).join('') + addCellHtml('plots');
+  }).join('');   // ปุ่มเพิ่มย้ายเป็นปุ่มลอย (.plots-add-fab) นอก grid
 }
 
 function clickPlot(i, el){
@@ -9347,6 +9378,9 @@ el.addEventListener('click', function () { stepPrice(Number(el.dataset.step)); }
 // delegation บน farm-sections-container (ครอบทุก grid ที่ renderFarmSections สร้าง)
 const farmContainer = document.getElementById('farm-sections-container');
 farmContainer.addEventListener('click', function(e){
+  // ปุ่มลอยเพิ่มแปลงพืช (plots)
+  const fab = e.target.closest('.plots-add-fab');
+  if(fab){ startConstruction(fab.dataset.addtype); return; }
   // กล่องเส้นประ "เพิ่มพื้นที่" — สั่งก่อสร้าง (ดักก่อนช่องปกติ)
   const addCell = e.target.closest('.slot-add-cell');
   if(addCell){
