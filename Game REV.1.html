@@ -402,14 +402,14 @@ body{
 /* ===== BOTTOM NAV ===== */
 #bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 560px;
+  width: calc(100% - 32px);
+  max-width: 420px;
   background: rgba(255,248,232,0.96);
-  border-radius: 22px 22px 0 0;
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+  border-radius: 24px;
+  padding: 7px 10px 7px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -1376,14 +1376,14 @@ body { padding-bottom: 72px; }
 
 #bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 560px;
+  width: calc(100% - 32px);
+  max-width: 420px;
   background: rgba(255,248,232,0.96);
-  border-radius: 22px 22px 0 0;
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+  border-radius: 24px;
+  padding: 7px 10px 7px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -3210,6 +3210,7 @@ body{
   overflow:hidden;            /* ปิดการเลื่อนของทั้งหน้า ให้เลื่อนภายใน #main แทน */
   position:relative;
   box-shadow:0 0 50px rgba(0,0,0,0.45);
+  padding-bottom:0;
 }
 /* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
 body, #login-screen{
@@ -5227,9 +5228,9 @@ const UPDATE_HISTORY = [
   {
     version: '0.57',
     date: '27/06/2026',
-    title: 'ปูแถบเมนูล่าง (bottom-nav) ให้ติดขอบจอ',
+    title: 'แถบเมนูล่างลอยเหมือนเดิม + กล่อง #main ปูถึงขอบจอล่าง',
     details: [
-      'เปลี่ยนแถบเมนูล่างจากลอย (bottom 10px, มุมโค้งทุกด้าน, กว้าง 420px) เป็นปูติดขอบจอ (bottom 0, กว้างเต็มกรอบ 560px, มุมโค้งเฉพาะด้านบน) + รองรับ safe-area ด้านล่าง — ไม่เห็นพื้นหลังโผล่ใต้แถบอีก',
+      'คืนแถบเมนูล่าง (bottom-nav) เป็นแบบลอยเดิม (bottom 10px, มุมโค้งรอบ, กว้าง 420px) · เอา padding-bottom 72px ของ body ออก ให้กล่อง #main ปูยาวถึงขอบจอล่างจริง (เนื้อหาลอดใต้แถบเมนูที่ลอยอยู่ เหมือนพฤติกรรมด้านบนกับ topbar)',
     ],
   },
 ];
