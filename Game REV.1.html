@@ -188,7 +188,10 @@ body{
   height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;        /* Firefox: ซ่อน scrollbar */
+  -ms-overflow-style: none;     /* IE/Edge เก่า: ซ่อน scrollbar */
 }
+#main::-webkit-scrollbar{ width:0; height:0; display:none; }  /* WebKit (Chrome/Safari): ซ่อน scrollbar */
 
 /* ===== FARM VIEW ===== */
 .farm-layout{display:grid;grid-template-columns:1fr 220px;gap:12px;}
@@ -1154,7 +1157,10 @@ body{
   height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;        /* Firefox: ซ่อน scrollbar */
+  -ms-overflow-style: none;     /* IE/Edge เก่า: ซ่อน scrollbar */
 }
+#main::-webkit-scrollbar{ width:0; height:0; display:none; }  /* WebKit (Chrome/Safari): ซ่อน scrollbar */
 
 /* ===== FARM VIEW ===== */
 .farm-layout{display:grid;grid-template-columns:1fr 220px;gap:12px;}
@@ -5239,6 +5245,14 @@ const UPDATE_HISTORY = [
     title: 'เอาพื้นหลังกล่อง #main ออก เหลือหัวข้อ + การ์ดภายใน',
     details: [
       'เอาพื้นครีม/กรอบ/เงา/มุมโค้งของกล่อง #main ออก (background transparent, border none, box-shadow none) — เหลือแต่หัวข้อ UI กับกล่องการ์ดหมวด (.farm-section) ลอยอยู่บนพื้นหลังฟาร์มโดยตรง',
+    ],
+  },
+  {
+    version: '0.59',
+    date: '27/06/2026',
+    title: 'ซ่อน scrollbar ของกล่อง #main',
+    details: [
+      'ซ่อนแถบเลื่อน (scrollbar) ของ #main ทุกเบราว์เซอร์ (scrollbar-width none + ::-webkit-scrollbar display none) — ยังเลื่อนได้ปกติ แค่ไม่เห็นแถบ',
     ],
   },
 ];
