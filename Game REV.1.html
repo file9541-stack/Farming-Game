@@ -259,7 +259,7 @@ body{
   width:80%; aspect-ratio:1.52;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
-  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
+  filter:drop-shadow(0 2px 5px rgba(70,40,10,0.45));  /* เอา glow เรืองแสงออก เหลือเงาตื้น */
 }
 .plot-wait-label{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -1228,7 +1228,7 @@ body{
   width:80%; aspect-ratio:1.52;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
-  filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
+  filter:drop-shadow(0 2px 5px rgba(70,40,10,0.45));  /* เอา glow เรืองแสงออก เหลือเงาตื้น */
 }
 .plot-wait-label{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -5339,6 +5339,14 @@ const UPDATE_HISTORY = [
     title: 'คืนช่องแปลง 200px + ย่อรูปแปลงดินในช่องลง 20%',
     details: [
       'คืน grid-auto-columns เป็น ~200px ต่อช่อง · ย่อรูปแปลงดินที่แสดง (.plot-soil-img) จาก 100% → 80% ของช่อง (รูปไม่ขยายเต็มจนเกินไป มีระยะขอบรอบรูป) — ไม่แตะรูปซูม .plot-zoom-img',
+    ],
+  },
+  {
+    version: '0.66',
+    date: '27/06/2026',
+    title: 'เอา glow เรืองแสงของแปลงดินออก',
+    details: [
+      'เอา drop-shadow เรืองแสงสีน้ำตาล (0 0 8px) ของ .plot-soil-img ออก เหลือเงาตื้นบางๆ ให้ไม่แบน',
     ],
   },
 ];
