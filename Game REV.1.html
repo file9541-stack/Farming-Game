@@ -222,7 +222,7 @@ body{
   display:grid; grid-template-columns:none;
   grid-auto-flow:column;
   grid-template-rows:repeat(3, auto);
-  grid-auto-columns:min(160px, calc(40vw - 18px));
+  grid-auto-columns:min(200px, calc(50vw - 24px));
   gap:12px; width:max-content;
 }
 .plots-add-fab{
@@ -256,7 +256,7 @@ body{
 }
 .plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
 .plot-soil-img{
-  width:100%; aspect-ratio:1.52;
+  width:80%; aspect-ratio:1.52;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
   filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
@@ -1225,7 +1225,7 @@ body{
 }
 .plot.plot-empty:hover{ transform:scale(1.04); filter:brightness(1.05); }
 .plot-soil-img{
-  width:100%; aspect-ratio:1.52;
+  width:80%; aspect-ratio:1.52;
   background-image:url('ภาพหน้าจอ/plot-soil.png');
   background-size:contain; background-position:center; background-repeat:no-repeat;
   filter:drop-shadow(0 0 8px rgba(120,70,20,0.75)) drop-shadow(0 2px 5px rgba(70,40,10,0.55));
@@ -5331,6 +5331,14 @@ const UPDATE_HISTORY = [
     title: 'ลดขนาดแปลงพืชลงอีก ~20% (200px → 160px)',
     details: [
       'ปรับ grid-auto-columns แปลงพืช ~200px → ~160px ต่อแปลง (เล็กลง ~20% เห็นต่อหน้าได้มากขึ้น)',
+    ],
+  },
+  {
+    version: '0.65',
+    date: '27/06/2026',
+    title: 'คืนช่องแปลง 200px + ย่อรูปแปลงดินในช่องลง 20%',
+    details: [
+      'คืน grid-auto-columns เป็น ~200px ต่อช่อง · ย่อรูปแปลงดินที่แสดง (.plot-soil-img) จาก 100% → 80% ของช่อง (รูปไม่ขยายเต็มจนเกินไป มีระยะขอบรอบรูป) — ไม่แตะรูปซูม .plot-zoom-img',
     ],
   },
 ];
