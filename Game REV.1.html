@@ -216,7 +216,7 @@ body{
 .plots-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 /* ===== แปลงปลูกพืช: กล่องสูงคงที่ (3 แถว) เลื่อนแนวนอนดูแปลงที่เกิน + ปุ่มเพิ่มลอย ===== */
 .plots-viewport{ position:relative; }
-.plots-scroll{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:2px 0 6px; }
+.plots-scroll{ overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:10px 0 12px; }
 .plots-scroll::-webkit-scrollbar{ display:none; }
 #plots-grid{
   display:grid; grid-template-columns:none;
@@ -5347,6 +5347,14 @@ const UPDATE_HISTORY = [
     title: 'เอา glow เรืองแสงของแปลงดินออก',
     details: [
       'เอา drop-shadow เรืองแสงสีน้ำตาล (0 0 8px) ของ .plot-soil-img ออก เหลือเงาตื้นบางๆ ให้ไม่แบน',
+    ],
+  },
+  {
+    version: '0.67',
+    date: '27/06/2026',
+    title: 'แก้รูปแปลงดินโดนตัดบน-ล่าง (overflow ของกล่องเลื่อน)',
+    details: [
+      'กล่องเลื่อนแปลง (.plots-scroll) เคยตั้ง overflow-y:hidden ทำให้รูปแปลงดินถูกตัดบน-ล่าง — เปลี่ยนเป็น overflow-y:visible (เลื่อนแค่แนวนอน) + เพิ่ม padding บน-ล่าง รูปแสดงเต็มไม่โดนตัด',
     ],
   },
 ];
