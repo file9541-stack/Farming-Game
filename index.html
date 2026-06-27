@@ -222,7 +222,7 @@ body{
   display:grid; grid-template-columns:none;
   grid-auto-flow:column;
   grid-template-rows:repeat(3, auto);
-  grid-auto-columns:min(230px, calc(50vw - 28px));
+  grid-auto-columns:min(200px, calc(50vw - 24px));
   gap:12px; width:max-content;
 }
 .plots-add-fab{
@@ -5315,6 +5315,14 @@ const UPDATE_HISTORY = [
     details: [
       'เปลี่ยนเลย์เอาต์แปลงพืชจากกริด 2 คอลัมน์ยืดลงล่าง → กล่องสูงคงที่ 3 แถว แสดง 2 คอลัมน์ (6 แปลง) ต่อหน้า เลื่อนแนวนอนอิสระเพื่อดูแปลงที่เกินทางขวา',
       'ย้ายปุ่ม "เพิ่มแปลง" ออกจากกริด → เป็นปุ่มลอยคงที่มุมขวาล่าง (.plots-add-fab) กดเพิ่มได้ตลอดไม่ว่าเลื่อนไปไหน · ใช้กับแปลงพืชก่อน หมวดอื่นคงเดิม',
+    ],
+  },
+  {
+    version: '0.63',
+    date: '27/06/2026',
+    title: 'ลดความกว้างแปลงพืชเหลือ ~200px',
+    details: [
+      'ปรับ grid-auto-columns ของแปลงพืชจาก ~230px → ~200px ต่อแปลง (เห็นต่อหน้าได้มากขึ้นนิด)',
     ],
   },
 ];
