@@ -2220,7 +2220,7 @@ body { padding-bottom: 72px; }
 /* ===== CHAT PANEL (แถบแชทออนไลน์ — slide-in ด้านซ้าย) ===== */
 #chat-toggle {
   position: fixed;
-  left: 0; top: 12px;
+  left: max(0px, calc(50% - 280px)); top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#5a9bd4,#3a7ab0);
   color: #fff; border: none;
@@ -2251,7 +2251,7 @@ body { padding-bottom: 72px; }
 
 #chat-panel {
   position: fixed;
-  left: 0; top: 0; bottom: 0;
+  left: max(0px, calc(50% - 280px)); top: 0; bottom: 0;
   width: 82%; max-width: 340px;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
   box-shadow: 4px 0 24px rgba(40,80,120,0.3);
@@ -2334,7 +2334,7 @@ body { padding-bottom: 72px; }
 /* ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== */
 #nav-toggle {
   position: fixed;
-  right: 0; top: 12px;
+  right: max(0px, calc(50% - 280px)); top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#f5c518,#e0a010);
   color: #6b3500; border: none;
@@ -2357,7 +2357,7 @@ body { padding-bottom: 72px; }
 
 #nav-drawer {
   position: fixed;
-  right: 0; top: 0; bottom: 0;
+  right: max(0px, calc(50% - 280px)); top: 0; bottom: 0;
   width: 82%; max-width: 320px;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
   box-shadow: -4px 0 24px rgba(120,80,20,0.28);
@@ -5286,6 +5286,14 @@ const UPDATE_HISTORY = [
       'ทำระบบแชทชุมชนให้ใช้งานได้จริงแบบ local: ฟองข้อความ 2 ฝั่ง + เวลา + เก็บประวัติ LocalStorage (mfw_chat)',
       'บอท NPC (ลุงมานพ/ป้าสมศรี/เฮียตี๋/น้องฟ้า) ทักทาย + สุ่มตอบตามห้อง · แผงอีโมจิ 😀 · ป้ายฐานะ 🏅 หน้าชื่อ (เชื่อม Wealth Rank) · ช่องแยกหมวด 📂 (ทั่วไป/ซื้อขาย/ช่วยเหลือ)',
       'เลิกใช้ innerHTML เปลี่ยนเป็น DOM API + event delegation (ตาม DEV-001 ข้อ 10) · กันสแปม 0.8 วิ · escape อัตโนมัติด้วย textContent',
+    ],
+  },
+  {
+    version: '0.62',
+    date: '27/06/2026',
+    title: 'แก้ปุ่มแถบซ่อน (chat/nav) ให้ยึดขอบกรอบเกม ไม่ใช่ขอบจอ',
+    details: [
+      'บนจอกว้าง (iPad/PC) ปุ่ม 💬 (chat-toggle) / ☰ (nav-toggle) และ drawer ทั้งสองฝั่ง เคยลอยติดขอบจอจริง ห่างจากกรอบเกม 560px — แก้ให้ยึดขอบกรอบเกมด้วย left/right: max(0px, calc(50% - 280px)) · จอแคบ ≤560px ยังชิดขอบเหมือนเดิม',
     ],
   },
 ];
