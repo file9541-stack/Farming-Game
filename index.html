@@ -180,10 +180,10 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  margin-top: 100px;
-  margin-bottom: 80px;
-  height: calc(100vh - 180px);
-  height: calc(100dvh - 180px);
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1144,10 +1144,10 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  margin-top: 100px;
-  margin-bottom: 80px;
-  height: calc(100vh - 180px);
-  height: calc(100dvh - 180px);
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -5210,6 +5210,14 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนพื้นหลังภาพขยายแปลงจากเบลอ → รูปทุ่งหญ้า',
     details: [
       'หน้าจอ "ดูแปลงใกล้ๆ" เปลี่ยนพื้นหลังเบลอเดิมเป็นรูปทุ่งหญ้าฟาร์ม (บีบ JPEG + ฝัง base64) มีชั้นมืดจางทับให้แปลงดิน/ตัวอักษรอ่านชัด',
+    ],
+  },
+  {
+    version: '0.56',
+    date: '27/06/2026',
+    title: 'ขยายกล่อง #main ให้เต็มจอ 100%',
+    details: [
+      'ขยายกล่องเนื้อหา #main เป็นเต็มจอจริง (margin บน/ล่าง = 0, height = 100dvh) — แถบบน (topbar) และแถบเมนูล่าง (bottom-nav) ลอยทับเนื้อหา',
     ],
   },
 ];
