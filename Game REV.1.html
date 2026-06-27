@@ -3235,6 +3235,7 @@ body{
   position:relative;
   box-shadow:0 0 50px rgba(0,0,0,0.45);
   padding-bottom:0;
+  transform: translateZ(0);   /* ทำให้ position:fixed อ้างอิง "กรอบเกม" + overflow:hidden ตัดแถบลอยที่ซ่อนให้พ้นกรอบ (จอกว้าง iPad/PC) */
 }
 /* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
 body, #login-screen{
@@ -3242,7 +3243,7 @@ body, #login-screen{
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll;
 }
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
@@ -5321,6 +5322,14 @@ const UPDATE_HISTORY = [
     title: 'ซ่อนปุ่มแถบลอย (chat/nav) ตอนอยู่หน้าล็อกอิน',
     details: [
       'ปุ่ม 💬 (chat) / ☰ (nav) ไม่โชว์บนหน้าล็อกอินอีก — แสดงเฉพาะเมื่อเข้าเกมแล้ว (เพิ่ม body.in-game ตอน enterGame, เอาออกตอน showLogin พร้อมปิด drawer ที่ค้างอยู่)',
+    ],
+  },
+  {
+    version: '0.65',
+    date: '27/06/2026',
+    title: 'แก้ drawer โผล่ค้างนอกกรอบบนจอกว้าง (iPad/PC)',
+    details: [
+      'ใส่ transform: translateZ(0) ให้ body → position:fixed ทุกตัวอ้างอิงกรอบเกม 560px และ overflow:hidden ตัดแถบลอย (chat/nav drawer) ที่ซ่อนให้พ้นกรอบจริง — เดิม drawer ที่ translateX(-100%) ไปค้างในช่องว่างข้างกรอบบน iPad โผล่ตลอด · เปลี่ยน background-attachment เป็น scroll กันพื้นหลังเพี้ยน',
     ],
   },
 ];
