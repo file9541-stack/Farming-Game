@@ -175,11 +175,11 @@ body{
 #main{
   width:calc(100% - 44px);max-width:500px;
   margin-left:auto;margin-right:auto;
-  background:var(--panel);
-  border:2px solid var(--border);
-  border-radius:16px;
+  background:transparent;
+  border:none;
+  border-radius:0;
   padding:12px;
-  box-shadow:0 4px 18px var(--shadow);
+  box-shadow:none;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 100px;
@@ -1141,11 +1141,11 @@ body{
 #main{
   width:calc(100% - 44px);max-width:500px;
   margin-left:auto;margin-right:auto;
-  background:var(--panel);
-  border:2px solid var(--border);
-  border-radius:16px;
+  background:transparent;
+  border:none;
+  border-radius:0;
   padding:12px;
-  box-shadow:0 4px 18px var(--shadow);
+  box-shadow:none;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 100px;
@@ -5231,6 +5231,14 @@ const UPDATE_HISTORY = [
     title: 'แถบเมนูล่างลอยเหมือนเดิม + กล่อง #main ปูถึงขอบจอล่าง',
     details: [
       'คืนแถบเมนูล่าง (bottom-nav) เป็นแบบลอยเดิม (bottom 10px, มุมโค้งรอบ, กว้าง 420px) · เอา padding-bottom 72px ของ body ออก ให้กล่อง #main ปูยาวถึงขอบจอล่างจริง (เนื้อหาลอดใต้แถบเมนูที่ลอยอยู่ เหมือนพฤติกรรมด้านบนกับ topbar)',
+    ],
+  },
+  {
+    version: '0.58',
+    date: '27/06/2026',
+    title: 'เอาพื้นหลังกล่อง #main ออก เหลือหัวข้อ + การ์ดภายใน',
+    details: [
+      'เอาพื้นครีม/กรอบ/เงา/มุมโค้งของกล่อง #main ออก (background transparent, border none, box-shadow none) — เหลือแต่หัวข้อ UI กับกล่องการ์ดหมวด (.farm-section) ลอยอยู่บนพื้นหลังฟาร์มโดยตรง',
     ],
   },
 ];
