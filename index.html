@@ -2256,7 +2256,7 @@ body { padding-bottom: 72px; }
   width: 82%; max-width: 340px;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
   box-shadow: 4px 0 24px rgba(40,80,120,0.3);
-  transform: translateX(-100%);
+  transform: translateX(calc(-100% - 50vw));  /* ซ่อน: เลื่อนพ้นจอซ้ายจริง (กันโผล่ค้างในช่องว่างข้างกรอบบนจอกว้าง) */
   transition: transform 0.28s cubic-bezier(0.34,1.1,0.64,1);
   z-index: 2700;
   display: flex; flex-direction: column;
@@ -2367,7 +2367,7 @@ body.in-game #nav-toggle  { display: flex; }
   width: 82%; max-width: 320px;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
   box-shadow: -4px 0 24px rgba(120,80,20,0.28);
-  transform: translateX(100%);
+  transform: translateX(calc(100% + 50vw));  /* ซ่อน: เลื่อนพ้นจอขวาจริง */
   transition: transform 0.28s cubic-bezier(0.34,1.1,0.64,1);
   z-index: 2700;
   display: flex; flex-direction: column;
@@ -5330,6 +5330,14 @@ const UPDATE_HISTORY = [
     title: 'แก้ drawer โผล่ค้างนอกกรอบบนจอกว้าง (iPad/PC)',
     details: [
       'ใส่ transform: translateZ(0) ให้ body → position:fixed ทุกตัวอ้างอิงกรอบเกม 560px และ overflow:hidden ตัดแถบลอย (chat/nav drawer) ที่ซ่อนให้พ้นกรอบจริง — เดิม drawer ที่ translateX(-100%) ไปค้างในช่องว่างข้างกรอบบน iPad โผล่ตลอด · เปลี่ยน background-attachment เป็น scroll กันพื้นหลังเพี้ยน',
+    ],
+  },
+  {
+    version: '0.66',
+    date: '27/06/2026',
+    title: 'แก้ drawer ยังโผล่ค้างบน Safari (เลื่อนซ่อนพ้นจอจริง)',
+    details: [
+      'Safari ไม่ตัด position:fixed ด้วย overflow:hidden ของ body → drawer ที่ translateX(-100%) ยังค้างในช่องว่างข้างกรอบ · แก้เป็นเลื่อนซ่อนพ้นจอจริง translateX(calc(-100% - 50vw)) / (100% + 50vw) — ซ่อนสนิททุกเบราว์เซอร์ กดปุ่มถึงเลื่อนเข้ากรอบ',
     ],
   },
 ];
