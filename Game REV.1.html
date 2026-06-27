@@ -2242,7 +2242,8 @@ body { padding-bottom: 72px; }
 
 #chat-overlay {
   display: none;
-  position: fixed; inset: 0;
+  position: fixed; top: 0; bottom: 0;
+  left: max(0px, calc(50% - 280px)); right: max(0px, calc(50% - 280px));
   background: rgba(20,30,40,0.5);
   z-index: 2600;
   backdrop-filter: blur(2px);
@@ -2348,7 +2349,8 @@ body { padding-bottom: 72px; }
 
 #nav-overlay {
   display: none;
-  position: fixed; inset: 0;
+  position: fixed; top: 0; bottom: 0;
+  left: max(0px, calc(50% - 280px)); right: max(0px, calc(50% - 280px));
   background: rgba(40,30,15,0.5);
   z-index: 2600;
   backdrop-filter: blur(2px);
@@ -5294,6 +5296,14 @@ const UPDATE_HISTORY = [
     title: 'แก้ปุ่มแถบซ่อน (chat/nav) ให้ยึดขอบกรอบเกม ไม่ใช่ขอบจอ',
     details: [
       'บนจอกว้าง (iPad/PC) ปุ่ม 💬 (chat-toggle) / ☰ (nav-toggle) และ drawer ทั้งสองฝั่ง เคยลอยติดขอบจอจริง ห่างจากกรอบเกม 560px — แก้ให้ยึดขอบกรอบเกมด้วย left/right: max(0px, calc(50% - 280px)) · จอแคบ ≤560px ยังชิดขอบเหมือนเดิม',
+    ],
+  },
+  {
+    version: '0.63',
+    date: '27/06/2026',
+    title: 'แก้ฉากมืด (overlay) ของ drawer ให้คลุมแค่กรอบเกม',
+    details: [
+      'chat-overlay / nav-overlay เคยเป็น inset:0 คลุมเต็มจอ ทำให้ drawer ดูล้นนอกกรอบบน iPad/PC — แก้เป็นคลุมเฉพาะกรอบเกม (left/right: max(0px, calc(50% - 280px))) ฉากมืด+แถบลอยอยู่ในกรอบเกมครบ',
     ],
   },
 ];
