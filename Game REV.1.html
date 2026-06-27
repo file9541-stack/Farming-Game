@@ -222,7 +222,7 @@ body{
   display:grid; grid-template-columns:none;
   grid-auto-flow:column;
   grid-template-rows:repeat(3, auto);
-  grid-auto-columns:min(200px, calc(50vw - 24px));
+  grid-auto-columns:min(160px, calc(40vw - 18px));
   gap:12px; width:max-content;
 }
 .plots-add-fab{
@@ -5323,6 +5323,14 @@ const UPDATE_HISTORY = [
     title: 'ลดความกว้างแปลงพืชเหลือ ~200px',
     details: [
       'ปรับ grid-auto-columns ของแปลงพืชจาก ~230px → ~200px ต่อแปลง (เห็นต่อหน้าได้มากขึ้นนิด)',
+    ],
+  },
+  {
+    version: '0.64',
+    date: '27/06/2026',
+    title: 'ลดขนาดแปลงพืชลงอีก ~20% (200px → 160px)',
+    details: [
+      'ปรับ grid-auto-columns แปลงพืช ~200px → ~160px ต่อแปลง (เล็กลง ~20% เห็นต่อหน้าได้มากขึ้น)',
     ],
   },
 ];
