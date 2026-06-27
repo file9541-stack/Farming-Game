@@ -2220,7 +2220,7 @@ body { padding-bottom: 72px; }
 /* ===== CHAT PANEL (แถบแชทออนไลน์ — slide-in ด้านซ้าย) ===== */
 #chat-toggle {
   position: fixed;
-  left: max(0px, calc(50% - 280px)); top: 12px;
+  left: 0; top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#5a9bd4,#3a7ab0);
   color: #fff; border: none;
@@ -2242,8 +2242,7 @@ body { padding-bottom: 72px; }
 
 #chat-overlay {
   display: none;
-  position: fixed; top: 0; bottom: 0;
-  left: max(0px, calc(50% - 280px)); right: max(0px, calc(50% - 280px));
+  position: fixed; inset: 0;
   background: rgba(20,30,40,0.5);
   z-index: 2600;
   backdrop-filter: blur(2px);
@@ -2252,11 +2251,11 @@ body { padding-bottom: 72px; }
 
 #chat-panel {
   position: fixed;
-  left: max(0px, calc(50% - 280px)); top: 0; bottom: 0;
+  left: 0; top: 0; bottom: 0;
   width: 82%; max-width: 340px;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
   box-shadow: 4px 0 24px rgba(40,80,120,0.3);
-  transform: translateX(calc(-100% - 50vw));  /* ซ่อน: เลื่อนพ้นจอซ้ายจริง (กันโผล่ค้างในช่องว่างข้างกรอบบนจอกว้าง) */
+  transform: translateX(-100%);
   transition: transform 0.28s cubic-bezier(0.34,1.1,0.64,1);
   z-index: 2700;
   display: flex; flex-direction: column;
@@ -2335,7 +2334,7 @@ body { padding-bottom: 72px; }
 /* ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== */
 #nav-toggle {
   position: fixed;
-  right: max(0px, calc(50% - 280px)); top: 12px;
+  right: 0; top: 12px;
   z-index: 1500;
   background: linear-gradient(135deg,#f5c518,#e0a010);
   color: #6b3500; border: none;
@@ -2346,15 +2345,10 @@ body { padding-bottom: 72px; }
   display: flex; align-items: center; justify-content: center;
 }
 #nav-toggle:active { transform: scale(0.94); }
-/* ซ่อนปุ่มแถบลอย (chat/nav) ตอนหน้าล็อกอิน — แสดงเฉพาะเมื่อเข้าเกมแล้ว (body.in-game) */
-#chat-toggle, #nav-toggle { display: none; }
-body.in-game #chat-toggle { display: flex; }
-body.in-game #nav-toggle  { display: flex; }
 
 #nav-overlay {
   display: none;
-  position: fixed; top: 0; bottom: 0;
-  left: max(0px, calc(50% - 280px)); right: max(0px, calc(50% - 280px));
+  position: fixed; inset: 0;
   background: rgba(40,30,15,0.5);
   z-index: 2600;
   backdrop-filter: blur(2px);
@@ -2363,11 +2357,11 @@ body.in-game #nav-toggle  { display: flex; }
 
 #nav-drawer {
   position: fixed;
-  right: max(0px, calc(50% - 280px)); top: 0; bottom: 0;
+  right: 0; top: 0; bottom: 0;
   width: 82%; max-width: 320px;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
   box-shadow: -4px 0 24px rgba(120,80,20,0.28);
-  transform: translateX(calc(100% + 50vw));  /* ซ่อน: เลื่อนพ้นจอขวาจริง */
+  transform: translateX(100%);
   transition: transform 0.28s cubic-bezier(0.34,1.1,0.64,1);
   z-index: 2700;
   display: flex; flex-direction: column;
@@ -3235,7 +3229,6 @@ body{
   position:relative;
   box-shadow:0 0 50px rgba(0,0,0,0.45);
   padding-bottom:0;
-  transform: translateZ(0);   /* ทำให้ position:fixed อ้างอิง "กรอบเกม" + overflow:hidden ตัดแถบลอยที่ซ่อนให้พ้นกรอบ (จอกว้าง iPad/PC) */
 }
 /* รูปพื้นหลังฟาร์มชุดเดียว ใช้ทั้งพื้นหลังเกมทุกหน้าและหน้าล็อกอิน (ฝัง base64 ครั้งเดียว) */
 body, #login-screen{
@@ -3243,7 +3236,7 @@ body, #login-screen{
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
 }
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
@@ -3444,7 +3437,6 @@ body, #login-screen{
   function enterGame(name){
     try{ window.CURRENT_PLAYER = name; }catch(e){}
     screen.classList.add('hidden');
-    document.body.classList.add('in-game');
     if(typeof window.toast === 'function'){
       window.toast('ยินดีต้อนรับ ' + name + ' 🌻');
     }
@@ -3466,10 +3458,6 @@ body, #login-screen{
     });
     document.querySelectorAll('.login-pane').forEach(function(p){
       p.classList.toggle('active', p.id === 'pane-login');
-    });
-    document.body.classList.remove('in-game');
-    ['chat-overlay','chat-panel','nav-overlay','nav-drawer'].forEach(function(id){
-      var el = document.getElementById(id); if(el) el.classList.remove('show');
     });
     screen.classList.remove('hidden');
   };
@@ -5298,46 +5286,6 @@ const UPDATE_HISTORY = [
       'ทำระบบแชทชุมชนให้ใช้งานได้จริงแบบ local: ฟองข้อความ 2 ฝั่ง + เวลา + เก็บประวัติ LocalStorage (mfw_chat)',
       'บอท NPC (ลุงมานพ/ป้าสมศรี/เฮียตี๋/น้องฟ้า) ทักทาย + สุ่มตอบตามห้อง · แผงอีโมจิ 😀 · ป้ายฐานะ 🏅 หน้าชื่อ (เชื่อม Wealth Rank) · ช่องแยกหมวด 📂 (ทั่วไป/ซื้อขาย/ช่วยเหลือ)',
       'เลิกใช้ innerHTML เปลี่ยนเป็น DOM API + event delegation (ตาม DEV-001 ข้อ 10) · กันสแปม 0.8 วิ · escape อัตโนมัติด้วย textContent',
-    ],
-  },
-  {
-    version: '0.62',
-    date: '27/06/2026',
-    title: 'แก้ปุ่มแถบซ่อน (chat/nav) ให้ยึดขอบกรอบเกม ไม่ใช่ขอบจอ',
-    details: [
-      'บนจอกว้าง (iPad/PC) ปุ่ม 💬 (chat-toggle) / ☰ (nav-toggle) และ drawer ทั้งสองฝั่ง เคยลอยติดขอบจอจริง ห่างจากกรอบเกม 560px — แก้ให้ยึดขอบกรอบเกมด้วย left/right: max(0px, calc(50% - 280px)) · จอแคบ ≤560px ยังชิดขอบเหมือนเดิม',
-    ],
-  },
-  {
-    version: '0.63',
-    date: '27/06/2026',
-    title: 'แก้ฉากมืด (overlay) ของ drawer ให้คลุมแค่กรอบเกม',
-    details: [
-      'chat-overlay / nav-overlay เคยเป็น inset:0 คลุมเต็มจอ ทำให้ drawer ดูล้นนอกกรอบบน iPad/PC — แก้เป็นคลุมเฉพาะกรอบเกม (left/right: max(0px, calc(50% - 280px))) ฉากมืด+แถบลอยอยู่ในกรอบเกมครบ',
-    ],
-  },
-  {
-    version: '0.64',
-    date: '27/06/2026',
-    title: 'ซ่อนปุ่มแถบลอย (chat/nav) ตอนอยู่หน้าล็อกอิน',
-    details: [
-      'ปุ่ม 💬 (chat) / ☰ (nav) ไม่โชว์บนหน้าล็อกอินอีก — แสดงเฉพาะเมื่อเข้าเกมแล้ว (เพิ่ม body.in-game ตอน enterGame, เอาออกตอน showLogin พร้อมปิด drawer ที่ค้างอยู่)',
-    ],
-  },
-  {
-    version: '0.65',
-    date: '27/06/2026',
-    title: 'แก้ drawer โผล่ค้างนอกกรอบบนจอกว้าง (iPad/PC)',
-    details: [
-      'ใส่ transform: translateZ(0) ให้ body → position:fixed ทุกตัวอ้างอิงกรอบเกม 560px และ overflow:hidden ตัดแถบลอย (chat/nav drawer) ที่ซ่อนให้พ้นกรอบจริง — เดิม drawer ที่ translateX(-100%) ไปค้างในช่องว่างข้างกรอบบน iPad โผล่ตลอด · เปลี่ยน background-attachment เป็น scroll กันพื้นหลังเพี้ยน',
-    ],
-  },
-  {
-    version: '0.66',
-    date: '27/06/2026',
-    title: 'แก้ drawer ยังโผล่ค้างบน Safari (เลื่อนซ่อนพ้นจอจริง)',
-    details: [
-      'Safari ไม่ตัด position:fixed ด้วย overflow:hidden ของ body → drawer ที่ translateX(-100%) ยังค้างในช่องว่างข้างกรอบ · แก้เป็นเลื่อนซ่อนพ้นจอจริง translateX(calc(-100% - 50vw)) / (100% + 50vw) — ซ่อนสนิททุกเบราว์เซอร์ กดปุ่มถึงเลื่อนเข้ากรอบ',
     ],
   },
 ];
