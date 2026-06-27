@@ -2346,6 +2346,10 @@ body { padding-bottom: 72px; }
   display: flex; align-items: center; justify-content: center;
 }
 #nav-toggle:active { transform: scale(0.94); }
+/* ซ่อนปุ่มแถบลอย (chat/nav) ตอนหน้าล็อกอิน — แสดงเฉพาะเมื่อเข้าเกมแล้ว (body.in-game) */
+#chat-toggle, #nav-toggle { display: none; }
+body.in-game #chat-toggle { display: flex; }
+body.in-game #nav-toggle  { display: flex; }
 
 #nav-overlay {
   display: none;
@@ -3439,6 +3443,7 @@ body, #login-screen{
   function enterGame(name){
     try{ window.CURRENT_PLAYER = name; }catch(e){}
     screen.classList.add('hidden');
+    document.body.classList.add('in-game');
     if(typeof window.toast === 'function'){
       window.toast('ยินดีต้อนรับ ' + name + ' 🌻');
     }
@@ -3460,6 +3465,10 @@ body, #login-screen{
     });
     document.querySelectorAll('.login-pane').forEach(function(p){
       p.classList.toggle('active', p.id === 'pane-login');
+    });
+    document.body.classList.remove('in-game');
+    ['chat-overlay','chat-panel','nav-overlay','nav-drawer'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.classList.remove('show');
     });
     screen.classList.remove('hidden');
   };
@@ -5304,6 +5313,14 @@ const UPDATE_HISTORY = [
     title: 'แก้ฉากมืด (overlay) ของ drawer ให้คลุมแค่กรอบเกม',
     details: [
       'chat-overlay / nav-overlay เคยเป็น inset:0 คลุมเต็มจอ ทำให้ drawer ดูล้นนอกกรอบบน iPad/PC — แก้เป็นคลุมเฉพาะกรอบเกม (left/right: max(0px, calc(50% - 280px))) ฉากมืด+แถบลอยอยู่ในกรอบเกมครบ',
+    ],
+  },
+  {
+    version: '0.64',
+    date: '27/06/2026',
+    title: 'ซ่อนปุ่มแถบลอย (chat/nav) ตอนอยู่หน้าล็อกอิน',
+    details: [
+      'ปุ่ม 💬 (chat) / ☰ (nav) ไม่โชว์บนหน้าล็อกอินอีก — แสดงเฉพาะเมื่อเข้าเกมแล้ว (เพิ่ม body.in-game ตอน enterGame, เอาออกตอน showLogin พร้อมปิด drawer ที่ค้างอยู่)',
     ],
   },
 ];
