@@ -180,11 +180,12 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  margin-top: 100px;
+  margin-top: 0;
   margin-bottom: 0;
+  padding-top: 100px;
   padding-bottom: 80px;
-  height: calc(100vh - 100px);
-  height: calc(100dvh - 100px);
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1145,11 +1146,12 @@ body{
   border-radius:16px;
   padding:12px;
   box-shadow:0 4px 18px var(--shadow);
-  margin-top: 100px;
+  margin-top: 0;
   margin-bottom: 0;
+  padding-top: 100px;
   padding-bottom: 80px;
-  height: calc(100vh - 100px);
-  height: calc(100dvh - 100px);
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -5217,9 +5219,9 @@ const UPDATE_HISTORY = [
   {
     version: '0.56',
     date: '27/06/2026',
-    title: 'ปรับกล่อง #main — เว้นบนใต้ topbar, ล่างปูยาวถึงขอบจอ',
+    title: 'กล่อง #main เต็มจอ + เนื้อหาเลื่อนลอดใต้ topbar/bottom-nav',
     details: [
-      'กล่อง #main เว้นช่องว่างจากแถบบน (margin-top 100px ไม่ทับ topbar) · ด้านล่างปูยาวถึงขอบจอ (margin-bottom 0, height = 100dvh - 100px) ให้แถบเมนูล่าง (bottom-nav) ลอยทับกล่อง · เพิ่ม padding-bottom 80px กันเนื้อหาบรรทัดสุดท้ายโดนแถบเมนูบัง',
+      'กล่อง #main เต็มจอจริง (margin บน/ล่าง = 0, height = 100dvh) แต่ใส่ padding-top 100px / padding-bottom 80px ด้านใน — เปิดหน้าใหม่เนื้อหาเริ่มใต้ topbar (มีช่องว่างบน) พอเลื่อนลงเนื้อหาจะมุดลอดใต้ topbar และแถบเมนูล่าง (แถบ UI ลอยทับ ไม่บังตอนพัก)',
     ],
   },
 ];
