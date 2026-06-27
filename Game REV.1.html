@@ -2318,6 +2318,18 @@ body { padding-bottom: 72px; }
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
 }
 .chat-send:active { transform: scale(0.92); }
+/* แท็บห้องแชท (ช่องแยกหมวด) */
+.chat-rooms { display:flex; gap:6px; padding:8px 10px; background:#eaf2fb; border-bottom:1.5px solid #d4e4f4; flex-shrink:0; }
+.chat-room-tab { flex:1; border:1.5px solid #c0d4e8; background:#fff; color:#3a7ab0; border-radius:14px; padding:6px 4px; font-family:inherit; font-size:0.72rem; font-weight:700; cursor:pointer; }
+.chat-room-tab.active { background:linear-gradient(135deg,#5a9bd4,#3a7ab0); color:#fff; border-color:#3a7ab0; }
+/* ป้ายฐานะหน้าชื่อผู้ส่ง */
+.chat-msg .cm-rank { margin-right:2px; }
+/* แผงอีโมจิ */
+.chat-emoji-panel { display:none; flex-wrap:wrap; gap:4px; padding:8px 10px; background:#fff; border-top:1.5px solid #d4e4f4; max-height:140px; overflow-y:auto; flex-shrink:0; }
+.chat-emoji-panel.show { display:flex; }
+.chat-emoji-item { border:none; background:#f0f6fc; border-radius:8px; width:34px; height:34px; font-size:1.1rem; cursor:pointer; }
+.chat-emoji-item:active { transform:scale(0.9); }
+.chat-emoji-btn { background:#eaf2fb; border:1.5px solid #c0d4e8; border-radius:50%; width:40px; height:40px; font-size:1.1rem; cursor:pointer; flex-shrink:0; }
 
 /* ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== */
 #nav-toggle {
@@ -3523,18 +3535,21 @@ body, #login-screen{
   <div class="chat-header">
     <div>
       <h2>💬 แชทชุมชน</h2>
-      <div class="chat-status" id="chat-status">⚫ ออฟไลน์ — รอระบบผู้เล่นหลายคน</div>
+      <div class="chat-status" id="chat-status">🟡 โหมดทดสอบ — คุยกับชาวบ้าน (NPC)</div>
     </div>
     <button class="chat-close" id="chat-close">✕</button>
   </div>
+  <div class="chat-rooms" id="chat-rooms"></div>
   <div class="chat-messages" id="chat-messages">
     <div class="chat-empty" id="chat-empty">
       <span class="ce-emoji">🌾</span>
-      ยังไม่มีข้อความ<br>
-      ระบบแชทออนไลน์จะเปิดใช้งาน<br>เมื่อมีผู้เล่นหลายคน
+      ยังไม่มีข้อความในห้องนี้<br>
+      เริ่มทักทายชาวบ้านได้เลย!
     </div>
   </div>
+  <div class="chat-emoji-panel" id="chat-emoji-panel"></div>
   <div class="chat-input-row">
+    <button class="chat-emoji-btn" id="chat-emoji-btn" type="button">😀</button>
     <input type="text" class="chat-input" id="chat-input" placeholder="พิมพ์ข้อความ..." maxlength="200">
     <button class="chat-send" id="chat-send">➤</button>
   </div>
@@ -5261,6 +5276,16 @@ const UPDATE_HISTORY = [
     title: 'บีบรูปพื้นหลัง 001 (PNG→JPEG) ลดขนาดเกม',
     details: [
       'แปลงพื้นหลังฟาร์มหลัก 001.png (2.92 MB) เป็น JPEG q82 (~430 KB เล็กลง 7 เท่า) — ไฟล์เกม standalone/index.html ลดจาก ~5.9 MB เหลือ ~3.4 MB เว็บโหลดเร็วขึ้นเกือบเท่าตัว',
+    ],
+  },
+  {
+    version: '0.61',
+    date: '27/06/2026',
+    title: 'แชทชุมชน เฟส A — local + บอท NPC + อีโมจิ + ป้ายฐานะ + ช่องแยกหมวด',
+    details: [
+      'ทำระบบแชทชุมชนให้ใช้งานได้จริงแบบ local: ฟองข้อความ 2 ฝั่ง + เวลา + เก็บประวัติ LocalStorage (mfw_chat)',
+      'บอท NPC (ลุงมานพ/ป้าสมศรี/เฮียตี๋/น้องฟ้า) ทักทาย + สุ่มตอบตามห้อง · แผงอีโมจิ 😀 · ป้ายฐานะ 🏅 หน้าชื่อ (เชื่อม Wealth Rank) · ช่องแยกหมวด 📂 (ทั่วไป/ซื้อขาย/ช่วยเหลือ)',
+      'เลิกใช้ innerHTML เปลี่ยนเป็น DOM API + event delegation (ตาม DEV-001 ข้อ 10) · กันสแปม 0.8 วิ · escape อัตโนมัติด้วย textContent',
     ],
   },
 ];
@@ -7208,59 +7233,156 @@ function nextDay(){
 //  CHAT SYSTEM — แชทออนไลน์ (Section [farm])
 //  โครงสร้างพร้อมรองรับ multiplayer — ตอนนี้ทำงาน local ก่อน
 // ============================================================
-let chatMessages = [];          // [{name, text, time, me}]
-let chatPlayerName = 'ผู้เล่น'; // ภายหลังเปลี่ยนเป็นชื่อจริงเมื่อมีระบบ login
+// ── CHAT DATA (เฟส A: local + บอท NPC) ──
+const CHAT_ROOMS = [
+  { id:'general', emoji:'💬', label:'ทั่วไป' },
+  { id:'trade',   emoji:'🛒', label:'ซื้อขาย' },
+  { id:'help',    emoji:'🤝', label:'ช่วยเหลือ' },
+];
+const CHAT_EMOJIS = ['😀','😄','😍','😂','😢','😮','👍','🙏','❤️','🔥','🎉','💰','🌾','🌻','🍅','🥕','🐔','🐄','🐟','🚜'];
+const CHAT_NPCS = [
+  { name:'ลุงมานพ', rankId:'commoner',
+    general:['สวัสดีชาวไร่ทุกคน! วันนี้อากาศดีนะ ☀️','ใครปลูกข้าวโพดบ้าง ของผมกำลังจะเก็บแล้ว','ขยันหน่อยนะ เดี๋ยวก็รวย 💪'],
+    trade:['มีใครขายเมล็ดมะเขือเทศไหม รับซื้อนะ','ผมมีไข่ไก่เยอะ ใครสนใจทักมา 🥚'],
+    help:['มือใหม่ลองกดที่แปลงเพื่อปลูกได้เลยนะ','พลังงานหมดให้รอฟื้น หรือกินอาหารเพิ่ม'] },
+  { name:'ป้าสมศรี', rankId:'welloff',
+    general:['สวัสดีจ้ะ วันนี้ขายผลผลิตได้ราคาดีมาก','ฟาร์มใครสวยที่สุดเอ่ย 🌻','ป้าเพิ่งซื้อรถใหม่ ดีใจจัง 🚗'],
+    trade:['รับซื้อนมวัวราคาดีนะจ๊ะ 🥛','ป้ามีผักสดส่งทุกวัน สนใจทักมาเลย'],
+    help:['อย่าลืมรดน้ำพืชนะจ๊ะ เดี๋ยวเหี่ยว','เก็บผลผลิตเร็วๆ เดี๋ยวเน่าเสียจ้ะ'] },
+  { name:'เฮียตี๋', rankId:'rich',
+    general:['ตลาดวันนี้คึกคักดีนะ 📈','ใครอยากรวยต้องลงทุนโรงงานแปรรูป','เฮียลงทุนที่ดินเพิ่มอีกแล้ว 💎'],
+    trade:['รับซื้อผลผลิตจำนวนมาก ราคาส่ง ทักเลย','มีเครื่องจักรมือสองขาย สนใจไหม'],
+    help:['ทำออเดอร์ให้ครบจะได้รางวัลเยอะ','อัปเกรดฐานะแล้วขายได้กำไรเพิ่มนะ'] },
+  { name:'น้องฟ้า', rankId:'poor',
+    general:['หวัดดีค่ะ เพิ่งเริ่มเล่นเองง 🌱','ฟาร์มหนูยังเล็กอยู่เลย ค่อยๆโตน้า','ขอกำลังใจหน่อยน้าทุกคน 🥺'],
+    trade:['มีใครแบ่งเมล็ดพันธุ์ให้มือใหม่ไหมคะ','หนูขายแครอทถูกๆ น้า 🥕'],
+    help:['ถามหน่อยค่ะ สร้างคอกสัตว์ยังไง','ขอบคุณทุกคนที่ช่วยนะคะ 🙏'] },
+];
+
+// ── CHAT STATE ──
+let chatRoom = 'general';
+let chatStore = { general:[], trade:[], help:[] };
+let chatPlayerName = 'ผู้เล่น';   // ภายหลังใช้ชื่อจริงเมื่อมีระบบ login/online
+let chatLastSent = 0;
+let chatEmojiOpen = false;
+
+function chatNow(){ const n=new Date(), p=x=>String(x).padStart(2,'0'); return p(n.getHours())+':'+p(n.getMinutes()); }
+function rankEmojiById(id){ const r = WEALTH_RANKS.find(x=>x.id===id); return r ? r.emoji : '🪙'; }
+function myRankEmoji(){ try{ return getWealthRank(calcNetWorth()).emoji; }catch(e){ return '🪙'; } }
+
+function loadChat(){
+  try{ const s=localStorage.getItem('mfw_chat'); if(s){ chatStore=Object.assign({general:[],trade:[],help:[]},JSON.parse(s)); return; } }catch(e){}
+  // ครั้งแรก: ใส่ข้อความต้อนรับจากชาวบ้าน (NPC)
+  chatStore.general = [
+    { name:'ลุงมานพ', rank:rankEmojiById('commoner'), text:'ยินดีต้อนรับสู่หมู่บ้านฟาร์ม! 🌾', time:chatNow(), me:false },
+    { name:'ป้าสมศรี', rank:rankEmojiById('welloff'), text:'สวัสดีจ้ะ มีอะไรให้ช่วยทักได้เลยน้า 😊', time:chatNow(), me:false },
+  ];
+  saveChat();
+}
+function saveChat(){ try{ localStorage.setItem('mfw_chat', JSON.stringify(chatStore)); }catch(e){} }
 
 function openChat(){
   document.getElementById('chat-overlay').classList.add('show');
   document.getElementById('chat-panel').classList.add('show');
   const badge = document.getElementById('chat-badge');
-  badge.classList.remove('show');
-  badge.textContent = '0';
-  setTimeout(() => {
-    const box = document.getElementById('chat-messages');
-    box.scrollTop = box.scrollHeight;
-  }, 50);
+  badge.classList.remove('show'); badge.textContent='0';
+  renderChatRooms();
+  renderChat();
 }
-
 function closeChat(){
   document.getElementById('chat-overlay').classList.remove('show');
   document.getElementById('chat-panel').classList.remove('show');
+  hideEmojiPanel();
 }
-
+function switchChatRoom(id){
+  if(!chatStore[id]) return;
+  chatRoom = id; renderChatRooms(); renderChat();
+}
+function renderChatRooms(){
+  const bar = document.getElementById('chat-rooms');
+  if(!bar) return;
+  bar.textContent='';
+  CHAT_ROOMS.forEach(r=>{
+    const b = document.createElement('button');
+    b.className = 'chat-room-tab' + (r.id===chatRoom?' active':'');
+    b.dataset.room = r.id;
+    b.textContent = r.emoji + ' ' + r.label;
+    bar.appendChild(b);
+  });
+}
+function buildMsgEl(m){
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-msg ' + (m.me?'me':'them');
+  if(!m.me){
+    const nm = document.createElement('div'); nm.className='cm-name';
+    if(m.rank){ const rk=document.createElement('span'); rk.className='cm-rank'; rk.textContent=m.rank; nm.appendChild(rk); }
+    nm.appendChild(document.createTextNode(' '+m.name));
+    wrap.appendChild(nm);
+  }
+  const tx = document.createElement('div'); tx.className='cm-text'; tx.textContent = m.text; wrap.appendChild(tx);
+  const tm = document.createElement('div'); tm.className='cm-time'; tm.textContent = m.time; wrap.appendChild(tm);
+  return wrap;
+}
 function renderChat(){
   const box = document.getElementById('chat-messages');
   const empty = document.getElementById('chat-empty');
-  if(chatMessages.length === 0){
-    if(empty) empty.style.display = 'block';
-    return;
-  }
-  if(empty) empty.style.display = 'none';
-  box.innerHTML = chatMessages.map(m =>
-    `<div class="chat-msg ${m.me?'me':'them'}">
-      ${m.me?'':`<div class="cm-name">${m.name}</div>`}
-      <div>${m.text}</div>
-      <div class="cm-time">${m.time}</div>
-    </div>`
-  ).join('');
+  box.querySelectorAll('.chat-msg').forEach(el=>el.remove());  // ลบเฉพาะฟองข้อความ เก็บ empty ไว้
+  const msgs = chatStore[chatRoom] || [];
+  if(empty) empty.style.display = msgs.length===0 ? 'block' : 'none';
+  msgs.forEach(m=>box.appendChild(buildMsgEl(m)));
   box.scrollTop = box.scrollHeight;
 }
-
+function pushChat(roomId, msg){
+  chatStore[roomId].push(msg);
+  if(chatStore[roomId].length > 200) chatStore[roomId].shift();
+  saveChat();
+  if(roomId===chatRoom) renderChat();
+  // badge เมื่อปิดแชทอยู่ + เป็นข้อความคนอื่น
+  if(!msg.me && !document.getElementById('chat-panel').classList.contains('show')){
+    const badge=document.getElementById('chat-badge');
+    badge.textContent = String((parseInt(badge.textContent)||0)+1);
+    badge.classList.add('show');
+  }
+}
 function sendChat(){
   const input = document.getElementById('chat-input');
-  const text  = input.value.trim();
+  const text = input.value.trim();
   if(!text) return;
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  chatMessages.push({
-    name: chatPlayerName,
-    text: text.replace(/</g,'&lt;').replace(/>/g,'&gt;'),
-    time: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
-    me: true,
+  const now = Date.now();
+  if(now - chatLastSent < 800){ toast('⏳ พิมพ์ช้าลงนิดนะ'); return; }
+  chatLastSent = now;
+  pushChat(chatRoom, { name:chatPlayerName, rank:myRankEmoji(), text:text, time:chatNow(), me:true });
+  input.value=''; hideEmojiPanel();
+  npcReply(chatRoom);  // เฟส A: บอท NPC ตอบ · เฟส B: เปลี่ยนเป็นส่งขึ้น Firebase
+}
+function npcReply(roomId){
+  if(Math.random() > 0.65) return;  // ~65% มีคนตอบ
+  const npc = CHAT_NPCS[Math.floor(Math.random()*CHAT_NPCS.length)];
+  const pool = npc[roomId] || npc.general;
+  const line = pool[Math.floor(Math.random()*pool.length)];
+  setTimeout(()=>{
+    pushChat(roomId, { name:npc.name, rank:rankEmojiById(npc.rankId), text:line, time:chatNow(), me:false });
+  }, 1000 + Math.random()*1500);
+}
+
+// แผงอีโมจิ
+function renderEmojiPanel(){
+  const p = document.getElementById('chat-emoji-panel');
+  if(!p || p.dataset.built) return;
+  CHAT_EMOJIS.forEach(e=>{
+    const b=document.createElement('button'); b.type='button'; b.className='chat-emoji-item'; b.dataset.emoji=e; b.textContent=e; p.appendChild(b);
   });
-  input.value = '';
-  renderChat();
-  // TODO: เมื่อมีระบบ multiplayer → ส่งข้อความนี้ไปยัง server / WebSocket
+  p.dataset.built='1';
+}
+function toggleEmojiPanel(){
+  const p=document.getElementById('chat-emoji-panel'); renderEmojiPanel();
+  chatEmojiOpen=!chatEmojiOpen; p.classList.toggle('show', chatEmojiOpen);
+}
+function hideEmojiPanel(){
+  const p=document.getElementById('chat-emoji-panel'); if(p) p.classList.remove('show'); chatEmojiOpen=false;
+}
+function insertEmoji(e){
+  const input=document.getElementById('chat-input'); input.value += e; input.focus();
 }
 
 
@@ -8858,13 +8980,21 @@ function exitAdmin(){
 //  โหลดหลัง HTML elements ทั้งหมด (ไม่ใช้ DOMContentLoaded — รองรับ content:// protocol)
 // ============================================================
 
-// ─────────────────────────── CHAT (แชทออนไลน์) ───────────────────────────
+// ─────────────────────────── CHAT (แชทชุมชน — เฟส A: local + บอท NPC) ───────────────────────────
+loadChat();
 document.getElementById('chat-toggle').addEventListener('click', openChat);
 document.getElementById('chat-close').addEventListener('click', closeChat);
 document.getElementById('chat-overlay').addEventListener('click', closeChat);
 document.getElementById('chat-send').addEventListener('click', sendChat);
 document.getElementById('chat-input').addEventListener('keydown', function(e){
   if(e.key === 'Enter') sendChat();
+});
+document.getElementById('chat-emoji-btn').addEventListener('click', toggleEmojiPanel);
+document.getElementById('chat-rooms').addEventListener('click', function(e){
+  const t = e.target.closest('.chat-room-tab'); if(t) switchChatRoom(t.dataset.room);
+});
+document.getElementById('chat-emoji-panel').addEventListener('click', function(e){
+  const b = e.target.closest('.chat-emoji-item'); if(b) insertEmoji(b.dataset.emoji);
 });
 
 // ─────────────────────────── NAV DRAWER (เมนูแฮมเบอร์เกอร์ ฝั่งขวา) ───────────────────────────
