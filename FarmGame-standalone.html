@@ -5212,6 +5212,14 @@ const UPDATE_HISTORY = [
       'หน้าจอ "ดูแปลงใกล้ๆ" เปลี่ยนพื้นหลังเบลอเดิมเป็นรูปทุ่งหญ้าฟาร์ม (บีบ JPEG + ฝัง base64) มีชั้นมืดจางทับให้แปลงดิน/ตัวอักษรอ่านชัด',
     ],
   },
+  {
+    version: '0.56',
+    date: '28/06/2026',
+    title: 'เอาป้าย "ดูแปลง" กลางแปลงปลูกพืชออก',
+    details: [
+      'ลบป้ายตัวอักษร "ดูแปลง" กลางแปลงว่าง เหลือเฉพาะรูปแปลงดิน · ยังกดแปลงเพื่อเปิดเมนูลอยได้เหมือนเดิม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6312,7 +6320,7 @@ function renderFarm(){
   grid.innerHTML = plots.map((p,i)=>{
     const badge = '';
     if(!p.crop){
-      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อดูแปลง">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">ดูแปลง</span></div>`;
+      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อดูแปลง">${badge}<span class="plot-soil-img"></span></div>`;
     }
     const c = CROPS.find(x=>x.id===p.crop);
     return `
