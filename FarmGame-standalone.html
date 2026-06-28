@@ -4551,8 +4551,11 @@ const BUILD_INFO = {
 // ปลูกติดต่อกันได้ 4 รอบ ครบแล้วดินเสื่อม → กลับเป็น grass (เรียกคนงานเกษตรทำไร่ใหม่)
 const PLOT_COUNT      = 9;       // แปลงตายตัวต่อ 1 ไร่
 const PLOT_MAX_CYCLES = 4;       // ปลูกติดต่อกันได้กี่รอบก่อนดินเสื่อม
-const PLOT_WORK_MS    = 5000;    // เวลา ถางป่า / ทำแปลง / พืชโต (ชั่วคราว 5 วิ — รอใส่ค่าจริงภายหลัง)
-const PLOT_DECAY_MS   = 5000;    // เวลาเสื่อมสภาพของ ready/grass (ชั่วคราว 5 วิ)
+const PLOT_WORK_MS       = 5000;   // เวลา ถางป่า / ทำแปลง / พืชโต (ชั่วคราว 5 วิ — รอใส่ค่าจริงภายหลัง)
+const PLOT_DECAY_READY_MS = 20000; // แปลงพร้อมปลูกทิ้งไว้ไม่ปลูก 20 วิ → วัชพืชโต กลับเป็นพื้นหญ้า
+const PLOT_DECAY_GRASS_MS = 30000; // พื้นหญ้า(วัชพืช)ทิ้งไว้ไม่ถาง 30 วิ → ต้นไม้โต กลับเป็นป่ารก
+// คืนเวลาเสื่อมสภาพตาม state (ready=20วิ · grass=30วิ)
+function plotDecayMs(state){ return state==='grass' ? PLOT_DECAY_GRASS_MS : PLOT_DECAY_READY_MS; }
 // ===== ระบบอาหาร (เฟส 2) — กินเพื่อฟื้นฟูพลังงาน =====
 // ใช้ของในคลัง (id ตรงกับผลผลิต) มากินเพื่อเติมพลังงาน
 const FOOD_RESTORE = {
@@ -5419,6 +5422,16 @@ const UPDATE_HISTORY = [
       'ออกแบบแปลงด้วย CSS ล้วน (สีพื้นไล่เฉดตาม state + อีโมจิ + วงกลมรีโหลด conic-gradient พร้อมตัวเลขวินาที) — ยังไม่ใส่รูป รอเพิ่มภาพภายหลัง',
     ],
   },
+  {
+    version: '0.69',
+    date: '28/06/2026',
+    title: 'ปรับเวลาเสื่อมสภาพแปลง — แยก 20 วิ (วัชโต) / 30 วิ (ไม้โต)',
+    details: [
+      'แปลงพร้อมปลูกทิ้งไว้ไม่ปลูก ครบ 20 วินาที → วัชพืชโต กลับเป็นพื้นหญ้า (ค่า PLOT_DECAY_READY_MS)',
+      'พื้นหญ้า (วัชพืช) ทิ้งไว้ไม่ถาง ครบ 30 วินาที → ต้นไม้โต กลับเป็นป่ารก (ค่า PLOT_DECAY_GRASS_MS)',
+      'แยกค่าเวลาเสื่อมสภาพออกจากเวลางาน (ถางป่า/ทำแปลง/พืชโต ยังคง 5 วิ) · วงกลมรีโหลดคำนวณ duration ตาม state อัตโนมัติ',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5827,9 +5840,9 @@ function plantPlot(i, cropId){
 function advanceAfterHarvest(p){
   p.crop = null; p.cycles += 1; p.timerEnd = 0; p.timerDur = 0;
   if(p.cycles >= PLOT_MAX_CYCLES){
-    p.state = 'grass'; p.cycles = 0; p.decayAt = Date.now() + PLOT_DECAY_MS;
+    p.state = 'grass'; p.cycles = 0; p.decayAt = Date.now() + PLOT_DECAY_GRASS_MS;
   } else {
-    p.state = 'ready'; p.decayAt = Date.now() + PLOT_DECAY_MS;
+    p.state = 'ready'; p.decayAt = Date.now() + PLOT_DECAY_READY_MS;
   }
 }
 
@@ -5842,17 +5855,17 @@ function tickPlots(){
   let changed = false;
   plots.forEach(p => {
     if(p.state==='clearing' && now >= p.timerEnd){
-      p.state='grass'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      p.state='grass'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_GRASS_MS; changed=true;
       toast('🌿 ถางป่าเสร็จ — ได้พื้นหญ้าปกติแล้ว');
     } else if(p.state==='tilling' && now >= p.timerEnd){
-      p.state='ready'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      p.state='ready'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_READY_MS; changed=true;
       toast('🟫 ทำแปลงเสร็จ — แปลงเตรียมปลูกพืชพร้อมแล้ว');
     } else if(p.state==='growing' && now >= p.timerEnd){
       p.state='harvest'; p.timerEnd=0; p.timerDur=0; changed=true;
       const c = CROPS.find(x=>x.id===p.crop);
       toast(`🌾 ${c?c.emoji+' '+c.name:'พืช'} โตแล้ว เก็บได้!`);
     } else if(p.state==='ready' && p.decayAt && now >= p.decayAt){
-      p.state='grass'; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      p.state='grass'; p.decayAt=now+PLOT_DECAY_GRASS_MS; changed=true;
       toast('🌱 ปล่อยแปลงไว้นาน — วัชพืชโต ต้องเรียกคนงานเกษตรทำแปลงใหม่');
     } else if(p.state==='grass' && p.decayAt && now >= p.decayAt){
       p.state='forest'; p.decayAt=0; p.cycles=0; changed=true;
@@ -6607,7 +6620,7 @@ function plotRingHtml(p){
   const now = Date.now();
   let end = 0, dur = 0;
   if(p.timerEnd > 0){ end = p.timerEnd; dur = p.timerDur || PLOT_WORK_MS; }      // ถางป่า/ทำแปลง/พืชโต
-  else if(p.decayAt > 0){ end = p.decayAt; dur = PLOT_DECAY_MS; }                // นับถอยหลังเสื่อมสภาพ
+  else if(p.decayAt > 0){ end = p.decayAt; dur = plotDecayMs(p.state); }          // นับถอยหลังเสื่อมสภาพ (ready=20วิ · grass=30วิ)
   if(!end) return '';
   const remain = Math.max(0, end - now);
   const sec = Math.ceil(remain/1000);
