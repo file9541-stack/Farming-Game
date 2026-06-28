@@ -291,26 +291,39 @@ body{
 .bcph-bar.lg{ height:15px; }
 /* คอลัมน์ 1: เลข+ชื่อ+แท็ก + ดาว + รูป */
 .bc-left{ display:flex; flex-direction:column; gap:6px; }
-.bc-head{ display:flex; align-items:center; gap:6px; }
+.bc-head{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 6px; }
 .bc-num{ width:24px; height:24px; flex:0 0 24px; border-radius:50%;
-  background:#fff; border:2px solid #b98e4a; box-shadow:0 2px 4px rgba(120,80,20,0.25); }
-.bc-title{ flex:1; min-width:0; }
-.bc-tag{ width:34px; height:16px; flex:0 0 34px; border-radius:5px; }
-.bc-stars{ display:flex; gap:3px; }
-.bc-star{ width:13px; height:13px; background:#e7dcc0; border:1.2px dashed #c9b58a;
-  clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
-.bc-thumb{ width:100%; aspect-ratio:1.25; border-radius:10px;
-  border:2px dashed #c9b58a; background:#e7dcc0; box-shadow:inset 0 2px 5px rgba(120,80,20,0.12); }
+  background:#fff; border:2px solid #b98e4a; box-shadow:0 2px 4px rgba(120,80,20,0.25);
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.72rem; font-weight:900; color:#7a5210; }
+.bc-title{ flex:1 1 60px; min-width:0; font-size:0.76rem; font-weight:800; color:#5a3a10;
+  line-height:1.08; word-break:break-word; }
+.bc-tag{ flex:0 0 auto; padding:1px 7px; border-radius:6px;
+  font-size:0.52rem; font-weight:900; color:#fff; letter-spacing:0.5px;
+  box-shadow:0 1px 2px rgba(0,0,0,0.2); }
+.tag-new{ background:linear-gradient(135deg,#ff6a5a,#e23b28); }
+.tag-hot{ background:linear-gradient(135deg,#46a6ff,#1f78d8); }
+.tag-event{ background:linear-gradient(135deg,#b06bff,#7a36d8); }
+.bc-stars{ display:flex; gap:1px; font-size:0.82rem; line-height:1; }
+.bc-stars .on{ color:#f5c518; text-shadow:0 1px 1px rgba(150,100,0,0.4); }
+.bc-stars .off{ color:#d8c89a; }
+.bc-thumb{ width:100%; aspect-ratio:1.3; border-radius:10px;
+  border:2px solid #cBA876; background:linear-gradient(160deg,#efe4c4,#e2d2a4);
+  display:flex; align-items:center; justify-content:center; font-size:2.6rem;
+  box-shadow:inset 0 2px 5px rgba(120,80,20,0.15); overflow:hidden; }
 /* คอลัมน์ 2: ผลิตผล / คอลัมน์ 3: ข้อมูล */
-.bc-col{ display:flex; flex-direction:column; gap:7px; padding-top:2px; }
-.bc-colhead{ width:54px; margin-bottom:1px; }
+.bc-col{ display:flex; flex-direction:column; gap:6px; padding-top:1px; }
+.bc-colhead{ font-size:0.62rem; font-weight:800; color:#7a5a20; margin-bottom:2px; }
 .bc-prow{ display:flex; align-items:center; gap:6px; }
-.bc-pic{ width:20px; height:20px; flex:0 0 20px; }
-.bc-pname{ flex:1; min-width:0; }
-.bc-pqty{ width:18px; flex:0 0 18px; }
+.bc-pic{ flex:0 0 auto; font-size:1rem; line-height:1; }
+.bc-pname{ flex:1; min-width:0; font-size:0.64rem; font-weight:700; color:#5a4020;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bc-pqty{ flex:0 0 auto; font-size:0.64rem; font-weight:800; color:#2f8a18; }
 .bc-irow{ display:flex; align-items:center; gap:6px; }
-.bc-iic{ width:18px; height:18px; flex:0 0 18px; }
-.bc-ibar{ flex:1; min-width:0; }
+.bc-iic{ flex:0 0 auto; font-size:0.92rem; line-height:1; }
+.bc-itxt{ display:flex; flex-direction:column; line-height:1.15; min-width:0; }
+.bc-ilabel{ font-size:0.5rem; font-weight:700; color:#9a7a40; white-space:nowrap; }
+.bc-ival{ font-size:0.62rem; font-weight:800; color:#4a3210; white-space:nowrap; }
 /* คอลัมน์ 4 = กล่องเล็ก (ปุ่มเพิ่ม) แนวตั้ง */
 .acard{
   align-self:stretch; cursor:pointer;
@@ -331,14 +344,12 @@ body{
   background:#fff; border-radius:2px; box-shadow:0 1px 2px rgba(20,70,10,0.4); transform:translate(-50%,-50%); }
 .ac-plus::before{ width:19px; height:5px; }
 .ac-plus::after{ width:5px; height:19px; }
-.ac-label{ width:88%; height:12px; border-radius:6px; }
+.ac-label{ font-size:0.64rem; font-weight:800; color:#3a6a18; text-align:center; line-height:1.1; }
 .ac-price{ display:flex; align-items:center; justify-content:center; gap:5px; width:100%; padding:5px 8px;
   background:linear-gradient(150deg,#7ac84a,#2f7a18); border-radius:999px;
   box-shadow:0 3px 7px rgba(40,110,20,0.45), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 5px rgba(30,80,10,0.4); }
-.ac-coin{ width:17px; height:17px; flex:0 0 17px; border-radius:50%;
-  background:rgba(255,255,255,0.35); border:1.2px dashed rgba(255,255,255,0.8); }
-.ac-price-num{ width:40px; height:12px; border-radius:6px;
-  background:rgba(255,255,255,0.45); border:1.2px dashed rgba(255,255,255,0.85); }
+.ac-coin{ flex:0 0 auto; font-size:0.82rem; line-height:1; }
+.ac-price-num{ font-size:0.66rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); }
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -4609,6 +4620,15 @@ const BUILD_INFO = {
   big:   { verb:'สร้างคอก',     money:3000, seconds:90, wood:35 },
   ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75, wood:10 },
 };
+// ===== ข้อมูลแสดงผลบนการ์ดสิ่งปลูกสร้าง (.bcard) — ส่วนนำเสนอ (รูปยังเว้นไว้ใส่ทีหลัง) =====
+const BUILD_CARD = {
+  small: { num:1, emoji:'🐔', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
+    produce:[{e:'🥚',n:'ไข่',q:4},{e:'🪶',n:'ขน',q:1},{e:'🥩',n:'เนื้อ',q:1}] },
+  big:   { num:2, emoji:'🐄', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:2, fame:30, max:3, unit:'หลัง',
+    produce:[{e:'🥛',n:'นม',q:6},{e:'🥩',n:'เนื้อ',q:4},{e:'🟫',n:'หนัง',q:2}] },
+  ponds: { num:3, emoji:'🐟', tag:'EVENT', tagcls:'tag-event', stars:3, labor:2, fame:40, max:2, unit:'บ่อ',
+    produce:[{e:'🐟',n:'ปลา',q:8},{e:'🦐',n:'กุ้ง',q:6},{e:'🐚',n:'หอย',q:4}] },
+};
 // ===== ระบบแปลงปลูกพืช (รีโนเวท) — ที่ดิน 1 ไร่ = 9 แปลงตายตัว =====
 // วงจรชีวิตแปลง (state machine):
 //   forest 🌲 (วัชพืช+ไม้) ──ถางป่า(ช่างก่อสร้าง)──> grass 🌿 (หญ้าปกติ)
@@ -5508,6 +5528,16 @@ const UPDATE_HISTORY = [
       'สไตล์กระดาษพาร์ชเมนต์ครีม ขอบแทน 2 ชั้น เงานุ่ม + ปุ่มกลมเขียวเงาวาวขอบขาว + ปุ่มราคา pill เขียว (CSS ล้วน)',
       'เป็นกล่องเปล่า (placeholder เส้นประ) ยังไม่ใส่รูป/ตัวอักษร/อีโมจิ — รอเติมเนื้อหาภายหลัง',
       'ใส่แทนเนื้อหา 3 section: คอกสัตว์เล็ก/ใหญ่ (renderAnimals) และ บ่อเลี้ยงปลา (renderFish) · ปุ่ม + ของกล่องเล็กผูก data-addtype → ยังสั่งก่อสร้างได้ผ่าน event delegation เดิม',
+    ],
+  },
+  {
+    version: '0.71',
+    date: '28/06/2026',
+    title: 'เติมข้อมูลจริงลงการ์ดสิ่งปลูกสร้าง (.bcard) — รูปยังเว้นไว้ใส่ทีหลัง',
+    details: [
+      'เพิ่มคอนฟิก BUILD_CARD (เลข/แท็ก NEW·HOT·EVENT/ดาว/แรงงาน/ชื่อเสียง/จำนวนสูงสุด/ผลิตผล) ต่อหมวด',
+      'bcardHtml เรนเดอร์ข้อมูลจริง: ชื่อหมวด · ดาว · แท็กสี · ผลิตผล (อีโมจิ+ชื่อ+จำนวน) · ขนาดพื้นที่ (SLOT_COST) · เวลาก่อสร้าง (BUILD_INFO + fmtBuildTime) · แรงงาน · ชื่อเสียง · จำนวนที่สร้างแล้ว/สูงสุด · ปุ่มเพิ่ม + ราคา (BUILD_INFO.money)',
+      'ช่องรูปใหญ่ใส่อีโมจิเป็นตัวแทนชั่วคราว — รอแทนด้วยรูปจริงภายหลัง · ชื่อยาวตัดเป็น 2 บรรทัด แท็กลงบรรทัดล่าง',
     ],
   },
 ];
@@ -6842,39 +6872,56 @@ function clickTree(i){
 //  คอกเล็ก: ไก่/เป็ด · คอกใหญ่: วัว/ควาย
 //  โมเดลช่องว่าง: คลิกคอกว่าง → เลือกสัตว์จากร้าน · คลิกคอกมีสัตว์ → เก็บผลผลิต
 // ============================================================
-// ── กล่อง UI สิ่งปลูกสร้าง (การ์ดแนวนอนยาว · เปล่า placeholder รอเติมรูป/ข้อความ) ──
+// แปลงวินาที → ข้อความเวลา (เช่น 45 วินาที / 1 นาที 30 วินาที)
+function fmtBuildTime(s){
+  if(s < 60) return s + ' วินาที';
+  const m = Math.floor(s/60), r = s%60;
+  return r ? `${m} นาที ${r} วินาที` : `${m} นาที`;
+}
+// จำนวนที่สร้างแล้วในหมวดนั้น
+function builtCount(type){
+  return type==='small' ? smallPens.length : type==='big' ? bigPens.length : fishPonds.length;
+}
+// ── กล่อง UI สิ่งปลูกสร้าง (การ์ดแนวนอนยาว · เติมข้อมูลจริง · รูปยังเว้นไว้ใส่ทีหลัง) ──
 // data-addtype ที่ .acard → ปุ่มเพิ่มยังสั่งก่อสร้างได้ผ่าน event delegation เดิม
 function bcardHtml(type){
+  const m  = SECTION_META[type];
+  const c  = BUILD_CARD[type] || {};
+  const b  = BUILD_INFO[type] || {};
+  const area = SLOT_COST[type];
+  const built = builtCount(type);
+  // ดาว (เต็ม/ว่าง)
+  let stars = '';
+  for(let i=0;i<5;i++) stars += `<span class="${i < (c.stars||0) ? 'on':'off'}">★</span>`;
+  // ผลิตผล
+  const produce = (c.produce||[]).map(p =>
+    `<div class="bc-prow"><span class="bc-pic">${p.e}</span><span class="bc-pname">${p.n}</span><span class="bc-pqty">x${p.q}</span></div>`
+  ).join('');
   return `<div class="bcard">
     <div class="bc-left">
       <div class="bc-head">
-        <div class="bc-num"></div>
-        <div class="bc-title bcph bcph-bar lg"></div>
-        <div class="bc-tag bcph"></div>
+        <div class="bc-num">${c.num||''}</div>
+        <div class="bc-title">${m.label}</div>
+        ${c.tag ? `<div class="bc-tag ${c.tagcls}">${c.tag}</div>` : ''}
       </div>
-      <div class="bc-stars">
-        <span class="bc-star"></span><span class="bc-star"></span><span class="bc-star"></span>
-        <span class="bc-star"></span><span class="bc-star"></span>
-      </div>
-      <div class="bc-thumb"></div>
+      <div class="bc-stars">${stars}</div>
+      <div class="bc-thumb">${c.emoji||m.emoji}</div>
     </div>
     <div class="bc-col">
-      <div class="bc-colhead bcph bcph-bar"></div>
-      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
-      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
-      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
+      <div class="bc-colhead">ผลิตผล</div>
+      ${produce}
     </div>
     <div class="bc-col">
-      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
-      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
-      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
-      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
-      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+      <div class="bc-irow"><span class="bc-iic">🟩</span><div class="bc-itxt"><span class="bc-ilabel">ขนาดพื้นที่</span><span class="bc-ival">${area} ตร.ม.</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">⏱️</span><div class="bc-itxt"><span class="bc-ilabel">เวลาก่อสร้าง</span><span class="bc-ival">${fmtBuildTime(b.seconds||0)}</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">👷</span><div class="bc-itxt"><span class="bc-ilabel">ใช้แรงงาน</span><span class="bc-ival">${c.labor||1} คน</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">⭐</span><div class="bc-itxt"><span class="bc-ilabel">ชื่อเสียง</span><span class="bc-ival">+${c.fame||0}</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">🏠</span><div class="bc-itxt"><span class="bc-ilabel">สร้างแล้ว</span><span class="bc-ival">${built} / ${c.max||0} ${c.unit||''}</span></div></div>
     </div>
     <div class="acard" data-addtype="${type}">
       <div class="ac-plus"></div>
-      <div class="ac-label bcph"></div>
-      <div class="ac-price"><span class="ac-coin"></span><span class="ac-price-num"></span></div>
+      <div class="ac-label">เพิ่ม${m.label}</div>
+      <div class="ac-price"><span class="ac-coin">🪙</span><span class="ac-price-num">${(b.money||0).toLocaleString('th-TH')}</span></div>
     </div>
   </div>`;
 }
