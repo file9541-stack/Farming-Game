@@ -273,6 +273,73 @@ body{
 .pc-ring::before{ content:''; position:absolute; inset:4px; border-radius:50%; background:rgba(40,25,10,0.78); }
 .pc-ring span{ position:relative; font-size:0.56rem; font-weight:800; color:#fff; }
 
+/* ===== กล่อง UI สิ่งปลูกสร้าง (การ์ดแนวนอนยาว ตามรูปที่ 1 · พอดีจอแนวตั้ง) ===== */
+/* หมายเหตุ: เป็นกล่องเปล่า (placeholder) — รอเติมรูป/ตัวอักษร/อีโมจิ ทีหลัง */
+.bcard{
+  position:relative; width:100%; grid-column:1 / -1;   /* กินเต็มความกว้างของ grid section */
+  display:grid; grid-template-columns:128px 1fr 1.05fr 110px;
+  gap:9px; align-items:start; padding:11px;
+  background:linear-gradient(155deg,#fdf6e1,#f3e6c2);
+  border:2.5px solid #d8b877; border-radius:18px;
+  box-shadow:0 6px 16px rgba(90,60,20,0.26), inset 0 2px 0 rgba(255,255,255,0.7), inset 0 -3px 7px rgba(150,110,50,0.16);
+}
+.bcard::after{ content:''; position:absolute; inset:4px;
+  border:1.2px solid rgba(185,142,74,0.32); border-radius:14px; pointer-events:none; }
+/* placeholder helper (ช่องเปล่าเส้นประไว้ใส่ของ) */
+.bcph{ background:#e7dcc0; border:1.4px dashed #c9b58a; border-radius:6px; }
+.bcph-bar{ height:11px; border-radius:6px; }
+.bcph-bar.lg{ height:15px; }
+/* คอลัมน์ 1: เลข+ชื่อ+แท็ก + ดาว + รูป */
+.bc-left{ display:flex; flex-direction:column; gap:6px; }
+.bc-head{ display:flex; align-items:center; gap:6px; }
+.bc-num{ width:24px; height:24px; flex:0 0 24px; border-radius:50%;
+  background:#fff; border:2px solid #b98e4a; box-shadow:0 2px 4px rgba(120,80,20,0.25); }
+.bc-title{ flex:1; min-width:0; }
+.bc-tag{ width:34px; height:16px; flex:0 0 34px; border-radius:5px; }
+.bc-stars{ display:flex; gap:3px; }
+.bc-star{ width:13px; height:13px; background:#e7dcc0; border:1.2px dashed #c9b58a;
+  clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+.bc-thumb{ width:100%; aspect-ratio:1.25; border-radius:10px;
+  border:2px dashed #c9b58a; background:#e7dcc0; box-shadow:inset 0 2px 5px rgba(120,80,20,0.12); }
+/* คอลัมน์ 2: ผลิตผล / คอลัมน์ 3: ข้อมูล */
+.bc-col{ display:flex; flex-direction:column; gap:7px; padding-top:2px; }
+.bc-colhead{ width:54px; margin-bottom:1px; }
+.bc-prow{ display:flex; align-items:center; gap:6px; }
+.bc-pic{ width:20px; height:20px; flex:0 0 20px; }
+.bc-pname{ flex:1; min-width:0; }
+.bc-pqty{ width:18px; flex:0 0 18px; }
+.bc-irow{ display:flex; align-items:center; gap:6px; }
+.bc-iic{ width:18px; height:18px; flex:0 0 18px; }
+.bc-ibar{ flex:1; min-width:0; }
+/* คอลัมน์ 4 = กล่องเล็ก (ปุ่มเพิ่ม) แนวตั้ง */
+.acard{
+  align-self:stretch; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  padding:9px 7px;
+  background:linear-gradient(155deg,#fff8e8,#f5e9c8);
+  border:2px solid #d8b877; border-radius:14px;
+  box-shadow:0 4px 10px rgba(90,60,20,0.2), inset 0 2px 0 rgba(255,255,255,0.7);
+  transition:transform 0.1s, filter 0.15s;
+}
+.acard:active{ transform:scale(0.96); filter:brightness(1.04); }
+.ac-plus{ width:46px; height:46px; border-radius:50%;
+  background:linear-gradient(150deg,#7ac84a,#3f9220);
+  box-shadow:0 0 0 4px rgba(255,255,255,0.85), 0 5px 11px rgba(40,110,20,0.5),
+    inset 0 3px 5px rgba(255,255,255,0.5), inset 0 -4px 6px rgba(30,80,10,0.45);
+  position:relative; }
+.ac-plus::before, .ac-plus::after{ content:''; position:absolute; top:50%; left:50%;
+  background:#fff; border-radius:2px; box-shadow:0 1px 2px rgba(20,70,10,0.4); transform:translate(-50%,-50%); }
+.ac-plus::before{ width:19px; height:5px; }
+.ac-plus::after{ width:5px; height:19px; }
+.ac-label{ width:88%; height:12px; border-radius:6px; }
+.ac-price{ display:flex; align-items:center; justify-content:center; gap:5px; width:100%; padding:5px 8px;
+  background:linear-gradient(150deg,#7ac84a,#2f7a18); border-radius:999px;
+  box-shadow:0 3px 7px rgba(40,110,20,0.45), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 5px rgba(30,80,10,0.4); }
+.ac-coin{ width:17px; height:17px; flex:0 0 17px; border-radius:50%;
+  background:rgba(255,255,255,0.35); border:1.2px dashed rgba(255,255,255,0.8); }
+.ac-price-num{ width:40px; height:12px; border-radius:6px;
+  background:rgba(255,255,255,0.45); border:1.2px dashed rgba(255,255,255,0.85); }
+
 .plot{
   aspect-ratio:1;background:var(--soil);
   border-radius:10px;border:2px solid var(--soil2);
@@ -5432,6 +5499,17 @@ const UPDATE_HISTORY = [
       'แยกค่าเวลาเสื่อมสภาพออกจากเวลางาน (ถางป่า/ทำแปลง/พืชโต ยังคง 5 วิ) · วงกลมรีโหลดคำนวณ duration ตาม state อัตโนมัติ',
     ],
   },
+  {
+    version: '0.70',
+    date: '28/06/2026',
+    title: 'กล่อง UI สิ่งปลูกสร้างแบบใหม่ (การ์ดแนวนอนยาว) — ใส่แทน section คอกเล็ก/ใหญ่/บ่อปลา',
+    details: [
+      'เพิ่มกล่อง UI CSS การ์ดแนวนอนยาว (.bcard) ตามดีไซน์ใหม่: 4 คอลัมน์ในแถวเดียว [รูป+ชื่อ+ดาว] · [ผลิตผล] · [ข้อมูล] · [กล่องเล็กปุ่มเพิ่ม (.acard)] บีบพอดีจอแนวตั้ง 560px',
+      'สไตล์กระดาษพาร์ชเมนต์ครีม ขอบแทน 2 ชั้น เงานุ่ม + ปุ่มกลมเขียวเงาวาวขอบขาว + ปุ่มราคา pill เขียว (CSS ล้วน)',
+      'เป็นกล่องเปล่า (placeholder เส้นประ) ยังไม่ใส่รูป/ตัวอักษร/อีโมจิ — รอเติมเนื้อหาภายหลัง',
+      'ใส่แทนเนื้อหา 3 section: คอกสัตว์เล็ก/ใหญ่ (renderAnimals) และ บ่อเลี้ยงปลา (renderFish) · ปุ่ม + ของกล่องเล็กผูก data-addtype → ยังสั่งก่อสร้างได้ผ่าน event delegation เดิม',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6764,15 +6842,48 @@ function clickTree(i){
 //  คอกเล็ก: ไก่/เป็ด · คอกใหญ่: วัว/ควาย
 //  โมเดลช่องว่าง: คลิกคอกว่าง → เลือกสัตว์จากร้าน · คลิกคอกมีสัตว์ → เก็บผลผลิต
 // ============================================================
+// ── กล่อง UI สิ่งปลูกสร้าง (การ์ดแนวนอนยาว · เปล่า placeholder รอเติมรูป/ข้อความ) ──
+// data-addtype ที่ .acard → ปุ่มเพิ่มยังสั่งก่อสร้างได้ผ่าน event delegation เดิม
+function bcardHtml(type){
+  return `<div class="bcard">
+    <div class="bc-left">
+      <div class="bc-head">
+        <div class="bc-num"></div>
+        <div class="bc-title bcph bcph-bar lg"></div>
+        <div class="bc-tag bcph"></div>
+      </div>
+      <div class="bc-stars">
+        <span class="bc-star"></span><span class="bc-star"></span><span class="bc-star"></span>
+        <span class="bc-star"></span><span class="bc-star"></span>
+      </div>
+      <div class="bc-thumb"></div>
+    </div>
+    <div class="bc-col">
+      <div class="bc-colhead bcph bcph-bar"></div>
+      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
+      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
+      <div class="bc-prow"><span class="bc-pic bcph"></span><span class="bc-pname bcph bcph-bar"></span><span class="bc-pqty bcph bcph-bar"></span></div>
+    </div>
+    <div class="bc-col">
+      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+      <div class="bc-irow"><span class="bc-iic bcph"></span><span class="bc-ibar bcph bcph-bar"></span></div>
+    </div>
+    <div class="acard" data-addtype="${type}">
+      <div class="ac-plus"></div>
+      <div class="ac-label bcph"></div>
+      <div class="ac-price"><span class="ac-coin"></span><span class="ac-price-num"></span></div>
+    </div>
+  </div>`;
+}
+
 function renderAnimals(){
   const smallGrid = document.getElementById('small-grid');
   const bigGrid   = document.getElementById('big-grid');
-  if(smallGrid){
-    smallGrid.innerHTML = smallPens.map((pen,i) => penCardHtml(pen,'small',i)).join('') + addCellHtml('small');
-  }
-  if(bigGrid){
-    bigGrid.innerHTML = bigPens.map((pen,i) => penCardHtml(pen,'big',i)).join('') + addCellHtml('big');
-  }
+  if(smallGrid){ smallGrid.innerHTML = bcardHtml('small'); }
+  if(bigGrid){   bigGrid.innerHTML   = bcardHtml('big'); }
 }
 
 // สร้าง HTML การ์ดคอก 1 ช่อง
@@ -6824,25 +6935,7 @@ function clickPen(size, idx){
 function renderFish(){
   const grid = document.getElementById('fish-grid');
   if(!grid) return;
-  grid.innerHTML = fishPonds.map((p,i)=>{
-    const badge = '';
-    if(!p.fish){
-      return `<div class="fish-pen" style="opacity:0.6;cursor:pointer;position:relative;">
-        ${badge}
-        <span class="pen-emoji">🪣</span>
-        <div class="pen-name" style="color:#6a5a3a;font-weight:800;">รอเลี้ยงปลา</div>
-        <div class="pen-status" style="color:#bbb;">👆 กดเพื่อจัดการ</div>
-      </div>`;
-    }
-    const f = FISH.find(x=>x.id===p.fish);
-    return `
-      <div class="fish-pen ready-pen" style="position:relative;">
-        ${badge}
-        <span class="pen-emoji">${f.emoji}</span>
-        <div class="pen-name">${f.name}</div>
-        <div class="pen-status">${f.productEmoji} เก็บได้!</div>
-      </div>`;
-  }).join('') + addCellHtml('ponds');
+  grid.innerHTML = bcardHtml('ponds');
 }
 
 
@@ -9623,6 +9716,12 @@ farmContainer.addEventListener('click', function(e){
   const addCell = e.target.closest('.slot-add-cell');
   if(addCell){
     if(addCell.dataset.addtype) startConstruction(addCell.dataset.addtype);
+    return;
+  }
+  // กล่องเล็ก (ปุ่มเพิ่ม) ในการ์ดสิ่งปลูกสร้างแบบใหม่ — สั่งก่อสร้าง
+  const aCard = e.target.closest('.acard');
+  if(aCard){
+    if(aCard.dataset.addtype) startConstruction(aCard.dataset.addtype);
     return;
   }
   // แปลงผัก
