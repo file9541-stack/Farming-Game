@@ -235,6 +235,44 @@ body{
 }
 .plots-add-fab:active{ transform:scale(0.9); }
 
+/* ===== แปลงปลูกพืช (รีโนเวท) — การ์ดตาม state + วงกลมรีโหลด ===== */
+/* หมายเหตุ: ยังไม่ใส่รูป — ใช้ CSS + อีโมจิ ออกแบบไว้ก่อน รอใส่ภาพภายหลัง */
+.plot-cell{
+  aspect-ratio:1; border-radius:14px; overflow:hidden; cursor:pointer;
+  position:relative; user-select:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  border:2px solid rgba(0,0,0,0.10);
+  box-shadow:0 3px 8px rgba(40,25,10,0.25), inset 0 1px 0 rgba(255,255,255,0.18);
+  transition:transform 0.1s, filter 0.15s;
+}
+.plot-cell:hover{ transform:scale(1.04); filter:brightness(1.05); }
+.plot-cell:active{ transform:scale(0.95); }
+.plot-cell .pc-emoji{ font-size:2rem; line-height:1; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
+.plot-cell .pc-label{ font-size:0.62rem; font-weight:800; text-align:center; text-shadow:0 1px 2px rgba(0,0,0,0.45); padding:0 4px; }
+.plot-cell .pc-act{
+  font-size:0.56rem; font-weight:800; color:#3a2a00;
+  background:rgba(255,255,255,0.88); border-radius:8px; padding:1px 7px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.25);
+}
+/* สีพื้นตาม state */
+.pc-forest{ background:linear-gradient(160deg,#3f7d3a,#234e25); color:#eaffea; }
+.pc-grass { background:linear-gradient(160deg,#8fce5e,#5ba63f); color:#1f3d12; }
+.pc-ready { background:linear-gradient(160deg,#b07c4c,#7a4d28); color:#fff3e0; }
+.pc-growing{ background:linear-gradient(160deg,#8a5a32,#5a361b); color:#fff; }
+.pc-harvest{ background:linear-gradient(160deg,#e3ad44,#bd8120); color:#3a2400;
+  box-shadow:0 0 0 2px var(--gold), 0 0 12px var(--gold); animation:plotReadyPulse 1.4s ease-in-out infinite; }
+.pc-busy{ filter:saturate(0.85) brightness(0.93); }
+@keyframes plotReadyPulse{ 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.12); } }
+/* วงกลมรีโหลด (มุมขวาบน) — conic-gradient + ตัวเลขวินาทีตรงกลาง */
+.pc-ring{
+  position:absolute; top:5px; right:5px; width:28px; height:28px; border-radius:50%;
+  background:conic-gradient(#ffe08a calc(var(--p,0)*1%), rgba(0,0,0,0.32) 0);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 1px 3px rgba(0,0,0,0.45);
+}
+.pc-ring::before{ content:''; position:absolute; inset:4px; border-radius:50%; background:rgba(40,25,10,0.78); }
+.pc-ring span{ position:relative; font-size:0.56rem; font-weight:800; color:#fff; }
+
 .plot{
   aspect-ratio:1;background:var(--soil);
   border-radius:10px;border:2px solid var(--soil2);
@@ -3987,7 +4025,7 @@ body, #login-screen{
 <!-- PLOT FLOATING MENU (กดแปลง → เด้งเมนูลอย 2 แถบ เฉียงขึ้นขวา) -->
 <div id="plot-menu" class="plot-menu">
   <button class="plot-menu-bar" id="plot-menu-view">🔍 ดูแปลงใกล้ๆ</button>
-  <button class="plot-menu-bar" id="plot-menu-manage">🌱 ปลูกพืช / รื้อถอน</button>
+  <button class="plot-menu-bar" id="plot-menu-manage">🌱 ปลูกพืช</button>
 </div>
 
 <!-- PLOT ZOOM (ดูแปลงใกล้ ๆ — ภาพขยายเกือบเต็มจอ) -->
@@ -4504,6 +4542,17 @@ const BUILD_INFO = {
   big:   { verb:'สร้างคอก',     money:3000, seconds:90, wood:35 },
   ponds: { verb:'ขุดบ่อเติมน้ำ', money:2000, seconds:75, wood:10 },
 };
+// ===== ระบบแปลงปลูกพืช (รีโนเวท) — ที่ดิน 1 ไร่ = 9 แปลงตายตัว =====
+// วงจรชีวิตแปลง (state machine):
+//   forest 🌲 (วัชพืช+ไม้) ──ถางป่า(ช่างก่อสร้าง)──> grass 🌿 (หญ้าปกติ)
+//   grass 🌿 ──ทำแปลง(คนงานเกษตร)──> ready 🟫 (แปลงเตรียมปลูกพืชล้มลุก)
+//   ready 🟫 ──ปลูกพืช──> growing 🌱 ──โต──> harvest ✅ ──เก็บเกี่ยว──> ready (รอบ +1)
+// เสื่อมสภาพ (วงกลมรีโหลด): ready ทิ้งไว้ → วัชโต → grass · grass ทิ้งไว้ → ไม้ขึ้น → forest
+// ปลูกติดต่อกันได้ 4 รอบ ครบแล้วดินเสื่อม → กลับเป็น grass (เรียกคนงานเกษตรทำไร่ใหม่)
+const PLOT_COUNT      = 9;       // แปลงตายตัวต่อ 1 ไร่
+const PLOT_MAX_CYCLES = 4;       // ปลูกติดต่อกันได้กี่รอบก่อนดินเสื่อม
+const PLOT_WORK_MS    = 5000;    // เวลา ถางป่า / ทำแปลง / พืชโต (ชั่วคราว 5 วิ — รอใส่ค่าจริงภายหลัง)
+const PLOT_DECAY_MS   = 5000;    // เวลาเสื่อมสภาพของ ready/grass (ชั่วคราว 5 วิ)
 // ===== ระบบอาหาร (เฟส 2) — กินเพื่อฟื้นฟูพลังงาน =====
 // ใช้ของในคลัง (id ตรงกับผลผลิต) มากินเพื่อเติมพลังงาน
 const FOOD_RESTORE = {
@@ -5357,6 +5406,19 @@ const UPDATE_HISTORY = [
       'กล่องเลื่อนแปลง (.plots-scroll) เคยตั้ง overflow-y:hidden ทำให้รูปแปลงดินถูกตัดบน-ล่าง — เปลี่ยนเป็น overflow-y:visible (เลื่อนแค่แนวนอน) + เพิ่ม padding บน-ล่าง รูปแสดงเต็มไม่โดนตัด',
     ],
   },
+  {
+    version: '0.68',
+    date: '28/06/2026',
+    title: 'รีโนเวทระบบแปลงปลูกพืช — ที่ดิน 1 ไร่ = 9 แปลงตายตัว + วงจรชีวิตแปลง',
+    details: [
+      'เปลี่ยนแปลงปลูกพืชเป็นที่ดิน 1 ไร่ มี 9 แปลงตายตัว เริ่มเกมมีครบ 9 แปลงเลย (ตัดปุ่มลอย "เพิ่มแปลง" + ตัดระบบก่อสร้าง/พื้นที่ของแปลงพืชออก — ไม่กินพื้นที่เกษตรที่ซื้ออีกต่อไป)',
+      'เพิ่มวงจรชีวิตแปลง (state machine): ป่ารก 🌲 → ถางป่า (ช่างก่อสร้าง) → พื้นหญ้า 🌿 → ทำแปลง (คนงานเกษตร) → แปลงพร้อมปลูก 🟫 → ปลูกพืช → กำลังโต 🌱 → เก็บได้ ✅ → เก็บเกี่ยว → กลับไปพร้อมปลูก (นับรอบ)',
+      'ระบบเสื่อมสภาพ (วงกลมรีโหลดในแต่ละแปลง): ปล่อยแปลงพร้อมปลูกไว้ → วัชพืชโต กลับเป็นพื้นหญ้า (ต้องทำแปลงใหม่) · ปล่อยพื้นหญ้าต่อ → ต้นไม้ขึ้น กลับเป็นป่ารก (ต้องถางป่าใหม่)',
+      'ปลูกพืชติดต่อกันได้ 4 รอบต่อแปลง ครบแล้วดินเสื่อม กลับเป็นพื้นหญ้า (เรียกคนงานเกษตรทำไร่ใหม่)',
+      'เวลาทุกขั้น (ถางป่า/ทำแปลง/พืชโต/เสื่อมสภาพ) ตั้งชั่วคราวที่ 5 วินาที (ค่า PLOT_WORK_MS / PLOT_DECAY_MS ปรับได้ภายหลัง)',
+      'ออกแบบแปลงด้วย CSS ล้วน (สีพื้นไล่เฉดตาม state + อีโมจิ + วงกลมรีโหลด conic-gradient พร้อมตัวเลขวินาที) — ยังไม่ใส่รูป รอเพิ่มภาพภายหลัง',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -5579,7 +5641,10 @@ function workerCap(){
 }
 
 // ระบบพื้นที่ว่าง (A): เริ่มต้นว่างทั้งหมด ผู้เล่นกดเพิ่มช่องเองจากพื้นที่ว่างของที่ดิน
-let plots      = [];  // แปลงผัก    — {crop, plantedAt, ready}
+// แปลงปลูกพืช (รีโนเวท): 1 ไร่ = 9 แปลงตายตัว เริ่มเกมเป็นป่ารกทั้งหมด
+// แต่ละแปลง: {state, crop, cycles, timerEnd, timerDur, decayAt}
+function makeForestPlot(){ return {state:'forest', crop:null, cycles:0, timerEnd:0, timerDur:0, decayAt:0}; }
+let plots      = Array.from({length:PLOT_COUNT}, makeForestPlot);
 let treePlots  = [];  // ไม้ยืนต้น  — {tree, plantedAt, ready}
 let fishPonds  = [];  // บ่อปลา     — {fish, stockedAt, ready}
 let smallPens  = [];  // คอกสัตว์เล็ก (ไก่/เป็ด)  — {animal:id}
@@ -5603,8 +5668,8 @@ function calcTotalSpace(){
 
 // ─── พื้นที่ที่ใช้ไปแล้ว (จากช่องที่แปลงไว้) ───
 function calcUsedSpace(){
-  return plots.length    * SLOT_COST.plots
-       + treePlots.length * SLOT_COST.trees
+  // หมายเหตุ: แปลงปลูกพืชเป็นที่ดิน 1 ไร่แยกเฉพาะ (9 แปลงตายตัว) ไม่กินพื้นที่เกษตรที่ซื้อ
+  return treePlots.length * SLOT_COST.trees
        + smallPens.length * SLOT_COST.small
        + bigPens.length   * SLOT_COST.big
        + fishPonds.length * SLOT_COST.ponds;
@@ -5728,6 +5793,81 @@ function startConstructionTimer(){
   _constructionTimer = setInterval(tickConstructions, 1000);
 }
 
+// ============================================================
+//  ระบบแปลงปลูกพืช (รีโนเวท) — state machine + จับเวลาจริง
+// ============================================================
+// เริ่มงานกับแปลง (ถางป่า / ทำแปลง) — กดสั่ง → รอ 5 วิ → เสร็จ
+function startPlotWork(i){
+  const p = plots[i]; if(!p) return;
+  if(p.state==='forest'){
+    p.state = 'clearing';
+    p.timerEnd = Date.now() + PLOT_WORK_MS; p.timerDur = PLOT_WORK_MS;
+    toast('👷 ช่างก่อสร้างกำลังถางป่า... รอสักครู่');
+  } else if(p.state==='grass'){
+    p.state = 'tilling';
+    p.timerEnd = Date.now() + PLOT_WORK_MS; p.timerDur = PLOT_WORK_MS;
+    p.decayAt = 0;
+    toast('👨‍🌾 คนงานเกษตรกำลังทำแปลง... รอสักครู่');
+  }
+  startPlotTimer();
+  if(currentTab==='farm') renderFarm();
+}
+
+// ปลูกพืชลงแปลง ready (เรียกจาก placeFromStorage) — ตั้งเวลาโต 5 วิ
+function plantPlot(i, cropId){
+  const p = plots[i]; if(!p || p.state!=='ready') return false;
+  p.state = 'growing'; p.crop = cropId;
+  p.timerEnd = Date.now() + PLOT_WORK_MS; p.timerDur = PLOT_WORK_MS;
+  p.decayAt = 0;
+  startPlotTimer();
+  return true;
+}
+
+// เก็บเกี่ยว → นับรอบ ครบ 4 รอบดินเสื่อมกลับเป็น grass
+function advanceAfterHarvest(p){
+  p.crop = null; p.cycles += 1; p.timerEnd = 0; p.timerDur = 0;
+  if(p.cycles >= PLOT_MAX_CYCLES){
+    p.state = 'grass'; p.cycles = 0; p.decayAt = Date.now() + PLOT_DECAY_MS;
+  } else {
+    p.state = 'ready'; p.decayAt = Date.now() + PLOT_DECAY_MS;
+  }
+}
+
+let _plotTimer = null;
+function plotsNeedTick(){
+  return plots.some(p => p.timerEnd > 0 || p.decayAt > 0);
+}
+function tickPlots(){
+  const now = Date.now();
+  let changed = false;
+  plots.forEach(p => {
+    if(p.state==='clearing' && now >= p.timerEnd){
+      p.state='grass'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      toast('🌿 ถางป่าเสร็จ — ได้พื้นหญ้าปกติแล้ว');
+    } else if(p.state==='tilling' && now >= p.timerEnd){
+      p.state='ready'; p.timerEnd=0; p.timerDur=0; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      toast('🟫 ทำแปลงเสร็จ — แปลงเตรียมปลูกพืชพร้อมแล้ว');
+    } else if(p.state==='growing' && now >= p.timerEnd){
+      p.state='harvest'; p.timerEnd=0; p.timerDur=0; changed=true;
+      const c = CROPS.find(x=>x.id===p.crop);
+      toast(`🌾 ${c?c.emoji+' '+c.name:'พืช'} โตแล้ว เก็บได้!`);
+    } else if(p.state==='ready' && p.decayAt && now >= p.decayAt){
+      p.state='grass'; p.decayAt=now+PLOT_DECAY_MS; changed=true;
+      toast('🌱 ปล่อยแปลงไว้นาน — วัชพืชโต ต้องเรียกคนงานเกษตรทำแปลงใหม่');
+    } else if(p.state==='grass' && p.decayAt && now >= p.decayAt){
+      p.state='forest'; p.decayAt=0; p.cycles=0; changed=true;
+      toast('🌲 ปล่อยทิ้งไว้นาน — ต้นไม้ขึ้นรก ต้องเรียกช่างก่อสร้างถางป่าใหม่');
+    }
+  });
+  // re-render ทุกวินาทีเพื่อให้วงกลมรีโหลดเดิน (เฉพาะตอนอยู่หน้าฟาร์ม)
+  if(currentTab==='farm') renderFarm();
+  if(!plotsNeedTick() && _plotTimer){ clearInterval(_plotTimer); _plotTimer=null; }
+}
+function startPlotTimer(){
+  if(_plotTimer || !plotsNeedTick()) return;
+  _plotTimer = setInterval(tickPlots, 1000);
+}
+
 // ─── แสดงสถานะ "กำลังก่อสร้าง" + นับถอยหลังในแต่ละหมวด ───
 function renderConstructions(){
   const now = Date.now();
@@ -5799,6 +5939,14 @@ function updateSpaceLabels(){
     if(!type || !SLOT_INFO[type]) return;
     const info = SLOT_INFO[type];
     const canAdd = Math.floor(free / info.cost);
+    // แปลงปลูกพืช (รีโนเวท): ที่ดิน 1 ไร่ = 9 แปลงตายตัว — ไม่กินพื้นที่เกษตรที่ซื้อ
+    if(type==='plots'){
+      const ready = plots.filter(p=>p.state==='ready').length;
+      const grown = plots.filter(p=>p.state==='harvest').length;
+      el.innerHTML = `🌾 ที่ดิน 1 ไร่ · ${PLOT_COUNT} แปลงตายตัว` +
+        `<br><span class="sec-area-built">พร้อมปลูก ${ready} · เก็บได้ ${grown} · ถางป่า → ทำแปลง → ปลูก (เก็บได้ ${PLOT_MAX_CYCLES} รอบ/แปลง)</span>`;
+      return;
+    }
     // จำนวนช่องที่สร้างแล้วในหมวดนี้
     let count = 0;
     if(type==='plots') count = plots.length;
@@ -5904,7 +6052,7 @@ function sectionStockCount(key){
 }
 // มีพื้นที่ว่างในหมวดฟาร์มให้ลงของไหม
 function sectionHasSpace(key){
-  if(key==='plots') return plots.some(p=>!p.crop);
+  if(key==='plots') return plots.some(p=>p.state==='ready');
   if(key==='trees') return treePlots.some(p=>!p.tree);
   if(key==='small') return smallPens.some(p=>!p.animal);
   if(key==='big')   return bigPens.some(p=>!p.animal);
@@ -6248,7 +6396,7 @@ function renderFarmSections(){
     const gridTag = key==='trees'
       ? `<div id="${m.gridId}" style="${m.gridStyle}"></div>`
       : key==='plots'
-      ? `<div class="plots-viewport"><div class="plots-scroll"><div class="${m.gridClass}" id="${m.gridId}"></div></div><button class="plots-add-fab" data-addtype="plots" type="button" aria-label="เพิ่มแปลง">＋</button></div>`
+      ? `<div class="plots-viewport"><div class="plots-scroll"><div class="${m.gridClass}" id="${m.gridId}"></div></div></div>`
       : `<div class="${m.gridClass}" id="${m.gridId}"></div>`;
     return `<div class="farm-section" data-seckey="${key}">
       <div class="farm-section-head">
@@ -6454,38 +6602,73 @@ function addCellHtml(type){
   </div>`;
 }
 
-function renderFarm(){
-  const grid = document.getElementById('plots-grid');
-  grid.innerHTML = plots.map((p,i)=>{
-    const badge = '';
-    if(!p.crop){
-      return `<div class="plot plot-empty" style="position:relative;" title="กดเพื่อดูแปลง">${badge}<span class="plot-soil-img"></span><span class="plot-wait-label">ดูแปลง</span></div>`;
-    }
-    const c = CROPS.find(x=>x.id===p.crop);
-    return `
-      <div class="plot ready" style="position:relative;">
-        ${badge}
-        ${c.emoji}
-        <span class="plot-time">เก็บได้!</span>
-        <div class="plot-badge">✓</div>
-      </div>`;
-  }).join('');   // ปุ่มเพิ่มย้ายเป็นปุ่มลอย (.plots-add-fab) นอก grid
+// วงกลมรีโหลด (conic) แสดงความคืบหน้า/นับถอยหลัง
+function plotRingHtml(p){
+  const now = Date.now();
+  let end = 0, dur = 0;
+  if(p.timerEnd > 0){ end = p.timerEnd; dur = p.timerDur || PLOT_WORK_MS; }      // ถางป่า/ทำแปลง/พืชโต
+  else if(p.decayAt > 0){ end = p.decayAt; dur = PLOT_DECAY_MS; }                // นับถอยหลังเสื่อมสภาพ
+  if(!end) return '';
+  const remain = Math.max(0, end - now);
+  const sec = Math.ceil(remain/1000);
+  const pct = Math.max(0, Math.min(100, (1 - remain/dur) * 100));
+  return `<div class="pc-ring" style="--p:${pct.toFixed(0)}"><span>${sec}</span></div>`;
 }
 
+// ข้อมูลแสดงผลของแต่ละ state
+const PLOT_VIEW = {
+  forest:  { cls:'pc-forest',  emoji:'🌲', label:'ป่ารก',        act:'👷 ถางป่า' },
+  clearing:{ cls:'pc-forest pc-busy', emoji:'🪓', label:'กำลังถางป่า', act:'' },
+  grass:   { cls:'pc-grass',   emoji:'🌿', label:'พื้นหญ้า',      act:'👨‍🌾 ทำแปลง' },
+  tilling: { cls:'pc-grass pc-busy',  emoji:'🚜', label:'กำลังทำแปลง', act:'' },
+  ready:   { cls:'pc-ready',   emoji:'🟫', label:'พร้อมปลูก',     act:'🌱 ปลูกพืช' },
+  growing: { cls:'pc-growing', emoji:'🌱', label:'กำลังโต',       act:'' },
+  harvest: { cls:'pc-harvest', emoji:'✅', label:'เก็บได้!',      act:'🧺 เก็บเกี่ยว' },
+};
+
+function renderFarm(){
+  const grid = document.getElementById('plots-grid');
+  if(!grid) return;
+  grid.innerHTML = plots.map((p,i)=>{
+    const v = PLOT_VIEW[p.state] || PLOT_VIEW.forest;
+    let emoji = v.emoji, label = v.label;
+    if((p.state==='growing' || p.state==='harvest') && p.crop){
+      const c = CROPS.find(x=>x.id===p.crop);
+      if(c){ emoji = c.emoji; label = (p.state==='harvest') ? `${c.name} เก็บได้!` : `${c.name} กำลังโต`; }
+    }
+    return `<div class="plot plot-cell ${v.cls}" title="${label}">
+      ${plotRingHtml(p)}
+      <span class="pc-emoji">${emoji}</span>
+      <span class="pc-label">${label}</span>
+      ${v.act ? `<span class="pc-act">${v.act}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+let plantTargetIdx = null;  // แปลงที่กำลังจะปลูก (จาก placeFromStorage)
 function clickPlot(i, el){
   const p = plots[i];
-  if(p.crop){
-    if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
-    const c = CROPS.find(x=>x.id===p.crop);
-    addInv(c.id, c.name, c.emoji, 1, c.sell);
-    addExp(c.exp);
-    plots[i] = {crop:null, plantedAt:null, ready:false};
-    toast(`เก็บ ${c.emoji} ${c.name} แล้ว!`);
-    renderFarm(); updateStockStatus();
-    return;
+  if(!p) return;
+  switch(p.state){
+    case 'forest':
+      startPlotWork(i); break;          // ถางป่า (ช่างก่อสร้าง)
+    case 'grass':
+      startPlotWork(i); break;          // ทำแปลง (คนงานเกษตร)
+    case 'ready':
+      openPlotMenu(i, el); break;       // เด้งเมนู: ดูแปลง / ปลูกพืช
+    case 'harvest': {
+      if(!spendEnergy(ENERGY_COST.harvest,'agri')) return;  // เก็บเกี่ยวใช้พลังงาน
+      const c = CROPS.find(x=>x.id===p.crop);
+      if(c){ addInv(c.id, c.name, c.emoji, 1, c.sell); addExp(c.exp); toast(`🧺 เก็บ ${c.emoji} ${c.name} แล้ว!`); }
+      advanceAfterHarvest(p);
+      startPlotTimer();
+      renderFarm(); updateStockStatus();
+      break;
+    }
+    case 'clearing': toast('👷 กำลังถางป่าอยู่ — รอสักครู่'); break;
+    case 'tilling':  toast('👨‍🌾 กำลังทำแปลงอยู่ — รอสักครู่'); break;
+    case 'growing':  toast('🌱 พืชกำลังโต — รอสักครู่'); break;
   }
-  // แปลงว่างที่สร้างแล้ว → เด้งเมนูลอย (ดูแปลง / ปลูกพืช-รื้อถอน)
-  openPlotMenu(i, el);
 }
 
 // ─── เมนูลอยของแปลง (เด้งเฉียงขึ้นขวา 45°) ───
@@ -6513,7 +6696,11 @@ function plotMenuView(){
 function plotMenuManage(){
   const i = plotMenuIdx;
   closePlotMenu();
-  if(i != null) openSlotAction('plots', i);
+  if(i == null) return;
+  if(plots[i] && plots[i].state==='ready'){
+    plantTargetIdx = i;          // ปลูกลงแปลงที่เลือก
+    openStorage('plots');        // เปิดคลังเมล็ดพันธุ์พืชให้เลือกลงปลูก
+  }
 }
 
 
@@ -6736,12 +6923,15 @@ function placeFromStorage(cat, id){
   if(!hasWarehouse()){ toast('🔒 ไม่มีโรงเก็บสินค้า'); return; }
   if((farmStock[cat][id]||0) < 1) return;
   if(cat==='seeds'){
-    const idx = plots.findIndex(p=>!p.crop);
-    if(idx<0){ toast('❌ ไม่มีแปลงว่าง — กดเพิ่มแปลง ➕ ก่อน'); return; }
+    // เลือกแปลงเป้าหมาย: แปลงที่กดเลือก (ถ้า ready) ไม่งั้นหาแปลง ready แปลงแรก
+    let idx = (plantTargetIdx!=null && plots[plantTargetIdx] && plots[plantTargetIdx].state==='ready') ? plantTargetIdx : -1;
+    if(idx<0) idx = plots.findIndex(p=>p.state==='ready');
+    plantTargetIdx = null;
+    if(idx<0){ toast('❌ ไม่มีแปลงที่พร้อมปลูก — ถางป่า → ทำแปลงก่อน'); return; }
     const c = CROPS.find(x=>x.id===id);
     if(!spendEnergy(ENERGY_COST.plant,'agri')) return;
     stockRemove('seeds',id,1);
-    plots[idx] = {crop:id, plantedAt:Date.now(), ready:false};
+    plantPlot(idx, id);
     toast(`🌱 ลงปลูก ${c.emoji} ${c.name} แล้ว!`);
   } else if(cat==='trees'){
     const idx = treePlots.findIndex(p=>!p.tree);
@@ -6860,9 +7050,10 @@ function confirmDemolish(){
 function autoHarvest(){
   if(!hasContinuousWorker('agri')) return;
   let n = 0;
-  plots.forEach((p,i)=>{
-    if(p.crop){ const c=CROPS.find(x=>x.id===p.crop); addInv(c.id,c.name,c.emoji,1,c.sell); addExp(c.exp); plots[i]={crop:null,plantedAt:null,ready:false}; n++; }
+  plots.forEach(p=>{
+    if(p.state==='harvest' && p.crop){ const c=CROPS.find(x=>x.id===p.crop); addInv(c.id,c.name,c.emoji,1,c.sell); addExp(c.exp); advanceAfterHarvest(p); n++; }
   });
+  startPlotTimer();
   treePlots.forEach(p=>{
     if(p.tree){ const t=TREES.find(x=>x.id===p.tree); addInv(t.id,t.name,t.emoji,t.harvestQty,t.sell); addExp(t.exp*t.harvestQty); n++; }
   });
@@ -7283,13 +7474,7 @@ function nextDay(){
   if(currentTab==='factory') renderFactory();
   if(currentTab==='orders') renderOrders();
   if(currentTab==='market') renderMarket();
-  // check auto-notifications
-  plots.forEach((p,i)=>{
-    if(p.crop){
-      const c = CROPS.find(x=>x.id===p.crop);
-      if(gameMinute - p.plantedAt === c.mins) toast(`🌾 ${c.emoji} ${c.name} โตแล้ว!`);
-    }
-  });
+  // check auto-notifications (แปลงพืชใช้จับเวลาจริงแบบ real-time ใน tickPlots แล้ว)
   treePlots.forEach((p,i)=>{
     if(p.tree){
       const t = TREES.find(x=>x.id===p.tree);
@@ -7774,7 +7959,7 @@ function confirmSellLandWithProduce(){
   const { asset, catKey, produce } = pendingLandSale;
   document.getElementById('land-sell-question').classList.remove('show');
   // เคลียร์ผลผลิตในพื้นที่ทั้งหมด
-  plots.forEach(p => { p.crop = null; p.plantedAt = null; p.ready = false; });
+  plots.forEach(p => { p.state='forest'; p.crop=null; p.cycles=0; p.timerEnd=0; p.timerDur=0; p.decayAt=0; });
   treePlots.forEach(p => { p.tree = null; p.plantedAt = null; p.ready = false; });
   smallPens.forEach(p => p.animal = null);
   bigPens.forEach(p => p.animal = null);
@@ -9360,7 +9545,7 @@ document.addEventListener('click', function(e){
   const menu = document.getElementById('plot-menu');
   if(!menu || !menu.classList.contains('show')) return;
   if(menu.contains(e.target)) return;
-  if(e.target.closest('.plot-empty')) return;
+  if(e.target.closest('.plot')) return;
   closePlotMenu();
 });
 // เลื่อนกล่องเนื้อหา → ปิดเมนูลอย (ตำแหน่งจะไม่ตามแล้ว)
