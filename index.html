@@ -3414,8 +3414,8 @@ html.mode-portrait{
 }
 html.mode-portrait body{
   max-width:none;
-  width:585px;          /* ฟิกขนาดตายตัว 13:16 (585×720) — ไม่ยืด/หดตามจอ */
-  height:720px;
+  width:585px;          /* ฟิกขนาดตายตัว 13:20 (585×900) — ไม่ยืด/หดตามจอ */
+  height:900px;
   min-height:0;
   margin:0;
   transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
@@ -3740,7 +3740,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
     root.classList.toggle('mode-landscape', m === 'landscape');
     root.classList.toggle('mode-portrait',  m === 'portrait');
     if(modeBtn){
-      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 13:16';
+      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 13:20';
     }
   }
   applyMode(curMode());
@@ -3750,7 +3750,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
       try{ localStorage.setItem(MODE_KEY, next); }catch(e){}
       applyMode(next);
       if(typeof window.toast === 'function'){
-        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 13:16 📱');
+        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 13:20 📱');
       }
     });
   }
@@ -5660,6 +5660,14 @@ const UPDATE_HISTORY = [
     title: 'ฟิกขนาดหน้าจอแนวตั้ง 13:16 เป็นพิกเซลตายตัว 585×720',
     details: [
       'เปลี่ยนเวทีโหมดแนวตั้ง (mode-portrait) จากปรับขนาดตามจอ (responsive) → ฟิกขนาดตายตัว 585×720 px (13:16) ไม่ยืด/หดตามจอ จัดกลางจอ letterbox เหมือนเดิม',
+    ],
+  },
+  {
+    version: '0.75',
+    date: '29/06/2026',
+    title: 'เปลี่ยนสัดส่วนจอแนวตั้งเป็น 13:20 (ฟิก 585×900)',
+    details: [
+      'ปรับมาตรฐานจอแนวตั้งจาก 13:16 → 13:20 · ฟิกขนาดตายตัว 585×900 px (คงความกว้าง 585) · อัปเดตป้ายปุ่ม/ข้อความ toast เป็น "13:20"',
     ],
   },
 ];
