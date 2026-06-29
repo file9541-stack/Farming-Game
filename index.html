@@ -3414,8 +3414,8 @@ html.mode-portrait{
 }
 html.mode-portrait body{
   max-width:none;
-  width:  min(100vw, calc(100vh * 13 / 16), 780px);
-  height: min(100vh, calc(100vw * 16 / 13), 960px);
+  width:585px;          /* ฟิกขนาดตายตัว 13:16 (585×720) — ไม่ยืด/หดตามจอ */
+  height:720px;
   min-height:0;
   margin:0;
   transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
@@ -3423,6 +3423,10 @@ html.mode-portrait body{
   overflow:hidden;
 }
 html.mode-portrait #main{ height:100%; }
+
+/* หน้า Login ใช้กรอบเวทีเต็ม (อยู่ในกรอบขนาดที่ฟิก/4:3 ด้วย ไม่ติด max-width 560 เดิม) */
+html.mode-landscape #login-screen,
+html.mode-portrait  #login-screen{ max-width:none; width:100%; }
 
 /* ปุ่มสลับโหมดหน้าจอบนการ์ด Login */
 .screen-toggle{
@@ -5648,6 +5652,14 @@ const UPDATE_HISTORY = [
       'ปรับมาตรฐานหน้าจอแนวตั้ง (โทรศัพท์) จาก 9:16 → 13:16',
       'โหมดแนวตั้ง (mode-portrait) ตอนนี้เป็นเวที 13:16 จัดกลางจอ ปรับขนาดพอดีจอ (letterbox สูงสุด 780×960) ใช้เทคนิค transform บน body เหมือนโหมด 4:3',
       'อัปเดตป้ายปุ่มสลับหน้าจอ/ข้อความ toast เป็น "13:16" · ดีฟอลต์เปิดหน้ายังเป็นแนวนอน 4:3 (กดสลับเป็น 13:16 ได้จากปุ่มหน้า Login)',
+    ],
+  },
+  {
+    version: '0.74',
+    date: '29/06/2026',
+    title: 'ฟิกขนาดหน้าจอแนวตั้ง 13:16 เป็นพิกเซลตายตัว 585×720',
+    details: [
+      'เปลี่ยนเวทีโหมดแนวตั้ง (mode-portrait) จากปรับขนาดตามจอ (responsive) → ฟิกขนาดตายตัว 585×720 px (13:16) ไม่ยืด/หดตามจอ จัดกลางจอ letterbox เหมือนเดิม',
     ],
   },
 ];
