@@ -3406,6 +3406,24 @@ html.mode-landscape #main{ height:100%; max-width:none; }
 html.mode-landscape #topbar{ max-width:none; }
 html.mode-landscape #bottom-nav{ max-width:none; }
 
+/* ===== โหมดหน้าจอ 13:16 แนวตั้ง (มาตรฐานจอโทรศัพท์ DEV-001) — เวทีกลางจอ letterbox =====
+   เทคนิคเดียวกับ 4:3: transform บน body → ลูก position:fixed อิงกรอบเวที 13:16 อัตโนมัติ */
+html.mode-portrait{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+}
+html.mode-portrait body{
+  max-width:none;
+  width:  min(100vw, calc(100vh * 13 / 16), 780px);
+  height: min(100vh, calc(100vw * 16 / 13), 960px);
+  min-height:0;
+  margin:0;
+  transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
+  border-radius:16px;
+  overflow:hidden;
+}
+html.mode-portrait #main{ height:100%; }
+
 /* ปุ่มสลับโหมดหน้าจอบนการ์ด Login */
 .screen-toggle{
   display:inline-flex; align-items:center; gap:6px;
@@ -3718,7 +3736,7 @@ html.mode-landscape #bottom-nav{ max-width:none; }
     root.classList.toggle('mode-landscape', m === 'landscape');
     root.classList.toggle('mode-portrait',  m === 'portrait');
     if(modeBtn){
-      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 9:16';
+      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 13:16';
     }
   }
   applyMode(curMode());
@@ -3728,7 +3746,7 @@ html.mode-landscape #bottom-nav{ max-width:none; }
       try{ localStorage.setItem(MODE_KEY, next); }catch(e){}
       applyMode(next);
       if(typeof window.toast === 'function'){
-        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 9:16 📱 (ยังไม่จัดเลย์เอาต์เต็ม)');
+        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 13:16 📱');
       }
     });
   }
@@ -5620,6 +5638,16 @@ const UPDATE_HISTORY = [
       'เพิ่มโหมด mode-landscape: ห่อ UI ทั้งหมดเป็นเวที 4:3 จัดกลางจอ ปรับขนาดพอดีหน้าจอ (letterbox รอบๆ สูงสุด 1280×960) · ใช้ transform บน body ให้ลูก position:fixed (topbar/main/nav/overlay/login) อิงกรอบเวทีอัตโนมัติ ไม่ต้องย้ายโครง HTML',
       'เพิ่มปุ่มสลับหน้าจอบนการ์ด Login (🖥️ แนวนอน 4:3 ↔ 📱 แนวตั้ง 9:16) สลับทันที + จำค่าใน LocalStorage (mfw_screen_mode) · มีสคริปต์ตั้งโหมดก่อนวาดหน้าใน <head> กัน FOUC',
       'โหมดแนวตั้ง (portrait) ชั่วคราวใช้เลย์เอาต์มือถือเดิม รอพัฒนา 9:16 เต็มรูปแบบภายหลัง',
+    ],
+  },
+  {
+    version: '0.73',
+    date: '29/06/2026',
+    title: 'เปลี่ยนมาตรฐานจอแนวตั้งเป็น 13:16 + ทำเวที letterbox โหมดแนวตั้งจริง',
+    details: [
+      'ปรับมาตรฐานหน้าจอแนวตั้ง (โทรศัพท์) จาก 9:16 → 13:16',
+      'โหมดแนวตั้ง (mode-portrait) ตอนนี้เป็นเวที 13:16 จัดกลางจอ ปรับขนาดพอดีจอ (letterbox สูงสุด 780×960) ใช้เทคนิค transform บน body เหมือนโหมด 4:3',
+      'อัปเดตป้ายปุ่มสลับหน้าจอ/ข้อความ toast เป็น "13:16" · ดีฟอลต์เปิดหน้ายังเป็นแนวนอน 4:3 (กดสลับเป็น 13:16 ได้จากปุ่มหน้า Login)',
     ],
   },
 ];
