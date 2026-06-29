@@ -3400,6 +3400,13 @@ html.mode-landscape{
   min-height:100vh;
   display:flex; align-items:center; justify-content:center;
 }
+/* พื้นหลังนอกกรอบเกม (letterbox) = ภาพฟาร์มเบลอ+หรี่แสง แทนพื้นดำทึบ */
+html.mode-landscape::before, html.mode-portrait::before{
+  content:""; position:fixed; inset:0; z-index:-1;
+  background:url('ภาพหน้าจอ/001.jpg') center/cover no-repeat;
+  filter:blur(24px) brightness(0.5) saturate(1.1);
+  transform:scale(1.12);       /* ขยายกันขอบเบลอโปร่ง */
+}
 html.mode-landscape body{
   max-width:none;
   width:585px;          /* กรอบหลักที่กำลังพัฒนา · ฟิกตายตัว 13:15 (585×675) — ไม่ยืดตามเบราว์เซอร์ */
@@ -5747,6 +5754,14 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนสัดส่วนกรอบเกมหลักเป็น 13:15 (ฟิก 585×675)',
     details: [
       'ปรับกรอบเกมหลัก (PC) จาก 13:16 585×720 → 13:15 ฟิกตายตัว 585×675 px (คงความกว้าง 585 ลดความสูงเป็น 675) · อัปเดตป้ายปุ่มเป็น "13:15"',
+    ],
+  },
+  {
+    version: '0.84',
+    date: '29/06/2026',
+    title: 'พื้นหลังนอกกรอบเกม (letterbox) = ภาพฟาร์มเบลอ แทนพื้นดำทึบ',
+    details: [
+      'เพิ่ม html.mode-landscape/portrait ::before เป็นภาพพื้นหลังเกม (001.jpg) เต็มจอ blur 24px + หรี่แสง (brightness 0.5) วางหลังกรอบเกม (z-index:-1) · เปิดเต็มจอแล้วขอบนอกกรอบเป็นฟาร์มเบลอนุ่มๆ ไม่ทึบดำ',
     ],
   },
 ];
