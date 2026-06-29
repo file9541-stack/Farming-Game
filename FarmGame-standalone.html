@@ -3394,8 +3394,8 @@ html.mode-landscape{
 }
 html.mode-landscape body{
   max-width:none;
-  width:1200px;         /* ฟิกขนาดตายตัว 4:3 (1200×900) — ไม่ยืด/หดตามการลากหน้าจอ */
-  height:900px;
+  width:585px;          /* กรอบหลักที่กำลังพัฒนา · ฟิกตายตัว 13:16 (585×720) — ไม่ยืดตามเบราว์เซอร์ */
+  height:720px;
   min-height:0;
   margin:0;
   transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
@@ -3440,6 +3440,9 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
 }
 .screen-toggle:hover{ background:rgba(200,140,0,0.18); }
 .screen-toggle:active{ transform:scale(0.96); }
+/* มือถือเอาไว้ก่อน — ตอนนี้ทำ PC อย่างเดียว แสดงเฉพาะกรอบ 13:16 จึงซ่อนปุ่มสลับโหมด
+   (เก็บโค้ด/ตรรกะปุ่มไว้ครบ รอเปิดใช้ตอนพัฒนาเวอร์ชันมือถือ) */
+#screen-mode-toggle{ display:none; }
 
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
@@ -3740,7 +3743,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
     root.classList.toggle('mode-landscape', m === 'landscape');
     root.classList.toggle('mode-portrait',  m === 'portrait');
     if(modeBtn){
-      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 13:16';
+      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอเกม 13:16 (PC)' : '📱 เวอร์ชันมือถือ (รอพัฒนา)';
     }
   }
   applyMode(curMode());
@@ -5692,6 +5695,16 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนกรอบจอแนวตั้งเป็น 13:16 (ฟิก 585×720)',
     details: [
       'ปรับมาตรฐานจอแนวตั้งจาก 11:20 → 13:16 · ฟิกขนาดตายตัว 585×720 px ไม่ยืดตามกรอบเบราว์เซอร์ · อัปเดตป้ายปุ่ม/ข้อความ toast เป็น "13:16"',
+    ],
+  },
+  {
+    version: '0.79',
+    date: '29/06/2026',
+    title: 'โฟกัส PC: กรอบเกมหลัก = 13:16 ฟิก 585×720 (เลิกยืดเต็มจอ) + ซ่อนปุ่มสลับโหมด (มือถือเอาไว้ก่อน)',
+    details: [
+      'เปลี่ยนกรอบหลักที่เปิดมา (mode-landscape) จาก 4:3 1200×900 → 13:16 ฟิกตายตัว 585×720 px · แก้ปัญหากรอบยืดเต็มจอกว้างจนใหญ่เกินไป — ตอนนี้เป็นหน้าต่างกลางจอ มี letterbox รอบๆ',
+      'ทำ PC ก่อน · มือถือเอาไว้ทีหลัง → ซ่อนปุ่มสลับโหมดหน้าจอบน Login (display:none) เก็บโค้ด/ตรรกะไว้ครบ รอเปิดใช้ตอนพัฒนาเวอร์ชันมือถือ',
+      'อัปเดตป้ายปุ่ม/ข้อความให้สื่อว่ากรอบ PC = 13:16 · มือถือ = รอพัฒนา',
     ],
   },
 ];
