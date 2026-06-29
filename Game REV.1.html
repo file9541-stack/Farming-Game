@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>🌻 Millionaire Farm Wars — สงครามฟาร์มมหาเศรษฐี</title>
+<!-- ตั้งโหมดหน้าจอก่อนวาดหน้า (กัน FOUC) · ดีฟอลต์ = แนวนอน 4:3 -->
+<script>
+(function(){
+  try{
+    var m = localStorage.getItem('mfw_screen_mode') === 'portrait' ? 'portrait' : 'landscape';
+    document.documentElement.classList.add('mode-' + m);
+  }catch(e){ document.documentElement.classList.add('mode-landscape'); }
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
 
@@ -3374,6 +3383,42 @@ body, #login-screen{
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+/* ===== โหมดหน้าจอ 4:3 แนวนอน (มาตรฐานจอ DEV-001) — เวทีกลางจอ letterbox =====
+   ดีฟอลต์เปิดหน้า = โหมดนี้ · สลับเป็นแนวตั้ง (mode-portrait) ได้จากปุ่มหน้า Login
+   เทคนิค: ใส่ transform บน body → ทำให้ลูกที่ position:fixed (topbar/main/nav/overlay/login)
+   อิง "กรอบเวที 4:3" แทน viewport อัตโนมัติ จึงไม่ต้องย้ายโครง HTML */
+html.mode-landscape{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+}
+html.mode-landscape body{
+  max-width:none;
+  width:  min(100vw, calc(100vh * 4 / 3), 1280px);
+  height: min(100vh, calc(100vw * 3 / 4), 960px);
+  min-height:0;
+  margin:0;
+  transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
+  border-radius:16px;
+  overflow:hidden;
+}
+html.mode-landscape #main{ height:100%; max-width:none; }
+html.mode-landscape #topbar{ max-width:none; }
+html.mode-landscape #bottom-nav{ max-width:none; }
+
+/* ปุ่มสลับโหมดหน้าจอบนการ์ด Login */
+.screen-toggle{
+  display:inline-flex; align-items:center; gap:6px;
+  margin:0 auto 10px; padding:5px 14px;
+  background:rgba(120,80,20,0.12);
+  border:1.5px solid rgba(200,160,80,0.45);
+  border-radius:14px;
+  color:#7a4a00; font-family:inherit; font-weight:800; font-size:0.74rem;
+  cursor:pointer; transition:transform 0.1s, background 0.15s;
+}
+.screen-toggle:hover{ background:rgba(200,140,0,0.18); }
+.screen-toggle:active{ transform:scale(0.96); }
+
 #login-screen{
   position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
   width:100%; max-width:560px; z-index:100000;
@@ -3505,6 +3550,8 @@ body, #login-screen{
     <div class="login-title">Millionaire Farm Wars</div>
     <div class="login-name-th">สงครามฟาร์มมหาเศรษฐี</div>
     <div class="login-sub">เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเริ่มเล่น</div>
+
+    <button type="button" id="screen-mode-toggle" class="screen-toggle">🖥️ จอแนวนอน 4:3</button>
 
     <div class="login-tabs">
       <button type="button" class="login-tab active" data-tab="login">เข้าสู่ระบบ</button>
@@ -3661,6 +3708,30 @@ body, #login-screen{
   document.getElementById('login-admin').addEventListener('click', function(){
     enterGame('ผู้ดูแลระบบ');
   });
+
+  // ----- สลับโหมดหน้าจอ (4:3 แนวนอน ↔ 9:16 แนวตั้ง) · สลับทันที + จำค่าใน LocalStorage -----
+  var MODE_KEY = 'mfw_screen_mode';
+  var modeBtn  = document.getElementById('screen-mode-toggle');
+  function curMode(){ return localStorage.getItem(MODE_KEY) === 'portrait' ? 'portrait' : 'landscape'; }
+  function applyMode(m){
+    var root = document.documentElement;
+    root.classList.toggle('mode-landscape', m === 'landscape');
+    root.classList.toggle('mode-portrait',  m === 'portrait');
+    if(modeBtn){
+      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอแนวนอน 4:3' : '📱 จอแนวตั้ง 9:16';
+    }
+  }
+  applyMode(curMode());
+  if(modeBtn){
+    modeBtn.addEventListener('click', function(){
+      var next = (curMode() === 'landscape') ? 'portrait' : 'landscape';
+      try{ localStorage.setItem(MODE_KEY, next); }catch(e){}
+      applyMode(next);
+      if(typeof window.toast === 'function'){
+        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 9:16 📱 (ยังไม่จัดเลย์เอาต์เต็ม)');
+      }
+    });
+  }
 })();
 </script>
 
@@ -5538,6 +5609,17 @@ const UPDATE_HISTORY = [
       'เพิ่มคอนฟิก BUILD_CARD (เลข/แท็ก NEW·HOT·EVENT/ดาว/แรงงาน/ชื่อเสียง/จำนวนสูงสุด/ผลิตผล) ต่อหมวด',
       'bcardHtml เรนเดอร์ข้อมูลจริง: ชื่อหมวด · ดาว · แท็กสี · ผลิตผล (อีโมจิ+ชื่อ+จำนวน) · ขนาดพื้นที่ (SLOT_COST) · เวลาก่อสร้าง (BUILD_INFO + fmtBuildTime) · แรงงาน · ชื่อเสียง · จำนวนที่สร้างแล้ว/สูงสุด · ปุ่มเพิ่ม + ราคา (BUILD_INFO.money)',
       'ช่องรูปใหญ่ใส่อีโมจิเป็นตัวแทนชั่วคราว — รอแทนด้วยรูปจริงภายหลัง · ชื่อยาวตัดเป็น 2 บรรทัด แท็กลงบรรทัดล่าง',
+    ],
+  },
+  {
+    version: '0.72',
+    date: '29/06/2026',
+    title: 'มาตรฐานหน้าจอ: โหมดแนวนอน 4:3 (เวทีกลางจอ letterbox) + ปุ่มสลับหน้าจอบนหน้า Login',
+    details: [
+      'กำหนดมาตรฐานขนาดหน้าจอเล่นเกม: แนวนอน 4:3 (iPad/PC/Notebook) เป็นดีฟอลต์เมื่อเปิดหน้า · เตรียมโครงโหมดแนวตั้ง 9:16 (โทรศัพท์) ไว้รองรับแต่ยังไม่จัดเลย์เอาต์',
+      'เพิ่มโหมด mode-landscape: ห่อ UI ทั้งหมดเป็นเวที 4:3 จัดกลางจอ ปรับขนาดพอดีหน้าจอ (letterbox รอบๆ สูงสุด 1280×960) · ใช้ transform บน body ให้ลูก position:fixed (topbar/main/nav/overlay/login) อิงกรอบเวทีอัตโนมัติ ไม่ต้องย้ายโครง HTML',
+      'เพิ่มปุ่มสลับหน้าจอบนการ์ด Login (🖥️ แนวนอน 4:3 ↔ 📱 แนวตั้ง 9:16) สลับทันที + จำค่าใน LocalStorage (mfw_screen_mode) · มีสคริปต์ตั้งโหมดก่อนวาดหน้าใน <head> กัน FOUC',
+      'โหมดแนวตั้ง (portrait) ชั่วคราวใช้เลย์เอาต์มือถือเดิม รอพัฒนา 9:16 เต็มรูปแบบภายหลัง',
     ],
   },
 ];
