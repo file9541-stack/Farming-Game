@@ -2388,25 +2388,28 @@ body { padding-bottom: 72px; }
 #chat-overlay {
   display: none;
   position: fixed; inset: 0;
-  background: rgba(20,30,40,0.5);
+  background: rgba(20,30,40,0.42);
   z-index: 2600;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 #chat-overlay.show { display: block; }
 
 #chat-panel {
-  position: fixed;
-  inset: 0;                         /* เปิดเป็นหน้าเต็มในกรอบเกม (ไม่สไลด์ซ้าย/ขวา) */
-  width: 100%; max-width: none;
+  position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดซ้าย เว้นขวาให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
+  top: 0; bottom: 0; left: 0; right: auto;
+  width: calc(100% - 30px); max-width: none;
+  border-radius: 0 22px 22px 0;
+  overflow: hidden;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
-  box-shadow: none;
+  box-shadow: 8px 0 30px rgba(40,80,120,0.28);
   opacity: 0; visibility: hidden;
-  transform: scale(1.02);
+  transform: translateX(-10px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   z-index: 2700;
   display: flex; flex-direction: column;
 }
-#chat-panel.show { opacity: 1; visibility: visible; transform: scale(1); }
+#chat-panel.show { opacity: 1; visibility: visible; transform: translateX(0); }
 
 .chat-header {
   background: linear-gradient(135deg,#3a7ab0,#2a5a88);
@@ -2495,25 +2498,28 @@ body { padding-bottom: 72px; }
 #nav-overlay {
   display: none;
   position: fixed; inset: 0;
-  background: rgba(40,30,15,0.5);
+  background: rgba(40,30,15,0.42);
   z-index: 2600;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 #nav-overlay.show { display: block; }
 
 #nav-drawer {
-  position: fixed;
-  inset: 0;                         /* เปิดเป็นหน้าเต็มในกรอบเกม (ไม่สไลด์ซ้าย/ขวา) */
-  width: 100%; max-width: none;
+  position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดขวา เว้นซ้ายให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
+  top: 0; bottom: 0; right: 0; left: auto;
+  width: calc(100% - 30px); max-width: none;
+  border-radius: 22px 0 0 22px;
+  overflow: hidden;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
-  box-shadow: none;
+  box-shadow: -8px 0 30px rgba(80,50,10,0.28);
   opacity: 0; visibility: hidden;
-  transform: scale(1.02);
+  transform: translateX(10px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   z-index: 2700;
   display: flex; flex-direction: column;
 }
-#nav-drawer.show { opacity: 1; visibility: visible; transform: scale(1); }
+#nav-drawer.show { opacity: 1; visibility: visible; transform: translateX(0); }
 
 .navd-header {
   background: linear-gradient(135deg,#e0a010,#b87810);
@@ -5716,6 +5722,15 @@ const UPDATE_HISTORY = [
     details: [
       'เปลี่ยน #chat-panel (เดิมสไลด์จากซ้าย) และ #nav-drawer (เดิมสไลด์จากขวา) จาก drawer translateX → เปิดเป็นหน้าเต็ม inset:0 กว้าง 100% ของกรอบเกม fade/ซูมขึ้นมา · เหมาะกับการเล่นบนเว็บ (PC) มากกว่าแถบลอยซ้าย/ขวา',
       'ปิดได้ด้วยปุ่ม ✕ เดิม · พฤติกรรม toggle .show เดิมไม่เปลี่ยน',
+    ],
+  },
+  {
+    version: '0.81',
+    date: '29/06/2026',
+    title: 'แผงแชท/เมนูขวา เป็นแผงในกรอบเกม (เว้นขอบเห็นฉากหลังเบลอ) ไม่เต็มจอ',
+    details: [
+      'ปรับ #chat-panel (ชิดซ้าย) และ #nav-drawer (ชิดขวา) จากเต็มกรอบ (inset:0) → กว้าง calc(100% - 30px) เว้นขอบด้านตรงข้ามให้เห็นเกมเบลอๆ ข้างหลัง + มุมโค้ง 22px + เงานุ่ม (แบบรูปอ้างอิงที่ผู้ใช้ต้องการ)',
+      'เพิ่ม backdrop blur ฉากหลัง (#chat-overlay/#nav-overlay) เป็น 5px ให้เห็นเกมเบลอชัดขึ้น · เปิดด้วย fade + ขยับเล็กน้อย (ไม่ใช่สไลด์เต็มจากขอบ)',
     ],
   },
 ];
