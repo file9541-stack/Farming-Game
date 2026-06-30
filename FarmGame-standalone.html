@@ -361,8 +361,8 @@ body{
 .ac-price-num{ font-size:0.66rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); }
 
 /* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
-/* หมวดคอกเล็กมีกรอบในตัวการ์ดแล้ว → เอา panel/padding ของ section นอกออก ให้การ์ดกว้างเต็มที่ */
-.farm-section[data-seckey="small"]{ border:none; background:none; box-shadow:none; padding:0; overflow:visible; }
+/* ขยายกล่อง section คอกเล็กให้ยื่นออกซ้าย-ขวา เข้าหาขอบกรอบเกม (ชดเชย margin/padding ของ #main) */
+.farm-section[data-seckey="small"]{ margin-left:-27px; margin-right:-27px; }
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
   display:grid; grid-template-columns:130px 1.08fr 1.06fr 0.8fr 86px;
   gap:4px; align-items:stretch; padding:15px 15px 16px;
@@ -5981,6 +5981,16 @@ const UPDATE_HISTORY = [
       'ซ่อนหัว section (farm-section-head) เฉพาะหมวดคอกเล็ก เพราะชื่อซ้ำกับในการ์ดแล้ว (หมวดอื่นยังมีหัวปกติ)',
       'เพิ่มหมายเลขกล่อง .pc-numbadge (ปุ่มดำขอบทอง) มุมซ้ายบนของการ์ด แสดงเลขหมวด · กดเพื่อสลับลำดับหมวดได้ (delegation → openSectionMoveModal ตาม sectionOrder.indexOf) · เลื่อนชื่อ (titlewrap padding-left 15px) ให้พ้น badge · ปรับ grid col1=130px',
       'ลดขนาดรูปคอกในช่อง thumbnail + จัดชิดล่าง (flex:1, align-items:flex-end, .pc-thumb-img 84%×76% bottom) เหลือที่ว่างด้านบนใต้ดาว ตามรูปต้นแบบ (ไม่แก้ไฟล์รูป)',
+      'ขยายการ์ดให้กว้างเต็มที่: เอา panel/border/padding ของ .farm-section[data-seckey=small] ออก (การ์ดมีกรอบในตัวแล้ว ไม่ต้องมีกรอบซ้อน) → การ์ดกว้างออกซ้าย-ขวาเต็มความกว้าง',
+    ],
+  },
+  {
+    version: '0.99',
+    date: '30/06/2026',
+    title: 'แก้วิธีขยายกล่อง section คอกเล็ก — ยื่นออกซ้าย-ขวาเข้าหาขอบกรอบเกม (คืน panel)',
+    details: [
+      'คืน panel/กรอบ/padding ของ .farm-section หมวดคอกเล็ก (v0.98 เอาออกผิดความหมาย)',
+      'ขยายทั้งกล่อง section ออกซ้าย-ขวาด้วย margin-left/right:-27px ชดเชยขอบ #main (max-width 500 ในกรอบเกม 585) → กล่องยื่นเข้าหาขอบกรอบเกม เหลือช่องว่าง ~7px แต่ละข้าง (เฉพาะหมวดคอกเล็ก ไม่กระทบ #main รวม/หมวดอื่น)',
     ],
   },
 ];
