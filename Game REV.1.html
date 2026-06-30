@@ -365,14 +365,14 @@ body{
 .farm-section[data-seckey="small"]{ background:none; border:none; box-shadow:none; }
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
   display:grid; grid-template-columns:140px 1.06fr 1.04fr 0.76fr 80px;
-  gap:4px; align-items:stretch; padding:15px 13px 16px;
+  gap:4px; align-items:stretch; padding:11px 13px 14px;
   background:linear-gradient(157deg,#fdf7e6 0%,#f6eccf 55%,#efe1bd 100%) padding-box,
     linear-gradient(145deg,#a9763a 0%,#7a4d1c 50%,#96632a 100%) border-box;
   border:3.5px solid transparent; border-radius:18px;
   box-shadow:0 7px 18px rgba(90,60,20,0.28), inset 0 2px 1px rgba(255,255,255,0.85),
     inset 0 -4px 9px rgba(150,110,50,0.18); }
 /* หมายเลขกล่อง (badge ปุ่มสีดำ) มุมซ้ายบนของการ์ด — กดสลับลำดับหมวดได้ */
-.pc-numbadge{ flex:0 0 auto; z-index:7;
+.pc-numbadge{ position:absolute; top:10px; left:10px; z-index:7;
   width:27px; height:27px; border-radius:50%; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   background:linear-gradient(158deg,#54463a 0%,#241a12 100%);
@@ -382,9 +382,9 @@ body{
 .pc-numbadge:active{ transform:scale(0.88); }
 /* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
 .pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
-.pc-titlewrap{ display:flex; align-items:center; gap:5px; width:100%; min-height:27px; }
-.pc-title{ flex:1; min-width:0; font-size:0.8rem; font-weight:900; color:#6a4512;
-  line-height:1.05; word-break:break-word; text-shadow:0 1px 0 rgba(255,255,255,0.6); }
+.pc-titlewrap{ display:flex; align-items:center; gap:5px; width:100%; padding-left:33px; }
+.pc-title{ flex:0 1 auto; min-width:0; font-size:0.8rem; font-weight:900; color:#6a4512;
+  line-height:1.05; white-space:nowrap; text-shadow:0 1px 0 rgba(255,255,255,0.6); }
 .pc-ribbon{ flex:0 0 auto; padding:2px 7px; border-radius:4px 4px 4px 0;
   font-size:0.5rem; font-weight:900; color:#fff; letter-spacing:0.5px;
   background:linear-gradient(135deg,#ff6a5a,#e2331f); box-shadow:0 2px 3px rgba(150,30,20,0.35); }
@@ -6033,6 +6033,15 @@ const UPDATE_HISTORY = [
     title: 'ขยายรูปคอกสัตว์เล็กให้ใหญ่ขึ้น อยู่กึ่งกลางซ้าย-ขวา ไม่ชนขอบ',
     details: [
       'ปรับ .pc-thumb-img เป็น width:96% height:100% (จากเดิม 90%×88%) — รูปคอกใหญ่ขึ้น จัดกึ่งกลาง เหลือช่องว่างซ้าย-ขวาเล็กน้อย ไม่ชนขอบ',
+    ],
+  },
+  {
+    version: '1.05',
+    date: '30/06/2026',
+    title: 'ย้ายหมายเลข badge ไปมุมบนซ้าย (เว้นระยะ) + ขยับชื่อ+ดาวขึ้น',
+    details: [
+      'เปลี่ยน .pc-numbadge กลับเป็น position:absolute top:10px left:10px (มุมบนซ้าย เว้นระยะ ไม่ชิด/ไม่ยื่นออกมุม)',
+      'ลด padding-top การ์ด 15→11px ขยับชื่อ+ดาวขึ้น · titlewrap padding-left:33px ให้ชื่อพ้น badge · .pc-title white-space:nowrap (flex:0 1 auto) กันชื่อตกบรรทัด',
     ],
   },
 ];
