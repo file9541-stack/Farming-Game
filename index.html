@@ -361,8 +361,6 @@ body{
 .ac-price-num{ font-size:0.66rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); }
 
 /* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
-/* ขยายกล่อง section คอกเล็กให้ยื่นออกซ้าย-ขวา เข้าหาขอบกรอบเกม (ชดเชย margin/padding ของ #main) */
-.farm-section[data-seckey="small"]{ margin-left:-27px; margin-right:-27px; }
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
   display:grid; grid-template-columns:130px 1.08fr 1.06fr 0.8fr 86px;
   gap:4px; align-items:stretch; padding:15px 15px 16px;
@@ -5991,6 +5989,14 @@ const UPDATE_HISTORY = [
     details: [
       'คืน panel/กรอบ/padding ของ .farm-section หมวดคอกเล็ก (v0.98 เอาออกผิดความหมาย)',
       'ขยายทั้งกล่อง section ออกซ้าย-ขวาด้วย margin-left/right:-27px ชดเชยขอบ #main (max-width 500 ในกรอบเกม 585) → กล่องยื่นเข้าหาขอบกรอบเกม เหลือช่องว่าง ~7px แต่ละข้าง (เฉพาะหมวดคอกเล็ก ไม่กระทบ #main รวม/หมวดอื่น)',
+    ],
+  },
+  {
+    version: '1.00',
+    date: '30/06/2026',
+    title: 'ยกเลิกการขยายกล่อง section คอกเล็ก — กลับเป็นความกว้างปกติเท่าหมวดอื่น',
+    details: [
+      'เอา rule margin-left/right:-27px ของ .farm-section[data-seckey=small] ออก (v0.99) ตามที่ผู้ใช้ขอกลับแบบเดิม → กล่องคอกเล็กกว้างเท่าหมวดอื่นในกรอบ #main ปกติ',
     ],
   },
 ];
