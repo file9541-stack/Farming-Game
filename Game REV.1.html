@@ -360,6 +360,56 @@ body{
 .ac-coin{ flex:0 0 auto; font-size:0.82rem; line-height:1; }
 .ac-price-num{ font-size:0.66rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); }
 
+/* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
+.pcard{ position:relative; width:100%; grid-column:1 / -1;
+  display:grid; grid-template-columns:116px 1.04fr 1.02fr 0.9fr 96px;
+  gap:6px; align-items:stretch; padding:20px 24px 22px;
+  background:url('ภาพหน้าจอ/pen-card-bg.png') center/100% 100% no-repeat;
+  filter:drop-shadow(0 6px 14px rgba(90,60,20,0.28)); }
+/* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
+.pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
+.pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; }
+.pc-title{ flex:1; min-width:0; font-size:0.8rem; font-weight:900; color:#6a4512;
+  line-height:1.05; word-break:break-word; text-shadow:0 1px 0 rgba(255,255,255,0.6); }
+.pc-ribbon{ flex:0 0 auto; padding:2px 7px; border-radius:4px 4px 4px 0;
+  font-size:0.5rem; font-weight:900; color:#fff; letter-spacing:0.5px;
+  background:linear-gradient(135deg,#ff6a5a,#e2331f); box-shadow:0 2px 3px rgba(150,30,20,0.35); }
+.pc-stars{ display:flex; gap:2px; }
+.pc-stars i{ width:17px; height:17px; background-position:center; background-repeat:no-repeat; background-size:contain; }
+.pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
+.pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
+.pc-thumb{ width:100%; aspect-ratio:1; margin-top:2px;
+  background:url('ภาพหน้าจอ/pen-thumb-frame.png') center/100% 100% no-repeat;
+  display:flex; align-items:center; justify-content:center; font-size:2.7rem;
+  padding-bottom:4px; }
+/* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
+.pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+.pc-colhead{ height:23px; display:flex; align-items:center; justify-content:center;
+  background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
+  font-size:0.62rem; font-weight:900; color:#fff; text-shadow:0 1px 2px rgba(20,70,10,0.55);
+  margin-bottom:1px; }
+.pc-row{ display:flex; align-items:center; gap:5px; min-width:0; }
+.pc-ric{ flex:0 0 auto; font-size:0.98rem; line-height:1; }
+.pc-rname{ flex:1; min-width:0; font-size:0.58rem; font-weight:700; color:#5a4020;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pc-rqty{ flex:0 0 auto; font-size:0.62rem; font-weight:800; color:#2f8a18; }
+/* คอลัมน์ 4: ข้อมูล (ใช้สไตล์ bc เดิม) */
+.pc-info{ display:flex; flex-direction:column; gap:5px; justify-content:center; }
+/* คอลัมน์ 5: ปุ่มเพิ่ม (รูปจริง) + ราคา */
+.pc-addcol{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  transition:transform 0.1s, filter 0.15s; }
+.pc-addcol:active{ transform:scale(0.95); filter:brightness(1.05); }
+.pc-add{ width:62px; height:62px; background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
+  filter:drop-shadow(0 4px 7px rgba(40,110,20,0.4)); }
+.pc-addlabel{ min-width:90px; height:26px; display:flex; align-items:center; justify-content:center;
+  padding:0 8px; background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
+  font-size:0.56rem; font-weight:900; color:#fff; text-align:center; line-height:1;
+  text-shadow:0 1px 2px rgba(20,70,10,0.55); }
+.pc-price{ min-width:90px; height:28px; display:flex; align-items:center; justify-content:center; gap:4px;
+  background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
+  font-size:0.74rem; font-weight:900; color:#fff; text-shadow:0 1px 2px rgba(20,70,10,0.55); }
+.pc-coin{ font-size:0.84rem; line-height:1; }
+
 .plot{
   aspect-ratio:1;background:var(--soil);
   border-radius:10px;border:2px solid var(--soil2);
@@ -4738,7 +4788,8 @@ const BUILD_CARD = {
   trees: { num:2, emoji:'🌳', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:1, fame:20, max:6, unit:'ต้น',
     produce:[{e:'🍎',n:'แอปเปิ้ล',q:3},{e:'🥭',n:'มะม่วง',q:4},{e:'🥥',n:'มะพร้าว',q:3}] },
   small: { num:1, emoji:'🐔', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
-    produce:[{e:'🥚',n:'ไข่',q:4},{e:'🪶',n:'ขน',q:1},{e:'🥩',n:'เนื้อ',q:1}] },
+    support:[{e:'🐔',n:'ไก่ไข่'},{e:'🦆',n:'เป็ด'},{e:'🪿',n:'ห่าน'},{e:'🐦',n:'นกกระทา'},{e:'➕',n:'อื่นๆ'}],
+    produce:[{e:'🥚',n:'ไข่',q:4},{e:'🥩',n:'เนื้อ',q:1},{e:'🪶',n:'ขน',q:1},{e:'🎁',n:'พิเศษ',q:1}] },
   big:   { num:2, emoji:'🐄', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:2, fame:30, max:3, unit:'หลัง',
     produce:[{e:'🥛',n:'นม',q:6},{e:'🥩',n:'เนื้อ',q:4},{e:'🟫',n:'หนัง',q:2}] },
   ponds: { num:3, emoji:'🐟', tag:'EVENT', tagcls:'tag-event', stars:3, labor:2, fame:40, max:2, unit:'บ่อ',
@@ -5786,6 +5837,17 @@ const UPDATE_HISTORY = [
       'ลบบรรทัดข้อมูลซ้ำ .sec-area-info (เช่น "ที่ดิน 1 ไร่ · 9 แปลงตายตัว · พร้อมปลูก/เก็บได้…" และ "100 ตร.ม./คอก · ก่อสร้าง…") ออกจากทุกหมวด เพราะการ์ด .bcard แสดงข้อมูลเหล่านี้ครบแล้ว',
       'คงหัว section (badge เลข ⓪/①… + อีโมจิ + ชื่อหมวด) ไว้ — ยังกด badge เพื่อสลับลำดับหมวดได้เหมือนเดิม · sec-build-list (รายการกำลังก่อสร้าง) ยังคงอยู่',
       'updateSpaceLabels คงไว้ (ไม่ลบ) — ลูป .sec-area-info กลายเป็น no-op อัตโนมัติเมื่อไม่มี element นั้นแล้ว',
+    ],
+  },
+  {
+    version: '0.87',
+    date: '30/06/2026',
+    title: 'การ์ดคอกสัตว์เล็กเวอร์ชันใหม่ (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) [เทสต้นแบบ]',
+    details: [
+      'นำไฟล์ UI จากโฟลเดอร์ 001 (branch main) มา process ตามข้อ 21: ตัดพื้นเทาปุ่ม 2 ไฟล์ด้วย saturation mask + ครอบ mask วงกลม/มุมโค้ง · crop กรอบครีม/ดาว · ย่อ+quantize ลง KB (card-bg 38KB · thumb 16KB · ปุ่ม 12/11KB · ดาว 4KB) ฝัง base64',
+      'เพิ่ม .pcard layout 5 คอลัมน์: [ชื่อ+ribbon NEW+ดาวรูปจริง+รูปกรอบครีม] · [รองรับ] · [ผลิตได้] · [ข้อมูล] · [ปุ่ม+รูปจริง / ป้าย / ราคา] — พื้นหลังการ์ดเป็นรูปกรอบครีมขอบน้ำตาล+เถาวัลย์',
+      'เพิ่มข้อมูล BUILD_CARD.small.support (ไก่ไข่/เป็ด/ห่าน/นกกระทา/อื่นๆ) + ปรับ produce เป็น 4 รายการ (ไข่/เนื้อ/ขน/ผลผลิตพิเศษ) ตามดีไซน์',
+      'เทสกับคอกสัตว์เล็กก่อนหมวดเดียว (renderAnimals → penCardV2Html("small")) · คอกใหญ่/บ่อ/พืช/ไม้ ยังใช้ .bcard เดิม · ปุ่มเพิ่มผูก .pc-addcol[data-addtype] ผ่าน delegation',
     ],
   },
 ];
@@ -7151,10 +7213,55 @@ function bcardHtml(type){
   </div>`;
 }
 
+// ── การ์ด v2 (รูป UI จริง) — เทสกับคอกสัตว์เล็กก่อน ──
+function penCardV2Html(type){
+  const m  = SECTION_META[type];
+  const c  = BUILD_CARD[type] || {};
+  const b  = BUILD_INFO[type] || {};
+  const area = SLOT_COST[type];
+  const built = builtCount(type);
+  let stars = '';
+  for(let i=0;i<5;i++) stars += `<i class="${i < (c.stars||0) ? 'on':'off'}"></i>`;
+  const support = (c.support||[]).map(p =>
+    `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span></div>`).join('');
+  const produce = (c.produce||[]).map(p =>
+    `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span><span class="pc-rqty">x${p.q}</span></div>`).join('');
+  return `<div class="pcard">
+    <div class="pc-left">
+      <div class="pc-titlewrap">
+        <div class="pc-title">${m.label}</div>
+        ${c.tag ? `<div class="pc-ribbon">${c.tag}</div>` : ''}
+      </div>
+      <div class="pc-stars">${stars}</div>
+      <div class="pc-thumb">${c.emoji||m.emoji}</div>
+    </div>
+    <div class="pc-col">
+      <div class="pc-colhead">รองรับ</div>
+      ${support}
+    </div>
+    <div class="pc-col">
+      <div class="pc-colhead">ผลิตได้</div>
+      ${produce}
+    </div>
+    <div class="pc-info">
+      <div class="bc-irow"><span class="bc-iic">🟩</span><div class="bc-itxt"><span class="bc-ilabel">ขนาดพื้นที่</span><span class="bc-ival">${area} ตร.ม.</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">⏱️</span><div class="bc-itxt"><span class="bc-ilabel">เวลาก่อสร้าง</span><span class="bc-ival">${fmtBuildTime(b.seconds||0)}</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">👷</span><div class="bc-itxt"><span class="bc-ilabel">ใช้แรงงาน</span><span class="bc-ival">${c.labor||1} คน</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">⭐</span><div class="bc-itxt"><span class="bc-ilabel">ชื่อเสียง</span><span class="bc-ival">+${c.fame||0}</span></div></div>
+      <div class="bc-irow"><span class="bc-iic">🏠</span><div class="bc-itxt"><span class="bc-ilabel">สร้างแล้ว</span><span class="bc-ival">${built} / ${c.max||0} ${c.unit||''}</span></div></div>
+    </div>
+    <div class="pc-addcol" data-addtype="${type}">
+      <div class="pc-add"></div>
+      <div class="pc-addlabel">เพิ่ม${m.label}</div>
+      <div class="pc-price"><span class="pc-coin">🪙</span><span>${(b.money||0).toLocaleString('th-TH')}</span></div>
+    </div>
+  </div>`;
+}
+
 function renderAnimals(){
   const smallGrid = document.getElementById('small-grid');
   const bigGrid   = document.getElementById('big-grid');
-  if(smallGrid){ smallGrid.innerHTML = bcardHtml('small'); }
+  if(smallGrid){ smallGrid.innerHTML = penCardV2Html('small'); }  // เทสการ์ด v2 (รูปจริง)
   if(bigGrid){   bigGrid.innerHTML   = bcardHtml('big'); }
 }
 
@@ -9988,6 +10095,12 @@ farmContainer.addEventListener('click', function(e){
   const addCell = e.target.closest('.slot-add-cell');
   if(addCell){
     if(addCell.dataset.addtype) startConstruction(addCell.dataset.addtype);
+    return;
+  }
+  // ปุ่มเพิ่มในการ์ด v2 (.pcard) — สั่งก่อสร้าง
+  const pAdd = e.target.closest('.pc-addcol');
+  if(pAdd){
+    if(pAdd.dataset.addtype) startConstruction(pAdd.dataset.addtype);
     return;
   }
   // กล่องเล็ก (ปุ่มเพิ่ม) ในการ์ดสิ่งปลูกสร้างแบบใหม่ — สั่งก่อสร้าง
