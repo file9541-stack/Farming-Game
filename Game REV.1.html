@@ -362,8 +362,8 @@ body{
 
 /* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
-  display:grid; grid-template-columns:116px 1.04fr 1.02fr 0.9fr 96px;
-  gap:6px; align-items:stretch; padding:15px 17px 16px;
+  display:grid; grid-template-columns:114px 1.12fr 1.1fr 0.82fr 88px;
+  gap:4px; align-items:stretch; padding:15px 15px 16px;
   background:linear-gradient(157deg,#fdf7e6 0%,#f6eccf 55%,#efe1bd 100%) padding-box,
     linear-gradient(145deg,#a9763a 0%,#7a4d1c 50%,#96632a 100%) border-box;
   border:3.5px solid transparent; border-radius:18px;
@@ -388,6 +388,10 @@ body{
   background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+/* เส้นแบ่งตั้งบางๆ ระหว่างคอลัมน์ (จางหายตรงหัว-ท้าย) */
+.pc-col, .pc-info{ border-left:1.5px solid transparent;
+  border-image:linear-gradient(to bottom, transparent 6%, rgba(150,108,52,0.42) 24%, rgba(150,108,52,0.42) 76%, transparent 94%) 1;
+  padding-left:8px; }
 .pc-colhead{ height:23px; display:flex; align-items:center; justify-content:center;
   font-size:0.66rem; font-weight:900; color:#3a8a1c;
   margin-bottom:1px; }
@@ -5926,6 +5930,15 @@ const UPDATE_HISTORY = [
     title: 'เอาเส้นขอบในบางๆ (::after) ออกจากกรอบการ์ดคอกเล็ก',
     details: [
       'ลบ .pcard::after และ .pc-addcol::after (เส้นขอบในบางๆ) ออก — เหลือเส้นกรอบน้ำตาลเส้นเดียวสะอาดทั้งกรอบใหญ่และกรอบเล็ก',
+    ],
+  },
+  {
+    version: '0.96',
+    date: '30/06/2026',
+    title: 'เพิ่มเส้นแบ่งตั้งบางๆ ระหว่างคอลัมน์ (รองรับ | ผลิตได้ | ข้อมูล) ด้วย CSS',
+    details: [
+      'ใส่ border-left ที่ .pc-col และ .pc-info เป็นเส้นแบ่งตั้ง ใช้ border-image:linear-gradient แนวตั้งให้จางหายตรงหัว-ท้าย (โทนน้ำตาลจาง rgba(150,108,52,0.42)) + padding-left 8px',
+      'ปรับ grid-template-columns ชดเชยความกว้างที่เสียจาก padding เส้นแบ่ง (114px·1.12fr·1.1fr·0.82fr·88px, gap 4px) — ชื่อทุกรายการเต็มไม่โดนตัด ชื่อหัวการ์ดบรรทัดเดียว',
     ],
   },
 ];
