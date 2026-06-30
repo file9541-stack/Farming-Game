@@ -381,6 +381,8 @@ body{
 .pc-thumb{ width:100%; aspect-ratio:1; margin-top:2px;
   display:flex; align-items:center; justify-content:center; font-size:3rem;
   padding-bottom:4px; }
+.pc-thumb-img{ width:100%; height:100%; background-position:center; background-repeat:no-repeat;
+  background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
 .pc-colhead{ height:23px; display:flex; align-items:center; justify-content:center;
@@ -4785,7 +4787,7 @@ const BUILD_CARD = {
     produce:[{e:'🌾',n:'ข้าวสาลี',q:1},{e:'🌽',n:'ข้าวโพด',q:1},{e:'🥕',n:'แครอต',q:1}] },
   trees: { num:2, emoji:'🌳', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:1, fame:20, max:6, unit:'ต้น',
     produce:[{e:'🍎',n:'แอปเปิ้ล',q:3},{e:'🥭',n:'มะม่วง',q:4},{e:'🥥',n:'มะพร้าว',q:3}] },
-  small: { num:1, emoji:'🐔', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
+  small: { num:1, emoji:'🐔', thumb:'ภาพหน้าจอ/pen-small-coop.png', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
     support:[{e:'🐔',n:'ไก่ไข่'},{e:'🦆',n:'เป็ด'},{e:'🪿',n:'ห่าน'},{e:'🐦',n:'นกกระทา'},{e:'➕',n:'อื่นๆ'}],
     produce:[{e:'🥚',n:'ไข่',q:4},{e:'🥩',n:'เนื้อ',q:1},{e:'🪶',n:'ขน',q:1},{e:'🎁',n:'พิเศษ',q:1}] },
   big:   { num:2, emoji:'🐄', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:2, fame:30, max:3, unit:'หลัง',
@@ -5873,6 +5875,15 @@ const UPDATE_HISTORY = [
     details: [
       'ลบพื้นหลังรูปปุ่ม pill เขียว ui-btn-pill.png ออกจาก .pc-colhead (รองรับ/ผลิตได้) · .pc-addlabel (เพิ่มคอกสัตว์เล็ก) · .pc-price (ราคา) — เหลือเฉพาะตัวอักษร',
       'เปลี่ยนสีฟอนต์เป็นเขียวเข้ม #3a8a1c (อ่านออกบนพื้นครีม) + ตัด text-shadow ของพื้นเขียวเดิม · ไฟล์ ui-btn-pill.png เลิกใช้ (build เลิกฝังอัตโนมัติ)',
+    ],
+  },
+  {
+    version: '0.91',
+    date: '30/06/2026',
+    title: 'ใส่รูปคอกสัตว์เล็กจริง (โรงเรือนไก่) แทนอีโมจิ 🐔 ในช่อง thumbnail',
+    details: [
+      'นำรูปคอกไก่จากโฟลเดอร์ 001 (Generated image 1 (1)-Photoroom01) มา process (crop โปร่ง + ย่อ 248px + quantize 64 สี ~64KB) ฝัง base64 เป็น ภาพหน้าจอ/pen-small-coop.png',
+      'เพิ่มฟิลด์ BUILD_CARD.small.thumb ชี้ไฟล์รูป · penCardV2Html: ถ้ามี c.thumb เรนเดอร์ .pc-thumb-img (background contain + drop-shadow) ไม่งั้น fallback อีโมจิเดิม',
     ],
   },
 ];
@@ -7258,7 +7269,7 @@ function penCardV2Html(type){
         ${c.tag ? `<div class="pc-ribbon">${c.tag}</div>` : ''}
       </div>
       <div class="pc-stars">${stars}</div>
-      <div class="pc-thumb">${c.emoji||m.emoji}</div>
+      <div class="pc-thumb">${c.thumb ? `<span class="pc-thumb-img" style="background-image:url('${c.thumb}')"></span>` : (c.emoji||m.emoji)}</div>
     </div>
     <div class="pc-col">
       <div class="pc-colhead">รองรับ</div>
