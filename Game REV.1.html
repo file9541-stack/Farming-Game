@@ -393,8 +393,8 @@ body{
 .pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
 .pc-thumb{ width:100%; flex:1; min-height:60px; margin-top:4px;
-  display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
-.pc-thumb-img{ width:96%; height:100%; background-position:center center; background-repeat:no-repeat;
+  display:flex; align-items:center; justify-content:flex-start; font-size:2.5rem; }
+.pc-thumb-img{ width:108%; height:108%; margin-left:-8px; background-position:left center; background-repeat:no-repeat;
   background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
@@ -6042,6 +6042,14 @@ const UPDATE_HISTORY = [
     details: [
       'เปลี่ยน .pc-numbadge กลับเป็น position:absolute top:10px left:10px (มุมบนซ้าย เว้นระยะ ไม่ชิด/ไม่ยื่นออกมุม)',
       'ลด padding-top การ์ด 15→11px ขยับชื่อ+ดาวขึ้น · titlewrap padding-left:33px ให้ชื่อพ้น badge · .pc-title white-space:nowrap (flex:0 1 auto) กันชื่อตกบรรทัด',
+    ],
+  },
+  {
+    version: '1.06',
+    date: '30/06/2026',
+    title: 'ขยายรูปคอกอีกนิด + ขยับไปทางซ้าย',
+    details: [
+      'ปรับ .pc-thumb-img เป็น width/height:108% + margin-left:-8px · .pc-thumb justify-content:flex-start, background-position:left center — รูปคอกใหญ่ขึ้นและเยื้องไปทางซ้าย',
     ],
   },
 ];
