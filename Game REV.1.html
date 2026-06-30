@@ -385,7 +385,8 @@ body{
   display:flex; align-items:center; justify-content:center; font-size:3rem;
   padding-bottom:4px; }
 .pc-thumb-img{ width:100%; height:100%; background-position:center; background-repeat:no-repeat;
-  background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
+  background-size:contain; transform:scale(1.22); transform-origin:center bottom;
+  filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
 /* เส้นแบ่งตั้งบางๆ ระหว่างคอลัมน์ (จางหายตรงหัว-ท้าย) */
@@ -400,18 +401,30 @@ body{
 .pc-rname{ flex:1; min-width:0; font-size:0.58rem; font-weight:700; color:#5a4020;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pc-rqty{ flex:0 0 auto; font-size:0.62rem; font-weight:800; color:#2f8a18; }
+/* แถวอื่นๆ — hover โชว์แถบลอย "รอการพัฒนา" */
+.pc-row-soon{ position:relative; cursor:help; }
+.pc-row-soon .pc-tip{ position:absolute; left:0; bottom:calc(100% + 7px); z-index:50;
+  white-space:nowrap; padding:5px 9px; border-radius:8px;
+  background:linear-gradient(160deg,#4a3216,#2c1d0c); color:#ffe9b8;
+  font-size:0.56rem; font-weight:700; letter-spacing:0.2px;
+  box-shadow:0 4px 10px rgba(40,25,5,0.4); border:1px solid rgba(255,220,150,0.35);
+  opacity:0; transform:translateY(4px); pointer-events:none; transition:opacity 0.15s, transform 0.15s; }
+.pc-row-soon .pc-tip::after{ content:''; position:absolute; top:100%; left:16px;
+  border:5px solid transparent; border-top-color:#2c1d0c; }
+.pc-row-soon:hover .pc-tip{ opacity:1; transform:translateY(0); }
 /* คอลัมน์ 4: ข้อมูล (ใช้สไตล์ bc เดิม) */
 .pc-info{ display:flex; flex-direction:column; gap:5px; justify-content:center; }
 /* คอลัมน์ 5: ปุ่มเพิ่ม (รูปจริง) + ราคา */
 .pc-addcol{ position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; cursor:pointer;
   padding:13px 11px;
-  background:linear-gradient(157deg,#ead6a6 0%,#dcc488 55%,#cdb074 100%) padding-box,
-    linear-gradient(145deg,#956129 0%,#683f17 50%,#855526 100%) border-box;
+  transform:translateX(7px);
+  background:linear-gradient(157deg,#f7ecd4 0%,#eedfba 55%,#e6d2a6 100%) padding-box,
+    linear-gradient(145deg,#a9763a 0%,#7a4d1c 50%,#96632a 100%) border-box;
   border:3px solid transparent; border-radius:14px;
-  box-shadow:0 4px 10px rgba(90,60,20,0.26), inset 0 2px 1px rgba(255,255,255,0.55),
-    inset 0 -4px 8px rgba(120,85,35,0.28);
+  box-shadow:0 4px 10px rgba(90,60,20,0.22), inset 0 2px 1px rgba(255,255,255,0.6),
+    inset 0 -4px 8px rgba(150,110,50,0.18);
   transition:transform 0.1s, filter 0.15s; }
-.pc-addcol:active{ transform:scale(0.97); filter:brightness(1.05); }
+.pc-addcol:active{ transform:translateX(7px) scale(0.97); filter:brightness(1.05); }
 .pc-add{ width:58px; height:58px;
   background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
   filter:drop-shadow(0 4px 7px rgba(40,110,20,0.4)); }
@@ -4799,7 +4812,7 @@ const BUILD_CARD = {
   trees: { num:2, emoji:'🌳', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:1, fame:20, max:6, unit:'ต้น',
     produce:[{e:'🍎',n:'แอปเปิ้ล',q:3},{e:'🥭',n:'มะม่วง',q:4},{e:'🥥',n:'มะพร้าว',q:3}] },
   small: { num:1, emoji:'🐔', thumb:'ภาพหน้าจอ/pen-small-coop.png', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
-    support:[{e:'🐔',n:'ไก่ไข่'},{e:'🦆',n:'เป็ด'},{e:'🪿',n:'ห่าน'},{e:'🐦',n:'นกกระทา'},{e:'➕',n:'อื่นๆ'}],
+    support:[{e:'🐔',n:'ไก่ไข่'},{e:'🦆',n:'เป็ด'},{e:'🪿',n:'ห่าน'},{e:'🐦',n:'นกกระทา'},{e:'➕',n:'อื่นๆ',soon:'🔒 รอการพัฒนา — เตรียมรองรับสัตว์ปีกอื่นๆ'}],
     produce:[{e:'🥚',n:'ไข่',q:4},{e:'🥩',n:'เนื้อ',q:1},{e:'🪶',n:'ขน',q:1},{e:'🎁',n:'พิเศษ',q:1}] },
   big:   { num:2, emoji:'🐄', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:2, fame:30, max:3, unit:'หลัง',
     produce:[{e:'🥛',n:'นม',q:6},{e:'🥩',n:'เนื้อ',q:4},{e:'🟫',n:'หนัง',q:2}] },
@@ -5939,6 +5952,16 @@ const UPDATE_HISTORY = [
     details: [
       'ใส่ border-left ที่ .pc-col และ .pc-info เป็นเส้นแบ่งตั้ง ใช้ border-image:linear-gradient แนวตั้งให้จางหายตรงหัว-ท้าย (โทนน้ำตาลจาง rgba(150,108,52,0.42)) + padding-left 8px',
       'ปรับ grid-template-columns ชดเชยความกว้างที่เสียจาก padding เส้นแบ่ง (114px·1.12fr·1.1fr·0.82fr·88px, gap 4px) — ชื่อทุกรายการเต็มไม่โดนตัด ชื่อหัวการ์ดบรรทัดเดียว',
+    ],
+  },
+  {
+    version: '0.97',
+    date: '30/06/2026',
+    title: 'การ์ดคอกเล็ก: ขยายรูปคอก + tooltip "อื่นๆ" (รอการพัฒนา) + ปรับกล่องปุ่มเพิ่ม',
+    details: [
+      'ขยายรูปคอกสัตว์เล็กในช่อง thumbnail (.pc-thumb-img transform:scale(1.22) origin center bottom)',
+      'แถว "อื่นๆ" ในรองรับ: เพิ่ม flag soon ใน BUILD_CARD.small.support → hover โชว์แถบลอย .pc-tip "🔒 รอการพัฒนา — เตรียมรองรับสัตว์ปีกอื่นๆ" (CSS ล้วน ไม่ใช้ JS) เตรียมไว้สำหรับเพิ่มสัตว์ปีกในอนาคต',
+      'กล่องปุ่มเพิ่ม (.pc-addcol): ลดความเข้มพื้นหลัง (gradient ครีมอ่อนขึ้น #f7ecd4→#e6d2a6) · เปลี่ยนสีกรอบเป็นน้ำตาล (โทนเดียวกับกรอบใหญ่) · ขยับไปขวา transform:translateX(7px)',
     ],
   },
 ];
@@ -7314,7 +7337,9 @@ function penCardV2Html(type){
   let stars = '';
   for(let i=0;i<5;i++) stars += `<i class="${i < (c.stars||0) ? 'on':'off'}"></i>`;
   const support = (c.support||[]).map(p =>
-    `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span></div>`).join('');
+    p.soon
+      ? `<div class="pc-row pc-row-soon"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span><span class="pc-tip">${p.soon}</span></div>`
+      : `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span></div>`).join('');
   const produce = (c.produce||[]).map(p =>
     `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span><span class="pc-rqty">x${p.q}</span></div>`).join('');
   return `<div class="pcard">
