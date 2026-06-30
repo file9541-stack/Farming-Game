@@ -364,16 +364,16 @@ body{
 /* หมวดคอกเล็ก: เอา panel พื้นหลังจางๆ ของ section ออก (การ์ดมีกรอบในตัวแล้ว) — คงความกว้าง/padding เดิม */
 .farm-section[data-seckey="small"]{ background:none; border:none; box-shadow:none; }
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
-  display:grid; grid-template-columns:130px 1.08fr 1.06fr 0.8fr 86px;
-  gap:4px; align-items:stretch; padding:15px 15px 16px;
+  display:grid; grid-template-columns:140px 1.06fr 1.04fr 0.76fr 80px;
+  gap:4px; align-items:stretch; padding:15px 13px 16px;
   background:linear-gradient(157deg,#fdf7e6 0%,#f6eccf 55%,#efe1bd 100%) padding-box,
     linear-gradient(145deg,#a9763a 0%,#7a4d1c 50%,#96632a 100%) border-box;
   border:3.5px solid transparent; border-radius:18px;
   box-shadow:0 7px 18px rgba(90,60,20,0.28), inset 0 2px 1px rgba(255,255,255,0.85),
     inset 0 -4px 9px rgba(150,110,50,0.18); }
 /* หมายเลขกล่อง (badge ปุ่มสีดำ) มุมซ้ายบนของการ์ด — กดสลับลำดับหมวดได้ */
-.pc-numbadge{ position:absolute; top:-9px; left:-9px; z-index:7;
-  width:30px; height:30px; border-radius:50%; cursor:pointer;
+.pc-numbadge{ flex:0 0 auto; z-index:7;
+  width:27px; height:27px; border-radius:50%; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   background:linear-gradient(158deg,#54463a 0%,#241a12 100%);
   border:2px solid #e2c489; color:#ffeec2; font-size:0.86rem; font-weight:900;
@@ -382,7 +382,7 @@ body{
 .pc-numbadge:active{ transform:scale(0.88); }
 /* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
 .pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
-.pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; padding-left:15px; }
+.pc-titlewrap{ display:flex; align-items:center; gap:5px; width:100%; min-height:27px; }
 .pc-title{ flex:1; min-width:0; font-size:0.8rem; font-weight:900; color:#6a4512;
   line-height:1.05; word-break:break-word; text-shadow:0 1px 0 rgba(255,255,255,0.6); }
 .pc-ribbon{ flex:0 0 auto; padding:2px 7px; border-radius:4px 4px 4px 0;
@@ -393,8 +393,8 @@ body{
 .pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
 .pc-thumb{ width:100%; flex:1; min-height:60px; margin-top:4px;
-  display:flex; align-items:flex-end; justify-content:center; font-size:2.5rem; }
-.pc-thumb-img{ width:84%; height:76%; background-position:center bottom; background-repeat:no-repeat;
+  display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
+.pc-thumb-img{ width:90%; height:88%; background-position:center center; background-repeat:no-repeat;
   background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
@@ -407,7 +407,7 @@ body{
   margin-bottom:1px; }
 .pc-row{ display:flex; align-items:center; gap:5px; min-width:0; }
 .pc-ric{ flex:0 0 auto; font-size:0.98rem; line-height:1; }
-.pc-rname{ flex:1; min-width:0; font-size:0.58rem; font-weight:700; color:#5a4020;
+.pc-rname{ flex:1; min-width:0; font-size:0.55rem; font-weight:700; color:#5a4020;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pc-rqty{ flex:0 0 auto; font-size:0.62rem; font-weight:800; color:#2f8a18; }
 /* แถวอื่นๆ — hover โชว์แถบลอย "รอการพัฒนา" */
@@ -6009,6 +6009,16 @@ const UPDATE_HISTORY = [
       'ใส่ .farm-section[data-seckey=small]{ background:none; border:none; box-shadow:none; } — เอ panel พื้นหลังจาง+กรอบ+เงาของ section ออก เพราะการ์ดมีกรอบในตัวแล้ว (ไม่ซ้อนกรอบ) · ยังเก็บ padding ไว้ การ์ดจึงกว้าง/ตำแหน่งเท่าเดิม ไม่ขยับ',
     ],
   },
+  {
+    version: '1.02',
+    date: '30/06/2026',
+    title: 'ย้ายหมายเลข badge เข้ามาในกล่อง (inline ซ้ายของชื่อ) + จัดรูปคอกให้อยู่กึ่งกลาง',
+    details: [
+      'ย้าย .pc-numbadge จาก absolute มุมการ์ด → เป็น inline ในแถวชื่อ (.pc-titlewrap) เรียง [เลข][ชื่อ][NEW] อยู่ในกล่องไม่ยื่นออกมุม',
+      'จัดรูปคอกในช่อง thumbnail ให้อยู่กึ่งกลาง (.pc-thumb align-items:center · .pc-thumb-img 90%×88% center) ขึ้นจากชิดล่าง',
+      'ปรับ grid col1=140px + ลดฟอนต์ชื่อรายการเป็น 0.55rem ชดเชยความกว้าง — ชื่อหัวการ์ดบรรทัดเดียว + รายการ (นกกระทา/พิเศษ) เต็มไม่โดนตัด',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7391,9 +7401,9 @@ function penCardV2Html(type){
     `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span><span class="pc-rqty">x${p.q}</span></div>`).join('');
   const secidx = (typeof sectionOrder!=='undefined') ? sectionOrder.indexOf(type) : -1;
   return `<div class="pcard">
-    <div class="pc-numbadge" data-secidx="${secidx}">${c.num||''}</div>
     <div class="pc-left">
       <div class="pc-titlewrap">
+        <div class="pc-numbadge" data-secidx="${secidx}">${c.num||''}</div>
         <div class="pc-title">${m.label}</div>
         ${c.tag ? `<div class="pc-ribbon">${c.tag}</div>` : ''}
       </div>
