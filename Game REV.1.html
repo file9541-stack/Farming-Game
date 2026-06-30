@@ -388,13 +388,13 @@ body{
 .pc-ribbon{ flex:0 0 auto; padding:2px 7px; border-radius:4px 4px 4px 0;
   font-size:0.5rem; font-weight:900; color:#fff; letter-spacing:0.5px;
   background:linear-gradient(135deg,#ff6a5a,#e2331f); box-shadow:0 2px 3px rgba(150,30,20,0.35); }
-.pc-stars{ display:flex; gap:2px; }
+.pc-stars{ display:flex; gap:2px; padding-left:32px; margin-top:-4px; }
 .pc-stars i{ width:17px; height:17px; background-position:center; background-repeat:no-repeat; background-size:contain; }
 .pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
 .pc-thumb{ width:100%; flex:1; min-height:60px; margin-top:4px;
   display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
-.pc-thumb-img{ width:90%; height:88%; background-position:center center; background-repeat:no-repeat;
+.pc-thumb-img{ width:96%; height:100%; background-position:center center; background-repeat:no-repeat;
   background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
@@ -6017,6 +6017,22 @@ const UPDATE_HISTORY = [
       'ย้าย .pc-numbadge จาก absolute มุมการ์ด → เป็น inline ในแถวชื่อ (.pc-titlewrap) เรียง [เลข][ชื่อ][NEW] อยู่ในกล่องไม่ยื่นออกมุม',
       'จัดรูปคอกในช่อง thumbnail ให้อยู่กึ่งกลาง (.pc-thumb align-items:center · .pc-thumb-img 90%×88% center) ขึ้นจากชิดล่าง',
       'ปรับ grid col1=140px + ลดฟอนต์ชื่อรายการเป็น 0.55rem ชดเชยความกว้าง — ชื่อหัวการ์ดบรรทัดเดียว + รายการ (นกกระทา/พิเศษ) เต็มไม่โดนตัด',
+    ],
+  },
+  {
+    version: '1.03',
+    date: '30/06/2026',
+    title: 'เยื้องแถวดาวให้เริ่มใต้ชื่อ (พ้นวงกลมเลข)',
+    details: [
+      'เพิ่ม padding-left:32px ที่ .pc-stars → ดาวเริ่มตรงใต้ชื่อ "คอกสัตว์เล็ก" (เยื้องพ้นวงกลมหมายเลข) แทนที่จะเริ่มใต้เลข · margin-top:-4px ขยับดาวขึ้นใกล้ชื่ออีกนิด (ไม่ชนประโยคบน)',
+    ],
+  },
+  {
+    version: '1.04',
+    date: '30/06/2026',
+    title: 'ขยายรูปคอกสัตว์เล็กให้ใหญ่ขึ้น อยู่กึ่งกลางซ้าย-ขวา ไม่ชนขอบ',
+    details: [
+      'ปรับ .pc-thumb-img เป็น width:96% height:100% (จากเดิม 90%×88%) — รูปคอกใหญ่ขึ้น จัดกึ่งกลาง เหลือช่องว่างซ้าย-ขวาเล็กน้อย ไม่ชนขอบ',
     ],
   },
 ];
