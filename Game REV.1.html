@@ -369,8 +369,6 @@ body{
   border:3.5px solid transparent; border-radius:18px;
   box-shadow:0 7px 18px rgba(90,60,20,0.28), inset 0 2px 1px rgba(255,255,255,0.85),
     inset 0 -4px 9px rgba(150,110,50,0.18); }
-.pcard::after{ content:''; position:absolute; inset:4px; pointer-events:none;
-  border:1.4px solid rgba(120,80,35,0.45); border-radius:13px; }
 /* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
 .pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
 .pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; }
@@ -409,8 +407,6 @@ body{
   box-shadow:0 4px 10px rgba(90,60,20,0.26), inset 0 2px 1px rgba(255,255,255,0.55),
     inset 0 -4px 8px rgba(120,85,35,0.28);
   transition:transform 0.1s, filter 0.15s; }
-.pc-addcol::after{ content:''; position:absolute; inset:3px; pointer-events:none;
-  border:1.3px solid rgba(105,68,28,0.5); border-radius:10px; }
 .pc-addcol:active{ transform:scale(0.97); filter:brightness(1.05); }
 .pc-add{ width:58px; height:58px;
   background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
@@ -5922,6 +5918,14 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนเส้นกรอบจากทอง → น้ำตาลเข้ม (ทองจางมองไม่ชัด)',
     details: [
       'ปรับ gradient เส้นกรอบ (border-box) เป็นโทนน้ำตาลเข้ม: .pcard #a9763a→#7a4d1c→#96632a · .pc-addcol เข้มกว่า #956129→#683f17→#855526 · เส้นขอบใน ::after เป็นน้ำตาลเข้มด้วย — คมชัดขึ้น ไม่เลือน',
+    ],
+  },
+  {
+    version: '0.95',
+    date: '30/06/2026',
+    title: 'เอาเส้นขอบในบางๆ (::after) ออกจากกรอบการ์ดคอกเล็ก',
+    details: [
+      'ลบ .pcard::after และ .pc-addcol::after (เส้นขอบในบางๆ) ออก — เหลือเส้นกรอบน้ำตาลเส้นเดียวสะอาดทั้งกรอบใหญ่และกรอบเล็ก',
     ],
   },
 ];
