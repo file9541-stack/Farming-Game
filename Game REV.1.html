@@ -384,8 +384,7 @@ body{
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
 .pc-colhead{ height:23px; display:flex; align-items:center; justify-content:center;
-  background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
-  font-size:0.62rem; font-weight:900; color:#fff; text-shadow:0 1px 2px rgba(20,70,10,0.55);
+  font-size:0.66rem; font-weight:900; color:#3a8a1c;
   margin-bottom:1px; }
 .pc-row{ display:flex; align-items:center; gap:5px; min-width:0; }
 .pc-ric{ flex:0 0 auto; font-size:0.98rem; line-height:1; }
@@ -404,12 +403,9 @@ body{
   background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
   filter:drop-shadow(0 4px 7px rgba(40,110,20,0.4)); }
 .pc-addlabel{ min-width:90px; height:26px; display:flex; align-items:center; justify-content:center;
-  padding:0 8px; background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
-  font-size:0.56rem; font-weight:900; color:#fff; text-align:center; line-height:1;
-  text-shadow:0 1px 2px rgba(20,70,10,0.55); }
+  padding:0 8px; font-size:0.58rem; font-weight:900; color:#3a8a1c; text-align:center; line-height:1; }
 .pc-price{ min-width:90px; height:28px; display:flex; align-items:center; justify-content:center; gap:4px;
-  background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
-  font-size:0.74rem; font-weight:900; color:#fff; text-shadow:0 1px 2px rgba(20,70,10,0.55); }
+  font-size:0.78rem; font-weight:900; color:#3a8a1c; }
 .pc-coin{ font-size:0.84rem; line-height:1; }
 
 .plot{
@@ -5868,6 +5864,15 @@ const UPDATE_HISTORY = [
     details: [
       'ย้ายพื้นหลังกรอบครีม pen-thumb-frame.png จาก .pc-add → เป็นพื้นหลังของ .pc-addcol ทั้งกล่อง (ใส่ padding 14×12) ครอบ ปุ่ม ➕ + ป้าย "เพิ่มคอกสัตว์เล็ก" + ราคา 🪙 1,000 ไว้ในกรอบเดียว',
       '.pc-add กลับเป็นปุ่ม ➕ เดี่ยว (58px) ไม่มีกรอบของตัวเอง',
+    ],
+  },
+  {
+    version: '0.90',
+    date: '30/06/2026',
+    title: 'เอากล่อง UI เขียว (ui-btn-pill) ออกจากหัวรองรับ/ผลิตได้ + ป้ายเพิ่ม + ราคา เหลือแค่ตัวอักษร',
+    details: [
+      'ลบพื้นหลังรูปปุ่ม pill เขียว ui-btn-pill.png ออกจาก .pc-colhead (รองรับ/ผลิตได้) · .pc-addlabel (เพิ่มคอกสัตว์เล็ก) · .pc-price (ราคา) — เหลือเฉพาะตัวอักษร',
+      'เปลี่ยนสีฟอนต์เป็นเขียวเข้ม #3a8a1c (อ่านออกบนพื้นครีม) + ตัด text-shadow ของพื้นเขียวเดิม · ไฟล์ ui-btn-pill.png เลิกใช้ (build เลิกฝังอัตโนมัติ)',
     ],
   },
 ];
