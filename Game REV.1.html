@@ -361,17 +361,28 @@ body{
 .ac-price-num{ font-size:0.66rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); }
 
 /* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
+/* หมวดคอกเล็กมีกรอบในตัวการ์ดแล้ว → เอา panel/padding ของ section นอกออก ให้การ์ดกว้างเต็มที่ */
+.farm-section[data-seckey="small"]{ border:none; background:none; box-shadow:none; padding:0; overflow:visible; }
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
-  display:grid; grid-template-columns:114px 1.12fr 1.1fr 0.82fr 88px;
+  display:grid; grid-template-columns:130px 1.08fr 1.06fr 0.8fr 86px;
   gap:4px; align-items:stretch; padding:15px 15px 16px;
   background:linear-gradient(157deg,#fdf7e6 0%,#f6eccf 55%,#efe1bd 100%) padding-box,
     linear-gradient(145deg,#a9763a 0%,#7a4d1c 50%,#96632a 100%) border-box;
   border:3.5px solid transparent; border-radius:18px;
   box-shadow:0 7px 18px rgba(90,60,20,0.28), inset 0 2px 1px rgba(255,255,255,0.85),
     inset 0 -4px 9px rgba(150,110,50,0.18); }
+/* หมายเลขกล่อง (badge ปุ่มสีดำ) มุมซ้ายบนของการ์ด — กดสลับลำดับหมวดได้ */
+.pc-numbadge{ position:absolute; top:-9px; left:-9px; z-index:7;
+  width:30px; height:30px; border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(158deg,#54463a 0%,#241a12 100%);
+  border:2px solid #e2c489; color:#ffeec2; font-size:0.86rem; font-weight:900;
+  box-shadow:0 3px 7px rgba(25,16,6,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+  transition:transform 0.1s; }
+.pc-numbadge:active{ transform:scale(0.88); }
 /* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
 .pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
-.pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; }
+.pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; padding-left:15px; }
 .pc-title{ flex:1; min-width:0; font-size:0.8rem; font-weight:900; color:#6a4512;
   line-height:1.05; word-break:break-word; text-shadow:0 1px 0 rgba(255,255,255,0.6); }
 .pc-ribbon{ flex:0 0 auto; padding:2px 7px; border-radius:4px 4px 4px 0;
@@ -381,12 +392,10 @@ body{
 .pc-stars i{ width:17px; height:17px; background-position:center; background-repeat:no-repeat; background-size:contain; }
 .pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
-.pc-thumb{ width:100%; aspect-ratio:1; margin-top:2px;
-  display:flex; align-items:center; justify-content:center; font-size:3rem;
-  padding-bottom:4px; }
-.pc-thumb-img{ width:100%; height:100%; background-position:center; background-repeat:no-repeat;
-  background-size:contain; transform:scale(1.22); transform-origin:center bottom;
-  filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
+.pc-thumb{ width:100%; flex:1; min-height:60px; margin-top:4px;
+  display:flex; align-items:flex-end; justify-content:center; font-size:2.5rem; }
+.pc-thumb-img{ width:84%; height:76%; background-position:center bottom; background-repeat:no-repeat;
+  background-size:contain; filter:drop-shadow(0 3px 5px rgba(90,60,20,0.28)); }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
 /* เส้นแบ่งตั้งบางๆ ระหว่างคอลัมน์ (จางหายตรงหัว-ท้าย) */
@@ -5964,6 +5973,17 @@ const UPDATE_HISTORY = [
       'กล่องปุ่มเพิ่ม (.pc-addcol): ลดความเข้มพื้นหลัง (gradient ครีมอ่อนขึ้น #f7ecd4→#e6d2a6) · เปลี่ยนสีกรอบเป็นน้ำตาล (โทนเดียวกับกรอบใหญ่) · ขยับไปขวา transform:translateX(7px)',
     ],
   },
+  {
+    version: '0.98',
+    date: '30/06/2026',
+    title: 'การ์ดคอกเล็ก: ซ่อนหัว section + เพิ่มหมายเลข badge ในการ์ด + จัดรูปคอกตามต้นแบบ',
+    details: [
+      'ซ่อนหัว section (farm-section-head) เฉพาะหมวดคอกเล็ก เพราะชื่อซ้ำกับในการ์ดแล้ว (หมวดอื่นยังมีหัวปกติ)',
+      'เพิ่มหมายเลขกล่อง .pc-numbadge (ปุ่มดำขอบทอง) มุมซ้ายบนของการ์ด แสดงเลขหมวด · กดเพื่อสลับลำดับหมวดได้ (delegation → openSectionMoveModal ตาม sectionOrder.indexOf) · เลื่อนชื่อ (titlewrap padding-left 15px) ให้พ้น badge · ปรับ grid col1=130px',
+      'ลดขนาดรูปคอกในช่อง thumbnail + จัดชิดล่าง (flex:1, align-items:flex-end, .pc-thumb-img 84%×76% bottom) เหลือที่ว่างด้านบนใต้ดาว ตามรูปต้นแบบ (ไม่แก้ไฟล์รูป)',
+      'ขยายการ์ดให้กว้างเต็มที่: เอา panel/border/padding ของ .farm-section[data-seckey=small] ออก (การ์ดมีกรอบในตัวแล้ว ไม่ต้องมีกรอบซ้อน) → การ์ดกว้างออกซ้าย-ขวาเต็มความกว้าง',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6943,13 +6963,15 @@ function renderFarmSections(){
       : key==='plots'
       ? `<div class="plots-viewport"><div class="plots-scroll"><div class="${m.gridClass}" id="${m.gridId}"></div></div></div>`
       : `<div class="${m.gridClass}" id="${m.gridId}"></div>`;
-    return `<div class="farm-section" data-seckey="${key}">
-      <div class="farm-section-head">
+    // หมวดคอกเล็ก (การ์ด v2) ซ่อนหัว section — ใช้หมายเลข badge ในการ์ดแทน
+    const headTag = key==='small' ? '' : `<div class="farm-section-head">
         <div class="farm-section-title">
           <span class="sec-order-badge" data-secidx="${si}">${nums[si]||si+1}</span>
           ${m.emoji} ${m.label}
         </div>
-      </div>
+      </div>`;
+    return `<div class="farm-section" data-seckey="${key}">
+      ${headTag}
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       ${gridTag}
     </div>`;
@@ -7342,7 +7364,9 @@ function penCardV2Html(type){
       : `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span></div>`).join('');
   const produce = (c.produce||[]).map(p =>
     `<div class="pc-row"><span class="pc-ric">${p.e}</span><span class="pc-rname">${p.n}</span><span class="pc-rqty">x${p.q}</span></div>`).join('');
+  const secidx = (typeof sectionOrder!=='undefined') ? sectionOrder.indexOf(type) : -1;
   return `<div class="pcard">
+    <div class="pc-numbadge" data-secidx="${secidx}">${c.num||''}</div>
     <div class="pc-left">
       <div class="pc-titlewrap">
         <div class="pc-title">${m.label}</div>
@@ -10211,6 +10235,13 @@ farmContainer.addEventListener('click', function(e){
   const addCell = e.target.closest('.slot-add-cell');
   if(addCell){
     if(addCell.dataset.addtype) startConstruction(addCell.dataset.addtype);
+    return;
+  }
+  // หมายเลข badge ในการ์ด v2 — กดสลับลำดับหมวด
+  const pNum = e.target.closest('.pc-numbadge');
+  if(pNum){
+    const si = Number(pNum.dataset.secidx);
+    if(si >= 0) openSectionMoveModal(si);
     return;
   }
   // ปุ่มเพิ่มในการ์ด v2 (.pcard) — สั่งก่อสร้าง
