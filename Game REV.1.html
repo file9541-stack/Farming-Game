@@ -363,9 +363,13 @@ body{
 /* ===== การ์ดสิ่งปลูกสร้าง v2 (.pcard) — ใช้รูป UI จริง (กรอบครีม/ปุ่ม/ดาว) · เทสกับคอกสัตว์เล็กก่อน ===== */
 .pcard{ position:relative; width:100%; grid-column:1 / -1;
   display:grid; grid-template-columns:116px 1.04fr 1.02fr 0.9fr 96px;
-  gap:6px; align-items:stretch; padding:20px 24px 22px;
-  background:url('ภาพหน้าจอ/pen-card-bg.png') center/100% 100% no-repeat;
-  filter:drop-shadow(0 6px 14px rgba(90,60,20,0.28)); }
+  gap:6px; align-items:stretch; padding:15px 17px 16px;
+  background:linear-gradient(157deg,#fdf7e6 0%,#f6eccf 55%,#efe1bd 100%);
+  border:3px solid #cfa86a; border-radius:18px;
+  box-shadow:0 7px 18px rgba(90,60,20,0.28), inset 0 2px 1px rgba(255,255,255,0.85),
+    inset 0 -4px 9px rgba(150,110,50,0.18); }
+.pcard::after{ content:''; position:absolute; inset:4px; pointer-events:none;
+  border:1.4px solid rgba(180,140,75,0.4); border-radius:13px; }
 /* คอลัมน์ 1: ชื่อ + ribbon + ดาว + รูป */
 .pc-left{ display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
 .pc-titlewrap{ display:flex; align-items:flex-start; gap:5px; width:100%; }
@@ -396,10 +400,15 @@ body{
 /* คอลัมน์ 4: ข้อมูล (ใช้สไตล์ bc เดิม) */
 .pc-info{ display:flex; flex-direction:column; gap:5px; justify-content:center; }
 /* คอลัมน์ 5: ปุ่มเพิ่ม (รูปจริง) + ราคา */
-.pc-addcol{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; cursor:pointer;
-  padding:14px 12px;
-  background:url('ภาพหน้าจอ/pen-thumb-frame.png') center/100% 100% no-repeat;
+.pc-addcol{ position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; cursor:pointer;
+  padding:13px 11px;
+  background:linear-gradient(157deg,#ead6a6 0%,#dcc488 55%,#cdb074 100%);
+  border:2.5px solid #b6914f; border-radius:14px;
+  box-shadow:0 4px 10px rgba(90,60,20,0.26), inset 0 2px 1px rgba(255,255,255,0.55),
+    inset 0 -4px 8px rgba(120,85,35,0.28);
   transition:transform 0.1s, filter 0.15s; }
+.pc-addcol::after{ content:''; position:absolute; inset:3px; pointer-events:none;
+  border:1.3px solid rgba(140,105,55,0.45); border-radius:10px; }
 .pc-addcol:active{ transform:scale(0.97); filter:brightness(1.05); }
 .pc-add{ width:58px; height:58px;
   background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
@@ -5884,6 +5893,16 @@ const UPDATE_HISTORY = [
     details: [
       'นำรูปคอกไก่จากโฟลเดอร์ 001 (Generated image 1 (1)-Photoroom01) มา process (crop โปร่ง + ย่อ 248px + quantize 64 สี ~64KB) ฝัง base64 เป็น ภาพหน้าจอ/pen-small-coop.png',
       'เพิ่มฟิลด์ BUILD_CARD.small.thumb ชี้ไฟล์รูป · penCardV2Html: ถ้ามี c.thumb เรนเดอร์ .pc-thumb-img (background contain + drop-shadow) ไม่งั้น fallback อีโมจิเดิม',
+    ],
+  },
+  {
+    version: '0.92',
+    date: '30/06/2026',
+    title: 'เปลี่ยนกรอบการ์ดคอกเล็กเป็น CSS ล้วน — กรอบใหญ่ครีมอ่อน · กรอบเล็ก(ปุ่ม)สีเข้มขึ้น',
+    details: [
+      'เอารูป raster กรอบออก: .pcard เลิกใช้ pen-card-bg.png · .pc-addcol เลิกใช้ pen-thumb-frame.png (2 ไฟล์เลิกฝัง build อัตโนมัติ ไฟล์เกมเล็กลง)',
+      'กรอบใหญ่ (.pcard): gradient ครีมอ่อน + ขอบน้ำตาล 3px + เส้นขอบใน ::after + เงานุ่ม/ไฮไลต์ inset (สมจริงเงาวาว)',
+      'กรอบเล็ก (.pc-addcol): gradient โทนแทนเข้มขึ้น + ขอบ 2.5px เข้มกว่า + เส้นขอบใน ::after + เงา inset เข้ม — แยกระดับชัดจากกรอบใหญ่',
     ],
   },
 ];
