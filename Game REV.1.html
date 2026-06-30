@@ -395,13 +395,12 @@ body{
 /* คอลัมน์ 4: ข้อมูล (ใช้สไตล์ bc เดิม) */
 .pc-info{ display:flex; flex-direction:column; gap:5px; justify-content:center; }
 /* คอลัมน์ 5: ปุ่มเพิ่ม (รูปจริง) + ราคา */
-.pc-addcol{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
-  transition:transform 0.1s, filter 0.15s; }
-.pc-addcol:active{ transform:scale(0.95); filter:brightness(1.05); }
-.pc-add{ width:80px; height:80px;
+.pc-addcol{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; cursor:pointer;
+  padding:14px 12px;
   background:url('ภาพหน้าจอ/pen-thumb-frame.png') center/100% 100% no-repeat;
-  display:flex; align-items:center; justify-content:center; }
-.pc-add::before{ content:''; width:56px; height:56px;
+  transition:transform 0.1s, filter 0.15s; }
+.pc-addcol:active{ transform:scale(0.97); filter:brightness(1.05); }
+.pc-add{ width:58px; height:58px;
   background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
   filter:drop-shadow(0 4px 7px rgba(40,110,20,0.4)); }
 .pc-addlabel{ min-width:90px; height:26px; display:flex; align-items:center; justify-content:center;
@@ -5860,6 +5859,15 @@ const UPDATE_HISTORY = [
     details: [
       'ย้ายรูปกรอบครีม pen-thumb-frame.png จาก .pc-thumb (ช่องรูปซ้าย) ไปเป็นพื้นหลังของ .pc-add (ปุ่มเพิ่ม) — ปุ่ม ➕ เขียววางทับกลางกรอบครีมผ่าน ::before',
       '.pc-thumb เอาพื้นหลังกรอบออก เหลืออีโมจิ 🐔 ลอยกลางช่อง (ขยายขนาดเป็น 3rem) · .pc-add ขยายเป็น 80×80 ใส่กรอบครีม + ปุ่ม 56px ตรงกลาง',
+    ],
+  },
+  {
+    version: '0.89',
+    date: '30/06/2026',
+    title: 'ขยายกรอบครีมให้ครอบคลุมทั้งคอลัมน์ปุ่มเพิ่ม (ปุ่ม ➕ + ป้าย + ราคา)',
+    details: [
+      'ย้ายพื้นหลังกรอบครีม pen-thumb-frame.png จาก .pc-add → เป็นพื้นหลังของ .pc-addcol ทั้งกล่อง (ใส่ padding 14×12) ครอบ ปุ่ม ➕ + ป้าย "เพิ่มคอกสัตว์เล็ก" + ราคา 🪙 1,000 ไว้ในกรอบเดียว',
+      '.pc-add กลับเป็นปุ่ม ➕ เดี่ยว (58px) ไม่มีกรอบของตัวเอง',
     ],
   },
 ];
