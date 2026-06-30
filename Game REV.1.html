@@ -379,8 +379,7 @@ body{
 .pc-stars i.on{  background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pc-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
 .pc-thumb{ width:100%; aspect-ratio:1; margin-top:2px;
-  background:url('ภาพหน้าจอ/pen-thumb-frame.png') center/100% 100% no-repeat;
-  display:flex; align-items:center; justify-content:center; font-size:2.7rem;
+  display:flex; align-items:center; justify-content:center; font-size:3rem;
   padding-bottom:4px; }
 /* คอลัมน์ 2/3: รองรับ / ผลิตได้ (หัวเป็นปุ่ม pill รูปจริง) */
 .pc-col{ display:flex; flex-direction:column; gap:5px; min-width:0; }
@@ -399,7 +398,11 @@ body{
 .pc-addcol{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
   transition:transform 0.1s, filter 0.15s; }
 .pc-addcol:active{ transform:scale(0.95); filter:brightness(1.05); }
-.pc-add{ width:62px; height:62px; background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
+.pc-add{ width:80px; height:80px;
+  background:url('ภาพหน้าจอ/pen-thumb-frame.png') center/100% 100% no-repeat;
+  display:flex; align-items:center; justify-content:center; }
+.pc-add::before{ content:''; width:56px; height:56px;
+  background:url('ภาพหน้าจอ/ui-btn-plus.png') center/contain no-repeat;
   filter:drop-shadow(0 4px 7px rgba(40,110,20,0.4)); }
 .pc-addlabel{ min-width:90px; height:26px; display:flex; align-items:center; justify-content:center;
   padding:0 8px; background:url('ภาพหน้าจอ/ui-btn-pill.png') center/100% 100% no-repeat;
@@ -5848,6 +5851,15 @@ const UPDATE_HISTORY = [
       'เพิ่ม .pcard layout 5 คอลัมน์: [ชื่อ+ribbon NEW+ดาวรูปจริง+รูปกรอบครีม] · [รองรับ] · [ผลิตได้] · [ข้อมูล] · [ปุ่ม+รูปจริง / ป้าย / ราคา] — พื้นหลังการ์ดเป็นรูปกรอบครีมขอบน้ำตาล+เถาวัลย์',
       'เพิ่มข้อมูล BUILD_CARD.small.support (ไก่ไข่/เป็ด/ห่าน/นกกระทา/อื่นๆ) + ปรับ produce เป็น 4 รายการ (ไข่/เนื้อ/ขน/ผลผลิตพิเศษ) ตามดีไซน์',
       'เทสกับคอกสัตว์เล็กก่อนหมวดเดียว (renderAnimals → penCardV2Html("small")) · คอกใหญ่/บ่อ/พืช/ไม้ ยังใช้ .bcard เดิม · ปุ่มเพิ่มผูก .pc-addcol[data-addtype] ผ่าน delegation',
+    ],
+  },
+  {
+    version: '0.88',
+    date: '30/06/2026',
+    title: 'ย้ายกรอบครีม (pen-thumb-frame) ไปเป็นพื้นหลังปุ่ม ➕ · ช่องรูป 🐔 ซ้ายเหลือรูปลอยไม่มีกรอบ',
+    details: [
+      'ย้ายรูปกรอบครีม pen-thumb-frame.png จาก .pc-thumb (ช่องรูปซ้าย) ไปเป็นพื้นหลังของ .pc-add (ปุ่มเพิ่ม) — ปุ่ม ➕ เขียววางทับกลางกรอบครีมผ่าน ::before',
+      '.pc-thumb เอาพื้นหลังกรอบออก เหลืออีโมจิ 🐔 ลอยกลางช่อง (ขยายขนาดเป็น 3rem) · .pc-add ขยายเป็น 80×80 ใส่กรอบครีม + ปุ่ม 56px ตรงกลาง',
     ],
   },
 ];
