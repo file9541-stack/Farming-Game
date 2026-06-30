@@ -4733,6 +4733,10 @@ const BUILD_INFO = {
 };
 // ===== ข้อมูลแสดงผลบนการ์ดสิ่งปลูกสร้าง (.bcard) — ส่วนนำเสนอ (รูปยังเว้นไว้ใส่ทีหลัง) =====
 const BUILD_CARD = {
+  plots: { num:1, emoji:'🌱', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:10, max:9, unit:'แปลง',
+    produce:[{e:'🌾',n:'ข้าวสาลี',q:1},{e:'🌽',n:'ข้าวโพด',q:1},{e:'🥕',n:'แครอต',q:1}] },
+  trees: { num:2, emoji:'🌳', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:1, fame:20, max:6, unit:'ต้น',
+    produce:[{e:'🍎',n:'แอปเปิ้ล',q:3},{e:'🥭',n:'มะม่วง',q:4},{e:'🥥',n:'มะพร้าว',q:3}] },
   small: { num:1, emoji:'🐔', tag:'NEW',   tagcls:'tag-new',   stars:3, labor:1, fame:15, max:4, unit:'หลัง',
     produce:[{e:'🥚',n:'ไข่',q:4},{e:'🪶',n:'ขน',q:1},{e:'🥩',n:'เนื้อ',q:1}] },
   big:   { num:2, emoji:'🐄', tag:'HOT',   tagcls:'tag-hot',   stars:4, labor:2, fame:30, max:3, unit:'หลัง',
@@ -5764,6 +5768,26 @@ const UPDATE_HISTORY = [
       'เพิ่ม html.mode-landscape/portrait ::before เป็นภาพพื้นหลังเกม (001.jpg) เต็มจอ blur 24px + หรี่แสง (brightness 0.5) วางหลังกรอบเกม (z-index:-1) · เปิดเต็มจอแล้วขอบนอกกรอบเป็นฟาร์มเบลอนุ่มๆ ไม่ทึบดำ',
     ],
   },
+  {
+    version: '0.85',
+    date: '30/06/2026',
+    title: 'Adapt การ์ดสิ่งปลูกสร้าง (.bcard) เข้าหมวดแปลงปลูกพืช + สวนไม้ยืนต้น',
+    details: [
+      'เพิ่มคอนฟิก BUILD_CARD สำหรับ plots (แปลงปลูกพืช) และ trees (สวนไม้ยืนต้น): เลข/แท็ก/ดาว/แรงงาน/ชื่อเสียง/จำนวนสูงสุด/ผลิตผลตัวแทน',
+      'เปลี่ยน renderFarm (plots-grid) และ renderTrees (tree-grid) ให้เรนเดอร์ .bcard 1 ใบแทนกริดช่องเดิม — รูปแบบเดียวกับคอกสัตว์/บ่อปลา',
+      'ขยาย builtCount รองรับ plots (plots.length) และ trees (treePlots.length) สำหรับช่อง "สร้างแล้ว/สูงสุด" บนการ์ด · ปุ่ม + ผูก data-addtype เดิม',
+    ],
+  },
+  {
+    version: '0.86',
+    date: '30/06/2026',
+    title: 'เอาหัว section ที่ซ้ำกับการ์ดออก (sec-area-info) ทุกหมวด — คง badge สลับลำดับไว้',
+    details: [
+      'ลบบรรทัดข้อมูลซ้ำ .sec-area-info (เช่น "ที่ดิน 1 ไร่ · 9 แปลงตายตัว · พร้อมปลูก/เก็บได้…" และ "100 ตร.ม./คอก · ก่อสร้าง…") ออกจากทุกหมวด เพราะการ์ด .bcard แสดงข้อมูลเหล่านี้ครบแล้ว',
+      'คงหัว section (badge เลข ⓪/①… + อีโมจิ + ชื่อหมวด) ไว้ — ยังกด badge เพื่อสลับลำดับหมวดได้เหมือนเดิม · sec-build-list (รายการกำลังก่อสร้าง) ยังคงอยู่',
+      'updateSpaceLabels คงไว้ (ไม่ลบ) — ลูป .sec-area-info กลายเป็น no-op อัตโนมัติเมื่อไม่มี element นั้นแล้ว',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6750,7 +6774,6 @@ function renderFarmSections(){
           ${m.emoji} ${m.label}
         </div>
       </div>
-      <div class="sec-area-info" data-slottype="${m.slottype}"></div>
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       ${gridTag}
     </div>`;
@@ -6974,20 +6997,7 @@ const PLOT_VIEW = {
 function renderFarm(){
   const grid = document.getElementById('plots-grid');
   if(!grid) return;
-  grid.innerHTML = plots.map((p,i)=>{
-    const v = PLOT_VIEW[p.state] || PLOT_VIEW.forest;
-    let emoji = v.emoji, label = v.label;
-    if((p.state==='growing' || p.state==='harvest') && p.crop){
-      const c = CROPS.find(x=>x.id===p.crop);
-      if(c){ emoji = c.emoji; label = (p.state==='harvest') ? `${c.name} เก็บได้!` : `${c.name} กำลังโต`; }
-    }
-    return `<div class="plot plot-cell ${v.cls}" title="${label}">
-      ${plotRingHtml(p)}
-      <span class="pc-emoji">${emoji}</span>
-      <span class="pc-label">${label}</span>
-      ${v.act ? `<span class="pc-act">${v.act}</span>` : ''}
-    </div>`;
-  }).join('');
+  grid.innerHTML = bcardHtml('plots');
 }
 
 let plantTargetIdx = null;  // แปลงที่กำลังจะปลูก (จาก placeFromStorage)
@@ -7054,24 +7064,8 @@ function plotMenuManage(){
 // ============================================================
 function renderTrees(){
   const grid = document.getElementById('tree-grid');
-  grid.innerHTML = treePlots.map((p,i)=>{
-    const badge = '';
-    if(!p.tree){
-      return `<div class="animal-pen" style="min-height:70px;position:relative;">
-        ${badge}
-        <span style="font-size:1.5rem;color:#aaa;">🟫</span>
-        <div class="pen-name" style="color:#6a5a3a;font-weight:800;">รอปลูกไม้ผล</div>
-      </div>`;
-    }
-    const t = TREES.find(x=>x.id===p.tree);
-    return `
-      <div class="animal-pen ready-pen" style="position:relative;">
-        ${badge}
-        <span class="pen-emoji">${t.emoji}</span>
-        <div class="pen-name">${t.name}</div>
-        <div class="pen-status">✅ เก็บได้!</div>
-      </div>`;
-  }).join('') + addCellHtml('trees');
+  if(!grid) return;
+  grid.innerHTML = bcardHtml('trees');
 }
 
 
@@ -7104,7 +7098,14 @@ function fmtBuildTime(s){
 }
 // จำนวนที่สร้างแล้วในหมวดนั้น
 function builtCount(type){
-  return type==='small' ? smallPens.length : type==='big' ? bigPens.length : fishPonds.length;
+  switch(type){
+    case 'small': return smallPens.length;
+    case 'big':   return bigPens.length;
+    case 'ponds': return fishPonds.length;
+    case 'plots': return plots.length;
+    case 'trees': return treePlots.length;
+  }
+  return 0;
 }
 // ── กล่อง UI สิ่งปลูกสร้าง (การ์ดแนวนอนยาว · เติมข้อมูลจริง · รูปยังเว้นไว้ใส่ทีหลัง) ──
 // data-addtype ที่ .acard → ปุ่มเพิ่มยังสั่งก่อสร้างได้ผ่าน event delegation เดิม
