@@ -5778,6 +5778,16 @@ const UPDATE_HISTORY = [
       'ขยาย builtCount รองรับ plots (plots.length) และ trees (treePlots.length) สำหรับช่อง "สร้างแล้ว/สูงสุด" บนการ์ด · ปุ่ม + ผูก data-addtype เดิม',
     ],
   },
+  {
+    version: '0.86',
+    date: '30/06/2026',
+    title: 'เอาหัว section ที่ซ้ำกับการ์ดออก (sec-area-info) ทุกหมวด — คง badge สลับลำดับไว้',
+    details: [
+      'ลบบรรทัดข้อมูลซ้ำ .sec-area-info (เช่น "ที่ดิน 1 ไร่ · 9 แปลงตายตัว · พร้อมปลูก/เก็บได้…" และ "100 ตร.ม./คอก · ก่อสร้าง…") ออกจากทุกหมวด เพราะการ์ด .bcard แสดงข้อมูลเหล่านี้ครบแล้ว',
+      'คงหัว section (badge เลข ⓪/①… + อีโมจิ + ชื่อหมวด) ไว้ — ยังกด badge เพื่อสลับลำดับหมวดได้เหมือนเดิม · sec-build-list (รายการกำลังก่อสร้าง) ยังคงอยู่',
+      'updateSpaceLabels คงไว้ (ไม่ลบ) — ลูป .sec-area-info กลายเป็น no-op อัตโนมัติเมื่อไม่มี element นั้นแล้ว',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -6764,7 +6774,6 @@ function renderFarmSections(){
           ${m.emoji} ${m.label}
         </div>
       </div>
-      <div class="sec-area-info" data-slottype="${m.slottype}"></div>
       <div class="sec-build-list" data-slottype="${m.slottype}"></div>
       ${gridTag}
     </div>`;
