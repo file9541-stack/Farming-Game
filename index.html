@@ -8,8 +8,16 @@
 <script>
 (function(){
   try{
-    var m = localStorage.getItem('mfw_screen_mode') === 'portrait' ? 'portrait' : 'landscape';
+    var stored = localStorage.getItem('mfw_screen_mode');
+    // ถ้าผู้ใช้เคยเลือกไว้ใช้ค่านั้น · ถ้ายังไม่เคย: จอแคบ (มือถือ) = แนวตั้ง 9:16 อัตโนมัติ
+    var m = (stored === 'portrait' || stored === 'landscape') ? stored
+          : (window.innerWidth <= 820 ? 'portrait' : 'landscape');
     document.documentElement.classList.add('mode-' + m);
+    if(m === 'portrait'){
+      // ตั้ง scale พอดีจอตั้งแต่ก่อนวาดหน้า กัน FOUC
+      var s = Math.min(window.innerWidth / 585, window.innerHeight / 1040);
+      document.documentElement.style.setProperty('--pscale', s);
+    }
   }catch(e){ document.documentElement.classList.add('mode-landscape'); }
 })();
 </script>
@@ -3505,18 +3513,22 @@ html.mode-landscape #topbar{ max-width:none; }
 html.mode-landscape #bottom-nav{ max-width:none; }
 
 /* ===== โหมดหน้าจอ 9:16 แนวตั้ง (มาตรฐานจอโทรศัพท์ DEV-001) — เวทีกลางจอ letterbox =====
+   เวทีออกแบบฟิก 585×1040 (9:16) แล้ว "ย่อ/ขยายพอดีจอ" ทุกมือถือด้วย transform:scale(--pscale)
+   (คำนวณจาก JS: min(vw/585, vh/1040)) → กรอบเกม 9:16 เต็มจอเสมอ ไม่ว่ามือถือรุ่นไหน
    เทคนิคเดียวกับ 4:3: transform บน body → ลูก position:fixed อิงกรอบเวที 9:16 อัตโนมัติ */
 html.mode-portrait{
-  min-height:100vh;
-  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; height:100vh; height:100dvh;
+  overflow:hidden;             /* ตัดสกอลของหน้า เหลือ letterbox รอบกรอบ */
 }
 html.mode-portrait body{
+  position:fixed; left:50%; top:50%;
   max-width:none;
-  width:585px;          /* ฟิกขนาดตายตัว 9:16 (585×1040) — ไม่ยืด/หดตามจอ */
+  width:585px;          /* เวทีออกแบบ 9:16 (585×1040) · ขนาดจริงคงที่ ให้เนื้อหาเลย์เอาต์เท่าเดิม */
   height:1040px;
   min-height:0;
   margin:0;
-  transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
+  transform-origin:center center;
+  transform:translate(-50%,-50%) scale(var(--pscale, 1));  /* จัดกลาง + ย่อ/ขยายพอดีจอ */
   border-radius:16px;
   overflow:hidden;
 }
@@ -3835,16 +3847,32 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
   // ----- สลับโหมดหน้าจอ (4:3 แนวนอน ↔ 9:16 แนวตั้ง) · สลับทันที + จำค่าใน LocalStorage -----
   var MODE_KEY = 'mfw_screen_mode';
   var modeBtn  = document.getElementById('screen-mode-toggle');
-  function curMode(){ return localStorage.getItem(MODE_KEY) === 'portrait' ? 'portrait' : 'landscape'; }
+  function curMode(){
+    var stored = localStorage.getItem(MODE_KEY);
+    if(stored === 'portrait' || stored === 'landscape') return stored;
+    // ยังไม่เคยเลือก: จอแคบ (มือถือ) = แนวตั้ง 9:16 อัตโนมัติ · จอกว้าง = แนวนอน (PC)
+    return (window.innerWidth <= 820) ? 'portrait' : 'landscape';
+  }
+  // ย่อ/ขยายกรอบเวที 9:16 ให้พอดีหน้าจอทุกรุ่น (letterbox) — คำนวณ scale จากขนาดจอจริง
+  function fitPortrait(){
+    var root = document.documentElement;
+    if(curMode() !== 'portrait'){ root.style.removeProperty('--pscale'); return; }
+    var s = Math.min(window.innerWidth / 585, window.innerHeight / 1040);
+    root.style.setProperty('--pscale', s);
+  }
   function applyMode(m){
     var root = document.documentElement;
     root.classList.toggle('mode-landscape', m === 'landscape');
     root.classList.toggle('mode-portrait',  m === 'portrait');
     if(modeBtn){
-      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอเกม 13:15 (PC)' : '📱 เวอร์ชันมือถือ (รอพัฒนา)';
+      modeBtn.textContent = (m === 'landscape') ? '🖥️ จอเกม 13:15 (PC)' : '📱 จอมือถือ 9:16';
     }
+    fitPortrait();
   }
   applyMode(curMode());
+  // ปรับ scale ใหม่ทุกครั้งที่ขนาดจอ/การหมุนจอเปลี่ยน
+  window.addEventListener('resize', fitPortrait);
+  window.addEventListener('orientationchange', fitPortrait);
   if(modeBtn){
     modeBtn.addEventListener('click', function(){
       var next = (curMode() === 'landscape') ? 'portrait' : 'landscape';
@@ -6058,6 +6086,16 @@ const UPDATE_HISTORY = [
     title: 'เปลี่ยนมาตรฐานจอแนวตั้ง (มือถือ) จาก 13:16 → 9:16',
     details: [
       'ปรับเวทีโหมดแนวตั้ง (mode-portrait) จากฟิกขนาด 585×720 (13:16) → ฟิกขนาด 585×1040 (9:16) คงความกว้าง 585 · อัปเดตข้อความ toast สลับโหมดเป็น "9:16"',
+    ],
+  },
+  {
+    version: '1.08',
+    date: '04/07/2026',
+    title: 'กรอบจอแนวตั้ง 9:16 ย่อ/ขยายพอดีหน้าจอมือถือทุกรุ่น (scale-to-fit) + มือถือเข้าโหมด 9:16 อัตโนมัติ',
+    details: [
+      'แก้ปัญหากรอบ 9:16 ฟิก 585×1040 ล้นจอบนมือถือจริง → เปลี่ยนเป็นย่อ/ขยายด้วย transform:scale(--pscale) คำนวณจาก min(vw/585, vh/1040) ให้กรอบ 9:16 พอดีหน้าจอเสมอ (letterbox ขอบบน-ล่าง) ไม่ว่ามือถือรุ่นไหน',
+      'อัปเดต scale ใหม่อัตโนมัติเมื่อขนาดจอ/การหมุนจอเปลี่ยน (resize + orientationchange) · ตั้ง --pscale ตั้งแต่สคริปต์ใน <head> กัน FOUC',
+      'ถ้ายังไม่เคยเลือกโหมด: จอแคบ (≤820px = มือถือ) เข้าโหมดแนวตั้ง 9:16 อัตโนมัติ · จอกว้างยังเป็นแนวนอน (PC) เหมือนเดิม · เปลี่ยนป้ายปุ่มสลับเป็น "จอมือถือ 9:16"',
     ],
   },
 ];
