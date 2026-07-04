@@ -446,93 +446,71 @@ body{
   font-size:0.78rem; font-weight:900; color:#3a8a1c; }
 .pc-coin{ font-size:0.84rem; line-height:1; }
 
-/* ===== การ์ดคอกสัตว์เล็ก v3 (.pen2) — แนวตั้ง สไตล์รูปอ้างอิง · แทนการ์ดหมวดเดิม ===== */
-.pen2{ position:relative; width:100%; grid-column:1 / -1;
-  display:flex; flex-direction:column; gap:11px; padding:16px 15px 17px;
+/* ===== การ์ดคอกสัตว์เล็ก v4 (.pen2) — กริด 2 คอลัมน์ สไตล์รูปอ้างอิง (โชว์ 4 การ์ด/หน้า) ===== */
+.pen2-cathead{ grid-column:1 / -1; padding:8px 12px; border-radius:13px; margin-bottom:2px;
+  background:linear-gradient(#fdf7e6,#f2e6c6); border:2px solid rgba(150,108,52,0.3);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.7); }
+.pen2-cattitle{ display:flex; align-items:center; gap:8px; font-size:0.98rem; font-weight:900; color:#5a3d12; }
+.pen2-cattitle .pc-numbadge{ position:static; width:22px; height:22px; font-size:0.7rem; }
+.pen2-catsub{ margin-top:3px; padding-left:2px; font-size:0.6rem; font-weight:700; color:#8a6a3a; }
+.pen2{ position:relative; display:flex; flex-direction:column; gap:6px; padding:8px 8px 9px;
   background:linear-gradient(157deg,#fdf7e6 0%,#f4e8c9 58%,#ecdcb4 100%) padding-box,
     linear-gradient(145deg,#b5813f 0%,#7a4d1c 55%,#9c6a2e 100%) border-box;
-  border:4px solid transparent; border-radius:22px;
-  box-shadow:0 10px 26px rgba(80,50,15,0.3), inset 0 2px 1px rgba(255,255,255,0.8),
-    inset 0 -5px 11px rgba(150,110,50,0.16); }
-.pen2 .pc-numbadge{ top:13px; left:13px; }
-/* ป้ายไม้หัวการ์ด (ชื่อ + ดาว) */
-.pen2-head{ position:relative; align-self:center; display:flex; flex-direction:column; align-items:center; gap:4px;
-  min-width:62%; margin:2px 0 1px; padding:11px 26px 10px;
+  border:3px solid transparent; border-radius:15px;
+  box-shadow:0 5px 13px rgba(80,50,15,0.24), inset 0 2px 1px rgba(255,255,255,0.8),
+    inset 0 -4px 8px rgba(150,110,50,0.14); }
+.pen2-head{ position:relative; display:flex; flex-direction:column; align-items:center; gap:2px;
+  margin:0 4px; padding:5px 8px;
   background:linear-gradient(150deg,#8a5a2c 0%,#5f3a17 55%,#79471f 100%) padding-box,
     linear-gradient(160deg,#d29a58,#6e4114) border-box;
-  border:3px solid transparent; border-radius:14px;
-  box-shadow:0 6px 15px rgba(50,30,8,0.4), inset 0 2px 2px rgba(255,220,160,0.28),
-    inset 0 -5px 9px rgba(30,16,4,0.42); }
-.pen2-title{ font-size:1.18rem; font-weight:900; color:#fff3d8; letter-spacing:0.5px; white-space:nowrap;
-  text-shadow:0 2px 0 #3a2109, 0 -1px 0 #2a1706, 1px 0 0 #3a2109, -1px 0 0 #3a2109; }
-.pen2-stars{ display:flex; gap:3px; }
-.pen2-stars i{ width:21px; height:21px; background-position:center; background-repeat:no-repeat; background-size:contain;
+  border:2px solid transparent; border-radius:9px;
+  box-shadow:0 3px 7px rgba(50,30,8,0.34), inset 0 1px 1px rgba(255,220,160,0.26),
+    inset 0 -3px 6px rgba(30,16,4,0.4); }
+.pen2-title{ font-size:0.76rem; font-weight:900; color:#fff3d8; letter-spacing:0.2px; white-space:nowrap;
+  text-shadow:0 1px 0 #3a2109, 1px 0 0 #3a2109, -1px 0 0 #3a2109; }
+.pen2-stars{ display:flex; gap:2px; }
+.pen2-stars i{ width:12px; height:12px; background-position:center; background-repeat:no-repeat; background-size:contain;
   filter:drop-shadow(0 1px 1px rgba(0,0,0,0.35)); }
 .pen2-stars i.on{ background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
 .pen2-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
-.pen2-new{ position:absolute; top:-11px; right:-12px; padding:5px 13px; border-radius:10px;
-  font-size:0.74rem; font-weight:900; color:#fff; letter-spacing:1.2px;
-  background:linear-gradient(135deg,#ff5a4d,#d81f10); border:2.5px solid #ffdcc6;
-  box-shadow:0 4px 9px rgba(150,20,10,0.5); }
-/* สถานะกำลังผลิต */
-.pen2-status{ align-self:flex-start; display:inline-flex; align-items:center; gap:8px;
-  padding:6px 16px; border-radius:22px; font-size:0.82rem; font-weight:800; color:#fff;
-  background:linear-gradient(160deg,#5aa832,#3c7d1c); border:2px solid rgba(255,255,255,0.55);
-  box-shadow:0 3px 8px rgba(40,90,20,0.3), inset 0 1px 0 rgba(255,255,255,0.35); }
-.pen2-status .dot{ width:11px; height:11px; border-radius:50%; background:#c8ff70;
-  box-shadow:0 0 7px #b6ff4d, inset 0 0 0 2px rgba(255,255,255,0.55);
-  animation:pen2blink 1.4s ease-in-out infinite; }
-@keyframes pen2blink{ 0%,100%{ opacity:1; } 50%{ opacity:0.45; } }
-/* ภาพคอก */
-.pen2-scene{ width:100%; aspect-ratio:1.5; border-radius:16px; overflow:hidden;
-  background:linear-gradient(#bfe6f7 0%,#d7edc4 52%,#bcd98a 100%);
-  border:3px solid rgba(120,80,30,0.4);
-  display:flex; align-items:center; justify-content:center; padding:6px;
-  box-shadow:inset 0 3px 12px rgba(50,90,120,0.22), inset 0 -3px 8px rgba(80,120,40,0.18); }
+.pen2-new{ position:absolute; top:6px; right:6px; z-index:5; padding:2px 8px; border-radius:7px;
+  font-size:0.5rem; font-weight:900; color:#fff; letter-spacing:1px;
+  background:linear-gradient(135deg,#ff5a4d,#d81f10); border:1.5px solid #ffdcc6;
+  box-shadow:0 2px 5px rgba(150,20,10,0.45); }
+.pen2-new.hot{ background:linear-gradient(135deg,#ff9a3c,#e8600f); border-color:#ffe1b0; }
+.pen2-new.event{ background:linear-gradient(135deg,#b06cf0,#7d2fd0); border-color:#ecd6ff; }
+.pen2-scene{ width:100%; aspect-ratio:1.6; border-radius:11px; overflow:hidden;
+  background:linear-gradient(#bfe6f7 0%,#d7edc4 52%,#bcd98a 100%); border:2px solid rgba(120,80,30,0.4);
+  display:flex; align-items:center; justify-content:center; padding:3px;
+  box-shadow:inset 0 2px 7px rgba(50,90,120,0.2); }
 .pen2-scene img{ max-width:100%; max-height:100%; object-fit:contain;
-  filter:drop-shadow(0 6px 9px rgba(60,40,10,0.35)); }
-/* แถวสถิติ 5 ช่อง */
-.pen2-stats{ display:flex; align-items:stretch; justify-content:space-between;
-  padding:11px 4px; border-radius:14px;
-  background:linear-gradient(#fbf3dd,#f4e7c6);
-  border:2px solid rgba(150,108,52,0.28);
-  box-shadow:inset 0 1px 2px rgba(255,255,255,0.7); }
-.pen2-stat{ flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; padding:0 2px; }
-.pen2-stat-ic{ font-size:1.25rem; line-height:1; }
-.pen2-stat-label{ font-size:0.5rem; font-weight:700; color:#6a5230; line-height:1.15; }
-.pen2-stat-val{ font-size:0.74rem; font-weight:900; color:#3a2a12; }
-.pen2-stat-div{ width:1.5px; align-self:center; height:60%;
-  background:linear-gradient(transparent,rgba(150,108,52,0.35) 20%,rgba(150,108,52,0.35) 80%,transparent); }
-/* แถวชื่อเสียง / มูลค่าทรัพย์สิน */
-.pen2-repbar{ display:flex; gap:10px; }
-.pen2-rep{ flex:1; display:flex; align-items:center; gap:9px; padding:9px 12px; border-radius:13px;
-  background:linear-gradient(#fbf3dd,#f2e4c0); border:2px solid rgba(150,108,52,0.26);
-  box-shadow:inset 0 1px 2px rgba(255,255,255,0.7); }
-.pen2-rep-ic{ font-size:1.5rem; line-height:1; filter:drop-shadow(0 2px 2px rgba(120,80,20,0.3)); }
-.pen2-rep-txt{ display:flex; flex-direction:column; min-width:0; }
-.pen2-rep-label{ font-size:0.56rem; font-weight:700; color:#6a5230; }
-.pen2-rep-val{ font-size:0.98rem; font-weight:900; color:#2f6a16; white-space:nowrap; }
-.pen2-repbar .pen2-rep:last-child .pen2-rep-val{ color:#b07a12; }
-.pen2-coin{ font-size:0.85rem; }
-/* แถบเลเวล + ปุ่มอัปเกรด */
-.pen2-foot{ display:flex; align-items:center; gap:10px; }
-.pen2-lv{ flex:0 0 auto; padding:8px 15px; border-radius:12px; font-size:0.9rem; font-weight:900; color:#fff;
-  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:2px solid rgba(255,255,255,0.5);
-  box-shadow:0 3px 7px rgba(40,90,20,0.3); }
-.pen2-exp{ flex:1; position:relative; height:30px; border-radius:16px; overflow:hidden;
-  background:linear-gradient(#e7d9b6,#dbc9a0); border:2px solid rgba(120,80,30,0.35);
-  box-shadow:inset 0 2px 4px rgba(90,60,20,0.28); display:flex; align-items:center; justify-content:center; }
-.pen2-exp-fill{ position:absolute; left:0; top:0; bottom:0;
-  background:linear-gradient(90deg,#7ed24a,#4ea223); border-radius:0 8px 8px 0;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4); }
-.pen2-exp-txt{ position:relative; z-index:2; font-size:0.8rem; font-weight:900; color:#2a4a12;
-  text-shadow:0 1px 0 rgba(255,255,255,0.5); }
-.pen2-up{ flex:0 0 auto; width:46px; height:44px; border-radius:12px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; font-size:1.3rem;
-  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:2px solid rgba(255,255,255,0.5);
-  box-shadow:0 4px 8px rgba(40,90,20,0.35), inset 0 1px 0 rgba(255,255,255,0.35);
+  filter:drop-shadow(0 3px 5px rgba(60,40,10,0.3)); }
+.pen2-body{ display:flex; gap:7px; align-items:flex-start; }
+.pen2-seclabel{ font-size:0.5rem; font-weight:800; color:#3a8a1c; margin-bottom:2px; }
+.pen2-produce{ flex:0 0 auto; }
+.pen2-prow{ display:flex; flex-direction:column; gap:2px; }
+.pen2-pitem{ display:flex; align-items:center; gap:2px; font-size:0.72rem; }
+.pen2-pitem b{ font-size:0.56rem; font-weight:900; color:#2f8a18; }
+.pen2-stats2{ flex:1; min-width:0; display:grid; grid-template-columns:1fr 1fr; gap:3px 6px; }
+.pen2-s{ display:flex; align-items:center; gap:3px; min-width:0; }
+.pen2-s-ic{ font-size:0.72rem; line-height:1; flex:0 0 auto; }
+.pen2-s-tx{ display:flex; flex-direction:column; min-width:0; }
+.pen2-s-tx i{ font-size:0.4rem; font-style:normal; font-weight:700; color:#6a5230; line-height:1.05; white-space:nowrap; }
+.pen2-s-tx b{ font-size:0.54rem; font-weight:900; color:#3a2a12; line-height:1.05; white-space:nowrap; }
+.pen2-fertrow{ display:flex; align-items:center; gap:7px; }
+.pen2-fert{ flex:1; min-width:0; }
+.pen2-fert-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:2px; }
+.pen2-fert-top span{ font-size:0.44rem; font-weight:700; color:#6a5230; }
+.pen2-fert-top b{ font-size:0.56rem; font-weight:900; color:#3a8a1c; }
+.pen2-fert-bar{ height:10px; border-radius:6px; overflow:hidden; background:#e2d3ad;
+  border:1px solid rgba(120,80,30,0.3); box-shadow:inset 0 1px 2px rgba(90,60,20,0.25); }
+.pen2-fert-bar>div{ height:100%; background:linear-gradient(90deg,#7ed24a,#4ea223); border-radius:0 5px 5px 0; }
+.pen2-act{ flex:0 0 auto; padding:6px 12px; border-radius:10px; cursor:pointer;
+  font-size:0.62rem; font-weight:900; color:#fff; white-space:nowrap;
+  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:1.5px solid rgba(255,255,255,0.5);
+  box-shadow:0 3px 6px rgba(40,90,20,0.32), inset 0 1px 0 rgba(255,255,255,0.35);
   transition:transform 0.1s, filter 0.15s; }
-.pen2-up:active{ transform:scale(0.93); filter:brightness(1.08); }
+.pen2-act:active{ transform:scale(0.95); filter:brightness(1.08); }
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -6187,6 +6165,17 @@ const UPDATE_HISTORY = [
       'การ์ดกว้าง 100% ของ #main จึงพอดีกรอบเกมทุกโหมด (มือถือเต็มจอ/PC)',
     ],
   },
+  {
+    version: '1.11',
+    date: '04/07/2026',
+    title: 'ปรับการ์ดคอกสัตว์เล็กเป็นกริด 2 คอลัมน์ (4 การ์ด/หน้า) สไตล์รูปอ้างอิงที่ 3 — คอมแพกต์',
+    details: [
+      'v1.10 การ์ดใหญ่ใบเดียวกินเกือบเต็มจอ → เปลี่ยนเป็น .pen2 v4 การ์ดคอมแพกต์ 4 ใบในกริด 2×2 (#small-grid = animals-grid 2 คอลัมน์อยู่แล้ว) โชว์พอดีหน้าเดียวไม่ต้องสกอล',
+      'แต่ละการ์ด (ตามรูป): ป้ายไม้หัวการ์ด (ชื่อ+ดาว) + badge (NEW/HOT/EVENT สีต่างกัน) + รูปคอก + แถวผลิตผล (ไอคอน×จำนวน) + มินิสถิติ 2×2 (เวลาต่อรอบ/ชื่อเสียง/ใช้แรงงาน/มูลค่าที่ดิน) + แถบความสมบูรณ์ % + ปุ่ม "เพิ่มคอก"',
+      'ย่อรูป/ตัวอักษร/อีโมจิ/กล่องทั้งหมดให้กะทัดรัด · 4 คอกตัวอย่าง (ไก่ไข่/เป็ด/ห่าน/นกกระทา) ค่าตายตัวใน PEN_SMALL_ITEMS · เพิ่มหัวหมวด .pen2-cathead (span 2 คอลัมน์) + ย้าย .pc-numbadge (สลับลำดับ) มาที่หัวหมวด',
+      'ปุ่มเพิ่มคอกผูก .pen2-act[data-addtype=small] → startConstruction (delegation)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7601,50 +7590,59 @@ function penCardV2Html(type){
   </div>`;
 }
 
-// ── การ์ดคอกสัตว์เล็ก v3 (แนวตั้ง สไตล์รูปอ้างอิง) — ค่าตัวอย่างตายตัว (mockup) ──
-const PEN_SMALL_CARD = {
-  title:'คอกสัตว์เล็ก', stars:2, tag:'NEW', status:'กำลังผลิต',
-  scene:'ภาพหน้าจอ/pen-small-coop.png',
-  stats:[
-    { ic:'🏚️',   label:'คอกย่อยทั้งหมด', val:'3/6' },
-    { ic:'🐔',   label:'ประเภทสัตว์',    val:'2/5' },
-    { ic:'🥚',   label:'ผลิตผลที่จะได้',  val:'3/8' },
-    { ic:'👨‍🌾', label:'คนงานทั้งหมด',   val:'3/6' },
-    { ic:'🌿',   label:'พื้นที่ทั้งหมด',  val:'300 ตร.ม.' },
-  ],
-  fame:'+15', asset:'28,450',
-  level:2, expNow:230, expMax:300,
-};
+// ── การ์ดคอกสัตว์เล็ก v4 (กริด 2 คอลัมน์ สไตล์รูปอ้างอิง) — ค่าตัวอย่างตายตัว (mockup) ──
+const PEN_SMALL_ITEMS = [
+  { title:'คอกไก่ไข่',   stars:3, tag:'NEW',   tagcls:'new',
+    produce:[{e:'🥚',q:8},{e:'🍗',q:3},{e:'🪶',q:2}],
+    time:'20 นาที', fame:10, labor:'1 คน', value:'1,200', fert:80 },
+  { title:'คอกเป็ด',     stars:4, tag:'HOT',   tagcls:'hot',
+    produce:[{e:'🥚',q:6},{e:'🍖',q:4},{e:'🪶',q:3}],
+    time:'30 นาที', fame:15, labor:'1 คน', value:'1,800', fert:70 },
+  { title:'คอกห่าน',     stars:3, tag:'',      tagcls:'',
+    produce:[{e:'🥚',q:5},{e:'🍖',q:5},{e:'🪶',q:4}],
+    time:'40 นาที', fame:20, labor:'1 คน', value:'2,400', fert:60 },
+  { title:'คอกนกกระทา',  stars:5, tag:'EVENT', tagcls:'event',
+    produce:[{e:'🥚',q:12},{e:'🍗',q:6},{e:'🎁',q:2}],
+    time:'60 นาที', fame:50, labor:'2 คน', value:'5,000', fert:90 },
+];
 function penSmallCardHtml(){
-  const d = PEN_SMALL_CARD;
   // รูปคอก: ใช้ตัวที่ฝัง base64 ใน BUILD_CARD.small.thumb (ไฟล์ build) · fallback = path (ซอร์ส)
-  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || d.scene;
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
   const secidx = (typeof sectionOrder!=='undefined') ? sectionOrder.indexOf('small') : -1;
-  let stars=''; for(let i=0;i<5;i++) stars += `<i class="${i < d.stars ? 'on':'off'}"></i>`;
-  const stats = d.stats.map(s =>
-    `<div class="pen2-stat"><span class="pen2-stat-ic">${s.ic}</span><span class="pen2-stat-label">${s.label}</span><span class="pen2-stat-val">${s.val}</span></div>`
-  ).join('<span class="pen2-stat-div"></span>');
-  const pct = Math.max(0, Math.min(100, Math.round(d.expNow / d.expMax * 100)));
-  return `<div class="pen2">
-    <div class="pc-numbadge" data-secidx="${secidx}">1</div>
-    <div class="pen2-head">
-      <div class="pen2-title">${d.title}</div>
-      <div class="pen2-stars">${stars}</div>
-      ${d.tag ? `<div class="pen2-new">${d.tag}</div>` : ''}
-    </div>
-    <div class="pen2-status"><span class="dot"></span>${d.status}</div>
-    <div class="pen2-scene"><img src="${scene}" alt="คอกสัตว์เล็ก"></div>
-    <div class="pen2-stats">${stats}</div>
-    <div class="pen2-repbar">
-      <div class="pen2-rep"><span class="pen2-rep-ic">⭐</span><div class="pen2-rep-txt"><span class="pen2-rep-label">ชื่อเสียงสะสม</span><span class="pen2-rep-val">${d.fame}</span></div></div>
-      <div class="pen2-rep"><span class="pen2-rep-ic">🪙</span><div class="pen2-rep-txt"><span class="pen2-rep-label">มูลค่าทรัพย์สิน</span><span class="pen2-rep-val">${d.asset} <span class="pen2-coin">🪙</span></span></div></div>
-    </div>
-    <div class="pen2-foot">
-      <div class="pen2-lv">Lv.${d.level}</div>
-      <div class="pen2-exp"><div class="pen2-exp-fill" style="width:${pct}%"></div><span class="pen2-exp-txt">${d.expNow}/${d.expMax}</span></div>
-      <div class="pen2-up" data-addtype="small" title="อัปเกรด/เพิ่มคอก">⬆️</div>
-    </div>
-  </div>`;
+  const cathead = `<div class="pen2-cathead">
+      <div class="pen2-cattitle"><span class="pc-numbadge" data-secidx="${secidx}">1</span>🐔 คอกสัตว์เล็ก</div>
+      <div class="pen2-catsub">พื้นที่เลี้ยงสัตว์ปีก · เลือกชนิดคอกที่ต้องการเลี้ยง</div>
+    </div>`;
+  const cards = PEN_SMALL_ITEMS.map(d => {
+    let stars=''; for(let i=0;i<5;i++) stars += `<i class="${i < d.stars ? 'on':'off'}"></i>`;
+    const prod = d.produce.map(p => `<span class="pen2-pitem">${p.e}<b>x${p.q}</b></span>`).join('');
+    const badge = d.tag ? `<div class="pen2-new ${d.tagcls}">${d.tag}</div>` : '';
+    return `<div class="pen2">
+      ${badge}
+      <div class="pen2-head"><div class="pen2-title">${d.title}</div><div class="pen2-stars">${stars}</div></div>
+      <div class="pen2-scene"><img src="${scene}" alt="${d.title}"></div>
+      <div class="pen2-body">
+        <div class="pen2-produce">
+          <div class="pen2-seclabel">ผลิตผล</div>
+          <div class="pen2-prow">${prod}</div>
+        </div>
+        <div class="pen2-stats2">
+          <div class="pen2-s"><span class="pen2-s-ic">⏱️</span><span class="pen2-s-tx"><i>เวลาต่อรอบ</i><b>${d.time}</b></span></div>
+          <div class="pen2-s"><span class="pen2-s-ic">⭐</span><span class="pen2-s-tx"><i>ชื่อเสียง</i><b>${d.fame}</b></span></div>
+          <div class="pen2-s"><span class="pen2-s-ic">👷</span><span class="pen2-s-tx"><i>ใช้แรงงาน</i><b>${d.labor}</b></span></div>
+          <div class="pen2-s"><span class="pen2-s-ic">🪙</span><span class="pen2-s-tx"><i>มูลค่าที่ดิน</i><b>${d.value}</b></span></div>
+        </div>
+      </div>
+      <div class="pen2-fertrow">
+        <div class="pen2-fert">
+          <div class="pen2-fert-top"><span>ความสมบูรณ์</span><b>${d.fert}%</b></div>
+          <div class="pen2-fert-bar"><div style="width:${d.fert}%"></div></div>
+        </div>
+        <div class="pen2-act" data-addtype="small">➕ เพิ่มคอก</div>
+      </div>
+    </div>`;
+  }).join('');
+  return cathead + cards;
 }
 
 function renderAnimals(){
@@ -10499,10 +10497,10 @@ farmContainer.addEventListener('click', function(e){
     if(pAdd.dataset.addtype) startConstruction(pAdd.dataset.addtype);
     return;
   }
-  // ปุ่มอัปเกรด/เพิ่มคอก ในการ์ดคอกสัตว์เล็ก v3 (.pen2-up) — สั่งก่อสร้าง
-  const pUp = e.target.closest('.pen2-up');
-  if(pUp){
-    if(pUp.dataset.addtype) startConstruction(pUp.dataset.addtype);
+  // ปุ่มเพิ่มคอก ในการ์ดคอกสัตว์เล็ก v4 (.pen2-act) — สั่งก่อสร้าง
+  const pAct = e.target.closest('.pen2-act');
+  if(pAct){
+    if(pAct.dataset.addtype) startConstruction(pAct.dataset.addtype);
     return;
   }
   // กล่องเล็ก (ปุ่มเพิ่ม) ในการ์ดสิ่งปลูกสร้างแบบใหม่ — สั่งก่อสร้าง
