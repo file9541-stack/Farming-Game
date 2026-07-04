@@ -185,7 +185,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 44px);max-width:500px;
+  width:calc(100% - 40px);max-width:520px;   /* v1.13: ขยายกล่อง UI ให้กว้างขึ้น เหลือขอบพื้นหลังฟาร์มข้างละ ~20px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -1443,7 +1443,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 44px);max-width:500px;
+  width:calc(100% - 40px);max-width:520px;   /* v1.13: ขยายกล่อง UI ให้กว้างขึ้น เหลือขอบพื้นหลังฟาร์มข้างละ ~20px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -6189,6 +6189,15 @@ const UPDATE_HISTORY = [
       'ตั้ง #main{ overflow-x:hidden } (เดิม overflow-y:auto บังคับ overflow-x เป็น auto ทำให้เลื่อนด้านข้างได้) → เลื่อนได้แค่แนวตั้ง · แถวแปลงปลูก .plots-scroll ยังเลื่อนแนวนอนในตัวได้เหมือนเดิม',
       'ต้นเหตุที่เนื้อหาล้นด้านข้าง ~91px = การ์ด .bcard (คอกใหญ่/บ่อปลา/พืช/ไม้) กว้างเกินกรอบมือถือ (368px) → ปุ่มเพิ่มหลุดขอบขวา',
       'แก้ .bcard: grid-template-columns 128px/1fr/1.05fr/110px → 96px/minmax(0,1fr)/minmax(0,1fr)/88px · gap 9→7 · .bc-col{min-width:0} · .bc-ival ห่อบรรทัดได้ (white-space:normal) → การ์ดพอดีกรอบ ปุ่มเพิ่มไม่โดนตัด',
+    ],
+  },
+  {
+    version: '1.13',
+    date: '04/07/2026',
+    title: 'ขยายกล่อง UI (#main) ให้กว้างขึ้น เหลือขอบพื้นหลังฟาร์มข้างละ ~20px',
+    details: [
+      'ปรับ #main จาก width:calc(100% - 44px) max-width:500px → width:calc(100% - 40px) max-width:520px → กล่องเนื้อหากว้างขึ้น เหลือพื้นหลังฟาร์มโผล่ที่ขอบซ้าย-ขวาข้างละ ~20px (เดิม ~22px แต่ขยาย max-width ให้กว้างขึ้นบนจอใหญ่)',
+      'การ์ด/ตัวอักษรแสดงผลใหญ่ขึ้นเล็กน้อย · ยังเลื่อนด้านข้างไม่ได้ (v1.12) และการ์ดไม่ล้นกรอบ',
     ],
   },
 ];
