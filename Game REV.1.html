@@ -522,6 +522,123 @@ html.test-only-small #farm-sections-container{
 /* v1.16: ขยาย 4 กล่องออกด้านข้างสุด — ตัด padding ข้างของ #main + .farm-section (เหลือขอบ ~4px) */
 html.test-only-small #main{ padding-left:0; padding-right:0; }
 html.test-only-small .farm-section[data-seckey="small"]{ padding-left:0; padding-right:0; }
+/* ===== หน้า detail คอกสัตว์เล็ก (เวอร์ชันทดสอบ · เลียนแบบรูปอ้างอิง · ย่อพอดีหน้าเดียว) ===== */
+#pen-detail-overlay{ position:fixed; inset:0; z-index:100050; display:none;
+  flex-direction:column; gap:5px; padding:7px 7px 8px;
+  background:linear-gradient(160deg,#bfe0f2 0%,#cfe6b4 42%,#b7d98c 100%);
+  overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+#pen-detail-overlay::-webkit-scrollbar{ display:none; }
+#pen-detail-overlay.show{ display:flex; }
+.pd-panel{ background:linear-gradient(#fdf6e3,#f3e6c4); border:2px solid #d8b877; border-radius:12px;
+  box-shadow:0 3px 8px rgba(90,60,20,0.2), inset 0 1px 0 rgba(255,255,255,0.7); padding:7px 8px; }
+.pd-plabel{ display:inline-flex; align-items:center; gap:4px; padding:3px 10px; margin:-14px 0 5px; border-radius:8px;
+  background:linear-gradient(150deg,#a9702f,#6e4114); color:#ffe9c4; font-size:0.56rem; font-weight:900;
+  border:1.5px solid #caa15e; box-shadow:0 2px 4px rgba(50,30,8,0.35); }
+/* ---- top bar ---- */
+.pd-top{ display:flex; align-items:center; gap:6px; }
+.pd-back{ flex:0 0 auto; width:34px; height:30px; border-radius:9px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:1rem; color:#fff;
+  background:linear-gradient(150deg,#a9702f,#6e4114); border:2px solid #caa15e;
+  box-shadow:0 3px 6px rgba(50,30,8,0.4); }
+.pd-back:active{ transform:scale(0.93); }
+.pd-title{ font-size:0.95rem; font-weight:900; color:#6e4114; white-space:nowrap;
+  text-shadow:0 1px 0 rgba(255,255,255,0.7); }
+.pd-res{ margin-left:auto; display:flex; gap:4px; }
+.pd-chip{ display:flex; align-items:center; gap:3px; padding:2px 3px 2px 7px; border-radius:12px;
+  background:linear-gradient(#fff8e8,#f1e3c2); border:1.5px solid #d8b877; font-size:0.56rem; font-weight:900; color:#5a3d12; }
+.pd-chip .pd-chip-ic{ font-size:0.68rem; }
+.pd-chip .pd-chip-plus{ width:14px; height:14px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(150deg,#7ac84a,#3f9220); color:#fff; font-size:0.6rem; font-weight:900; box-shadow:0 1px 2px rgba(40,110,20,0.4); }
+/* ---- hero row (ภาพ + สรุป + ปุ่มสร้าง) ---- */
+.pd-herorow{ display:flex; gap:5px; align-items:stretch; }
+.pd-hero{ position:relative; flex:1.05; border-radius:12px; overflow:hidden; border:2px solid #cBA876;
+  background:linear-gradient(#bfe6f7,#cfe6b0); display:flex; align-items:center; justify-content:center; padding:4px;
+  box-shadow:inset 0 2px 7px rgba(50,90,120,0.2); min-height:96px; }
+.pd-hero img{ max-width:100%; max-height:88px; object-fit:contain; filter:drop-shadow(0 3px 4px rgba(60,40,10,0.3)); }
+.pd-hero-new{ position:absolute; top:5px; right:5px; padding:2px 7px; border-radius:6px; font-size:0.46rem; font-weight:900;
+  color:#fff; background:linear-gradient(135deg,#ff5a4d,#d81f10); border:1.5px solid #ffdcc6; box-shadow:0 2px 4px rgba(150,20,10,0.4); }
+.pd-hero-lv{ position:absolute; left:5px; right:5px; bottom:5px; display:flex; align-items:center; gap:4px; }
+.pd-hero-lvtag{ flex:0 0 auto; padding:2px 6px; border-radius:6px; font-size:0.5rem; font-weight:900; color:#fff;
+  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:1px solid rgba(255,255,255,0.5); }
+.pd-hero-bar{ flex:1; position:relative; height:13px; border-radius:7px; overflow:hidden; background:rgba(40,30,10,0.4);
+  border:1px solid rgba(255,255,255,0.4); display:flex; align-items:center; justify-content:center; }
+.pd-hero-bar>i{ position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#ffd24a,#f0a81e); }
+.pd-hero-bar>span{ position:relative; font-size:0.44rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.4); }
+.pd-hero-up{ flex:0 0 auto; width:20px; height:16px; border-radius:5px; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:1px solid rgba(255,255,255,0.5); }
+.pd-summary{ flex:1.15; display:flex; flex-direction:column; }
+.pd-srow{ display:flex; align-items:center; gap:4px; font-size:0.5rem; color:#5a4020; font-weight:700; line-height:1.5; }
+.pd-srow .pd-sic{ font-size:0.62rem; flex:0 0 auto; }
+.pd-srow b{ margin-left:auto; font-weight:900; color:#3a2a10; }
+.pd-srow .pd-sq{ margin-left:auto; font-weight:900; color:#2f8a18; }
+.pd-buildcol{ flex:0.72; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  cursor:pointer; }
+.pd-buildplus{ width:44px; height:44px; border-radius:50%; background:linear-gradient(150deg,#7ac84a,#3f9220);
+  box-shadow:0 0 0 3px rgba(255,255,255,0.85), 0 4px 9px rgba(40,110,20,0.5), inset 0 2px 4px rgba(255,255,255,0.5);
+  position:relative; }
+.pd-buildplus::before,.pd-buildplus::after{ content:''; position:absolute; top:50%; left:50%; background:#fff; border-radius:2px; transform:translate(-50%,-50%); }
+.pd-buildplus::before{ width:17px; height:5px; } .pd-buildplus::after{ width:5px; height:17px; }
+.pd-buildlabel{ font-size:0.5rem; font-weight:900; color:#3a6a18; text-align:center; line-height:1.1; }
+.pd-buildprice{ display:flex; align-items:center; gap:3px; padding:2px 10px; border-radius:999px;
+  background:linear-gradient(150deg,#7ac84a,#2f7a18); color:#fff; font-size:0.6rem; font-weight:900;
+  box-shadow:0 2px 5px rgba(40,110,20,0.4); }
+.pd-buildcol:active .pd-buildplus{ transform:scale(0.95); }
+/* ---- tabs ---- */
+.pd-tabs{ display:flex; gap:3px; }
+.pd-tab{ flex:1; padding:5px 2px; border-radius:8px 8px 3px 3px; text-align:center; cursor:pointer;
+  font-size:0.54rem; font-weight:900; color:#f3e2c0;
+  background:linear-gradient(#8a5a2c,#5f3a17); border:1.5px solid #6e4114; box-shadow:0 2px 3px rgba(50,30,8,0.3); }
+.pd-tab.active{ color:#6e4114; background:linear-gradient(#fdedcb,#f0d69e); border-color:#caa15e; }
+/* ---- content 2 คอลัมน์ ---- */
+.pd-cols{ display:flex; gap:5px; align-items:flex-start; }
+.pd-col{ flex:1; min-width:0; display:flex; flex-direction:column; gap:9px; }
+.pd-desc{ font-size:0.5rem; color:#6a5030; line-height:1.35; margin-bottom:5px; }
+.pd-stat2{ display:grid; grid-template-columns:1fr 1fr; gap:3px 6px; }
+.pd-st{ display:flex; flex-direction:column; }
+.pd-st i{ font-size:0.42rem; font-style:normal; color:#9a7a40; font-weight:700; }
+.pd-st b{ font-size:0.54rem; color:#4a3210; font-weight:900; }
+.pd-st .pd-stars{ font-size:0.6rem; color:#f5c518; letter-spacing:-1px; }
+.pd-st .pd-stars .o{ color:#d8c89a; }
+/* ผลิตผลที่ได้รับ / สัตว์ — การ์ดเล็ก 3 ช่อง */
+.pd-mini3{ display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.pd-minicard{ background:linear-gradient(#fbf3dd,#f2e4c0); border:1.5px solid #dcc596; border-radius:8px;
+  padding:5px 2px; text-align:center; }
+.pd-minicard .pd-mtitle{ font-size:0.46rem; font-weight:900; color:#5a3d12; }
+.pd-minicard .pd-mic{ font-size:1.35rem; line-height:1.1; margin:1px 0; }
+.pd-minicard .pd-mqty{ font-size:0.54rem; font-weight:900; color:#3a2a10; }
+.pd-minicard .pd-msub{ font-size:0.42rem; color:#8a6a3a; font-weight:700; }
+.pd-btn{ margin-top:2px; padding:5px; border-radius:8px; text-align:center; cursor:pointer;
+  font-size:0.54rem; font-weight:900; color:#f3e2c0;
+  background:linear-gradient(#a9702f,#6e4114); border:1.5px solid #caa15e; box-shadow:0 2px 4px rgba(50,30,8,0.3); }
+.pd-btn:active{ transform:scale(0.98); }
+/* อัปเกรด */
+.pd-uphead{ display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.pd-uplv{ font-size:0.72rem; font-weight:900; color:#3c7d1c; }
+.pd-uphead .pd-stars{ font-size:0.66rem; color:#f5c518; letter-spacing:-1px; margin-left:auto; }
+.pd-uphead .pd-stars .o{ color:#d8c89a; }
+.pd-uprow{ display:flex; align-items:center; font-size:0.5rem; font-weight:700; color:#6a5030; padding:2px 0; border-bottom:1px dashed rgba(180,140,80,0.35); }
+.pd-uprow span:first-child{ flex:1; }
+.pd-uprow .pd-uv{ font-weight:900; color:#4a3210; }
+.pd-uprow .pd-uv2{ font-weight:900; color:#2f8a18; margin-left:4px; }
+.pd-mats{ display:flex; align-items:center; gap:6px; margin-top:5px; }
+.pd-mat{ display:flex; flex-direction:column; align-items:center; font-size:0.46rem; font-weight:900; color:#c0491f; }
+.pd-mat .pd-matic{ font-size:0.95rem; }
+.pd-upbtn{ margin-left:auto; padding:5px 11px; border-radius:9px; text-align:center; cursor:pointer;
+  font-size:0.56rem; font-weight:900; color:#fff; line-height:1.15;
+  background:linear-gradient(#8f9aa2,#5f6a72); border:1.5px solid #aeb8bf; box-shadow:0 2px 4px rgba(40,50,60,0.3); }
+/* คอกของคุณ (ช่อง) */
+.pd-slots{ display:flex; gap:5px; }
+.pd-slot{ flex:1; border-radius:10px; border:2px solid #cBA876; padding:4px; text-align:center;
+  background:linear-gradient(#f7ecd0,#ecdcb0); min-height:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.pd-slot.locked{ background:linear-gradient(#dcd2c0,#cabfa8); color:#7a6f5a; }
+.pd-slot img{ max-width:100%; max-height:44px; object-fit:contain; }
+.pd-slot .pd-slotlv{ font-size:0.44rem; font-weight:900; color:#3c7d1c; }
+.pd-slot .pd-slotsub{ font-size:0.42rem; font-weight:800; }
+.pd-slot .pd-lock{ font-size:1.1rem; }
+.pd-slot.add{ background:linear-gradient(150deg,#7ac84a,#3f9220); border-color:#5aa832; color:#fff; cursor:pointer; }
+.pd-slot.add .pd-slotsub{ color:#fff; }
+.pd-slotplus{ font-size:1.2rem; font-weight:900; }
+
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -6241,6 +6358,16 @@ const UPDATE_HISTORY = [
       'ปรับ #main width:calc(100% - 8px) → calc(100% - 14px) (margin 4→7) → ขอบพื้นหลังฟาร์มข้างละ ~7px · การ์ด 198→195px',
     ],
   },
+  {
+    version: '1.18',
+    date: '04/07/2026',
+    title: 'ทดสอบ: กดการ์ดคอกสัตว์เล็ก → เด้งหน้า detail เต็มจอ (เลียนแบบรูปอ้างอิง · พอดีหน้าเดียว)',
+    details: [
+      'กดการ์ด .pen2 → openPenDetail() เปิด overlay #pen-detail-overlay (position:fixed เต็มจอ z-index สูง) · ปุ่ม ↩ ปิด (closePenDetail)',
+      'เลย์เอาต์เลียนแบบรูป: top bar (back+ชื่อ+ทรัพยากร 🪙🌾💎) · hero ภาพคอก+NEW+แถบ Lv.2 150/300 · แผง "สรุปรายละเอียด" · ปุ่มสร้างคอก 🪙1,000 · แท็บ ข้อมูล/อัปเกรด/สัตว์/ผลิตผล/ประวัติ · 2 คอลัมน์: รายละเอียด+ผลิตผลที่ได้รับ | ตัวอย่างสัตว์+อัปเกรด(Lv.2→3+วัสดุ) · แถบ "คอกของคุณ" (1 หลัง+3 ล็อก+เพิ่มช่อง)',
+      'ค่าทั้งหมด mockup ตายตัวตามรูป · ย่ออีโมจิ/กล่อง/ตัวอักษร (font 0.42–0.95rem) ให้พอดีหน้าเดียวไม่ต้องสกอล · ปุ่มสร้าง/เพิ่มช่อง → startConstruction(small)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7209,6 +7336,135 @@ function selCrop(id){
 //  FARM PLOTS
 // ============================================================
 // ─── render หมวดเกษตรทั้งหมดตาม sectionOrder (real-time) ───
+
+// ===== หน้า detail คอกสัตว์เล็ก (เวอร์ชันทดสอบ · เลียนแบบรูปอ้างอิง) =====
+function penDetailHtml(){
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
+  const st=(n)=>'★★★★★'.slice(0,n)+'<span class="o">'+'★★★★★'.slice(0,5-n)+'</span>';
+  return `
+  <div class="pd-top">
+    <div class="pd-back" onclick="closePenDetail()">↩</div>
+    <div class="pd-title">คอกสัตว์เล็ก</div>
+    <div class="pd-res">
+      <div class="pd-chip"><span class="pd-chip-ic">🪙</span>125,450<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">🌾</span>2,340<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">💎</span>320<span class="pd-chip-plus">+</span></div>
+    </div>
+  </div>
+
+  <div class="pd-herorow">
+    <div class="pd-hero">
+      <img src="${scene}" alt="คอกสัตว์เล็ก">
+      <div class="pd-hero-new">NEW</div>
+      <div class="pd-hero-lv"><span class="pd-hero-lvtag">Lv.2</span>
+        <div class="pd-hero-bar"><i style="width:50%"></i><span>150 / 300</span></div>
+        <div class="pd-hero-up">⬆️</div></div>
+    </div>
+    <div class="pd-panel pd-summary">
+      <div class="pd-plabel">🐔 สรุปรายละเอียด</div>
+      <div class="pd-srow"><span class="pd-sic">🥚</span>ไข่<span class="pd-sq">x4</span></div>
+      <div class="pd-srow"><span class="pd-sic">🪶</span>ขน<span class="pd-sq">x1</span></div>
+      <div class="pd-srow"><span class="pd-sic">🍖</span>เนื้อ<span class="pd-sq">x1</span></div>
+      <div class="pd-srow"><span class="pd-sic">🟩</span>ขนาดพื้นที่<b>100 ตร.ม.</b></div>
+      <div class="pd-srow"><span class="pd-sic">⏱️</span>เวลาก่อสร้าง<b>45 วินาที</b></div>
+      <div class="pd-srow"><span class="pd-sic">👷</span>ใช้แรงงาน<b>1 คน</b></div>
+      <div class="pd-srow"><span class="pd-sic">⭐</span>ชื่อเสียง<b>+15</b></div>
+      <div class="pd-srow"><span class="pd-sic">🏠</span>สร้างแล้ว<b>0 / 4 หลัง</b></div>
+    </div>
+    <div class="pd-buildcol" onclick="startConstruction('small')">
+      <div class="pd-buildplus"></div>
+      <div class="pd-buildlabel">สร้างคอกสัตว์เล็ก</div>
+      <div class="pd-buildprice">🪙 1,000</div>
+    </div>
+  </div>
+
+  <div class="pd-tabs">
+    <div class="pd-tab active">ข้อมูล</div><div class="pd-tab">อัปเกรด</div>
+    <div class="pd-tab">สัตว์</div><div class="pd-tab">ผลิตผล</div><div class="pd-tab">ประวัติ</div>
+  </div>
+
+  <div class="pd-cols">
+    <div class="pd-col">
+      <div class="pd-panel">
+        <div class="pd-plabel">📋 รายละเอียด</div>
+        <div class="pd-desc">คอกเลี้ยงสัตว์ขนาดเล็ก ใช้เลี้ยงไก่ เป็ด หรือกระต่าย เหมาะสำหรับเริ่มต้นฟาร์ม</div>
+        <div class="pd-stat2">
+          <div class="pd-st"><i>ขนาดพื้นที่</i><b>100 ตร.ม.</b></div>
+          <div class="pd-st"><i>ความจุ</i><b>10 ตัว</b></div>
+          <div class="pd-st"><i>เวลาผลิต</i><b>45 วินาที</b></div>
+          <div class="pd-st"><i>ใช้แรงงาน</i><b>1 คน</b></div>
+          <div class="pd-st"><i>ค่าบำรุงรักษา</i><b>20 / ชม.</b></div>
+          <div class="pd-st"><i>ชื่อเสียง</i><b>+15</b></div>
+          <div class="pd-st"><i>ระดับดาว</i><b class="pd-stars">${st(3)}</b></div>
+          <div class="pd-st"><i>สร้างแล้ว</i><b>0 / 4 หลัง</b></div>
+        </div>
+      </div>
+      <div class="pd-panel">
+        <div class="pd-plabel">🥚 ผลิตผลที่ได้รับ</div>
+        <div class="pd-mini3">
+          <div class="pd-minicard"><div class="pd-mtitle">ไข่</div><div class="pd-mic">🥚</div><div class="pd-mqty">x4</div><div class="pd-msub">45 วินาที</div></div>
+          <div class="pd-minicard"><div class="pd-mtitle">ขน</div><div class="pd-mic">🪶</div><div class="pd-mqty">x1</div><div class="pd-msub">1 นาที</div></div>
+          <div class="pd-minicard"><div class="pd-mtitle">เนื้อ</div><div class="pd-mic">🍖</div><div class="pd-mqty">x1</div><div class="pd-msub">5 นาที</div></div>
+        </div>
+        <div class="pd-btn">🧺 ดูผลิตผลทั้งหมด</div>
+      </div>
+    </div>
+    <div class="pd-col">
+      <div class="pd-panel">
+        <div class="pd-plabel">🐾 ตัวอย่างสัตว์ที่เลี้ยงได้</div>
+        <div class="pd-mini3">
+          <div class="pd-minicard"><div class="pd-mtitle">ไก่</div><div class="pd-mic">🐔</div><div class="pd-mqty">⭐x10</div><div class="pd-msub">ให้ไข่</div></div>
+          <div class="pd-minicard"><div class="pd-mtitle">เป็ด</div><div class="pd-mic">🦆</div><div class="pd-mqty">⭐x8</div><div class="pd-msub">ให้ไข่</div></div>
+          <div class="pd-minicard"><div class="pd-mtitle">กระต่าย</div><div class="pd-mic">🐰</div><div class="pd-mqty">⭐x6</div><div class="pd-msub">ให้ขน</div></div>
+        </div>
+        <div class="pd-btn">🐾 ดูสัตว์ทั้งหมด</div>
+      </div>
+      <div class="pd-panel">
+        <div class="pd-plabel">⬆️ อัปเกรดคอกสัตว์เล็ก</div>
+        <div class="pd-uphead"><span class="pd-uplv">Lv.2 → Lv.3</span><span class="pd-stars">${st(3)}</span></div>
+        <div class="pd-uprow"><span>ความจุ</span><span class="pd-uv">10</span><span class="pd-uv2">→ 15</span></div>
+        <div class="pd-uprow"><span>เวลาผลิต</span><span class="pd-uv">45 วิ</span><span class="pd-uv2">→ 40 วิ</span></div>
+        <div class="pd-uprow"><span>ค่าบำรุงรักษา</span><span class="pd-uv">20/ชม.</span><span class="pd-uv2">→ 25/ชม.</span></div>
+        <div class="pd-uprow"><span>ชื่อเสียง</span><span class="pd-uv">+15</span><span class="pd-uv2">→ +25</span></div>
+        <div class="pd-mats">
+          <div class="pd-mat"><span class="pd-matic">🪵</span>18/20</div>
+          <div class="pd-mat"><span class="pd-matic">🪨</span>12/15</div>
+          <div class="pd-mat"><span class="pd-matic">🔩</span>8/10</div>
+          <div class="pd-mat"><span class="pd-matic">🪚</span>4/5</div>
+          <div class="pd-upbtn">อัปเกรด<br>⏱️ 2 ชม.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-panel">
+    <div class="pd-plabel">🏠 คอกสัตว์เล็กของคุณ</div>
+    <div class="pd-slots">
+      <div class="pd-slot"><img src="${scene}"><div class="pd-slotlv">Lv.2</div><div class="pd-slotsub" style="color:#3c7d1c">⭐x2 · 🟢 กำลังผลิต</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 2</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 3</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 4</div></div>
+      <div class="pd-slot add" onclick="startConstruction('small')"><div class="pd-slotplus">＋</div><div class="pd-slotsub">เพิ่มช่อง 💎20</div></div>
+    </div>
+  </div>`;
+}
+function openPenDetail(){
+  let ov = document.getElementById('pen-detail-overlay');
+  if(!ov){ ov = document.createElement('div'); ov.id = 'pen-detail-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = penDetailHtml();
+  ov.classList.add('show');
+  ov.scrollTop = 0;
+  // แท็บ (สลับ active อย่างเดียว — เนื้อหาเป็น mock หน้า "ข้อมูล")
+  ov.querySelectorAll('.pd-tab').forEach(t => t.addEventListener('click', () => {
+    ov.querySelectorAll('.pd-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  }));
+}
+function closePenDetail(){
+  const ov = document.getElementById('pen-detail-overlay');
+  if(ov) ov.classList.remove('show');
+}
+
 // ===== เวอร์ชันทดสอบ: true = โชว์เฉพาะหมวดคอกสัตว์เล็ก (4 กล่อง) จัดกลางหน้า · false = โชว์ครบทุกหมวดตามปกติ =====
 const TEST_ONLY_SMALL = true;
 try{ document.documentElement.classList.toggle('test-only-small', TEST_ONLY_SMALL); }catch(e){}
@@ -10566,12 +10822,9 @@ farmContainer.addEventListener('click', function(e){
     if(pAdd.dataset.addtype) startConstruction(pAdd.dataset.addtype);
     return;
   }
-  // ปุ่มเพิ่มคอก ในการ์ดคอกสัตว์เล็ก v4 (.pen2-act) — สั่งก่อสร้าง
-  const pAct = e.target.closest('.pen2-act');
-  if(pAct){
-    if(pAct.dataset.addtype) startConstruction(pAct.dataset.addtype);
-    return;
-  }
+  // กดการ์ดคอกสัตว์เล็ก (.pen2) → เปิดหน้า detail (เวอร์ชันทดสอบ)
+  const penCard = e.target.closest('.pen2');
+  if(penCard){ if(typeof openPenDetail==='function') openPenDetail(); return; }
   // กล่องเล็ก (ปุ่มเพิ่ม) ในการ์ดสิ่งปลูกสร้างแบบใหม่ — สั่งก่อสร้าง
   const aCard = e.target.closest('.acard');
   if(aCard){
