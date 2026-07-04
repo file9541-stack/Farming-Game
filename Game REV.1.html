@@ -446,6 +446,94 @@ body{
   font-size:0.78rem; font-weight:900; color:#3a8a1c; }
 .pc-coin{ font-size:0.84rem; line-height:1; }
 
+/* ===== การ์ดคอกสัตว์เล็ก v3 (.pen2) — แนวตั้ง สไตล์รูปอ้างอิง · แทนการ์ดหมวดเดิม ===== */
+.pen2{ position:relative; width:100%; grid-column:1 / -1;
+  display:flex; flex-direction:column; gap:11px; padding:16px 15px 17px;
+  background:linear-gradient(157deg,#fdf7e6 0%,#f4e8c9 58%,#ecdcb4 100%) padding-box,
+    linear-gradient(145deg,#b5813f 0%,#7a4d1c 55%,#9c6a2e 100%) border-box;
+  border:4px solid transparent; border-radius:22px;
+  box-shadow:0 10px 26px rgba(80,50,15,0.3), inset 0 2px 1px rgba(255,255,255,0.8),
+    inset 0 -5px 11px rgba(150,110,50,0.16); }
+.pen2 .pc-numbadge{ top:13px; left:13px; }
+/* ป้ายไม้หัวการ์ด (ชื่อ + ดาว) */
+.pen2-head{ position:relative; align-self:center; display:flex; flex-direction:column; align-items:center; gap:4px;
+  min-width:62%; margin:2px 0 1px; padding:11px 26px 10px;
+  background:linear-gradient(150deg,#8a5a2c 0%,#5f3a17 55%,#79471f 100%) padding-box,
+    linear-gradient(160deg,#d29a58,#6e4114) border-box;
+  border:3px solid transparent; border-radius:14px;
+  box-shadow:0 6px 15px rgba(50,30,8,0.4), inset 0 2px 2px rgba(255,220,160,0.28),
+    inset 0 -5px 9px rgba(30,16,4,0.42); }
+.pen2-title{ font-size:1.18rem; font-weight:900; color:#fff3d8; letter-spacing:0.5px; white-space:nowrap;
+  text-shadow:0 2px 0 #3a2109, 0 -1px 0 #2a1706, 1px 0 0 #3a2109, -1px 0 0 #3a2109; }
+.pen2-stars{ display:flex; gap:3px; }
+.pen2-stars i{ width:21px; height:21px; background-position:center; background-repeat:no-repeat; background-size:contain;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,0.35)); }
+.pen2-stars i.on{ background-image:url('ภาพหน้าจอ/ui-star-on.png'); }
+.pen2-stars i.off{ background-image:url('ภาพหน้าจอ/ui-star-off.png'); }
+.pen2-new{ position:absolute; top:-11px; right:-12px; padding:5px 13px; border-radius:10px;
+  font-size:0.74rem; font-weight:900; color:#fff; letter-spacing:1.2px;
+  background:linear-gradient(135deg,#ff5a4d,#d81f10); border:2.5px solid #ffdcc6;
+  box-shadow:0 4px 9px rgba(150,20,10,0.5); }
+/* สถานะกำลังผลิต */
+.pen2-status{ align-self:flex-start; display:inline-flex; align-items:center; gap:8px;
+  padding:6px 16px; border-radius:22px; font-size:0.82rem; font-weight:800; color:#fff;
+  background:linear-gradient(160deg,#5aa832,#3c7d1c); border:2px solid rgba(255,255,255,0.55);
+  box-shadow:0 3px 8px rgba(40,90,20,0.3), inset 0 1px 0 rgba(255,255,255,0.35); }
+.pen2-status .dot{ width:11px; height:11px; border-radius:50%; background:#c8ff70;
+  box-shadow:0 0 7px #b6ff4d, inset 0 0 0 2px rgba(255,255,255,0.55);
+  animation:pen2blink 1.4s ease-in-out infinite; }
+@keyframes pen2blink{ 0%,100%{ opacity:1; } 50%{ opacity:0.45; } }
+/* ภาพคอก */
+.pen2-scene{ width:100%; aspect-ratio:1.5; border-radius:16px; overflow:hidden;
+  background:linear-gradient(#bfe6f7 0%,#d7edc4 52%,#bcd98a 100%);
+  border:3px solid rgba(120,80,30,0.4);
+  display:flex; align-items:center; justify-content:center; padding:6px;
+  box-shadow:inset 0 3px 12px rgba(50,90,120,0.22), inset 0 -3px 8px rgba(80,120,40,0.18); }
+.pen2-scene img{ max-width:100%; max-height:100%; object-fit:contain;
+  filter:drop-shadow(0 6px 9px rgba(60,40,10,0.35)); }
+/* แถวสถิติ 5 ช่อง */
+.pen2-stats{ display:flex; align-items:stretch; justify-content:space-between;
+  padding:11px 4px; border-radius:14px;
+  background:linear-gradient(#fbf3dd,#f4e7c6);
+  border:2px solid rgba(150,108,52,0.28);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.7); }
+.pen2-stat{ flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; padding:0 2px; }
+.pen2-stat-ic{ font-size:1.25rem; line-height:1; }
+.pen2-stat-label{ font-size:0.5rem; font-weight:700; color:#6a5230; line-height:1.15; }
+.pen2-stat-val{ font-size:0.74rem; font-weight:900; color:#3a2a12; }
+.pen2-stat-div{ width:1.5px; align-self:center; height:60%;
+  background:linear-gradient(transparent,rgba(150,108,52,0.35) 20%,rgba(150,108,52,0.35) 80%,transparent); }
+/* แถวชื่อเสียง / มูลค่าทรัพย์สิน */
+.pen2-repbar{ display:flex; gap:10px; }
+.pen2-rep{ flex:1; display:flex; align-items:center; gap:9px; padding:9px 12px; border-radius:13px;
+  background:linear-gradient(#fbf3dd,#f2e4c0); border:2px solid rgba(150,108,52,0.26);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.7); }
+.pen2-rep-ic{ font-size:1.5rem; line-height:1; filter:drop-shadow(0 2px 2px rgba(120,80,20,0.3)); }
+.pen2-rep-txt{ display:flex; flex-direction:column; min-width:0; }
+.pen2-rep-label{ font-size:0.56rem; font-weight:700; color:#6a5230; }
+.pen2-rep-val{ font-size:0.98rem; font-weight:900; color:#2f6a16; white-space:nowrap; }
+.pen2-repbar .pen2-rep:last-child .pen2-rep-val{ color:#b07a12; }
+.pen2-coin{ font-size:0.85rem; }
+/* แถบเลเวล + ปุ่มอัปเกรด */
+.pen2-foot{ display:flex; align-items:center; gap:10px; }
+.pen2-lv{ flex:0 0 auto; padding:8px 15px; border-radius:12px; font-size:0.9rem; font-weight:900; color:#fff;
+  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:2px solid rgba(255,255,255,0.5);
+  box-shadow:0 3px 7px rgba(40,90,20,0.3); }
+.pen2-exp{ flex:1; position:relative; height:30px; border-radius:16px; overflow:hidden;
+  background:linear-gradient(#e7d9b6,#dbc9a0); border:2px solid rgba(120,80,30,0.35);
+  box-shadow:inset 0 2px 4px rgba(90,60,20,0.28); display:flex; align-items:center; justify-content:center; }
+.pen2-exp-fill{ position:absolute; left:0; top:0; bottom:0;
+  background:linear-gradient(90deg,#7ed24a,#4ea223); border-radius:0 8px 8px 0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4); }
+.pen2-exp-txt{ position:relative; z-index:2; font-size:0.8rem; font-weight:900; color:#2a4a12;
+  text-shadow:0 1px 0 rgba(255,255,255,0.5); }
+.pen2-up{ flex:0 0 auto; width:46px; height:44px; border-radius:12px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:2px solid rgba(255,255,255,0.5);
+  box-shadow:0 4px 8px rgba(40,90,20,0.35), inset 0 1px 0 rgba(255,255,255,0.35);
+  transition:transform 0.1s, filter 0.15s; }
+.pen2-up:active{ transform:scale(0.93); filter:brightness(1.08); }
+
 .plot{
   aspect-ratio:1;background:var(--soil);
   border-radius:10px;border:2px solid var(--soil2);
@@ -6088,6 +6176,17 @@ const UPDATE_HISTORY = [
       'เอา listener resize/orientationchange (scale) ออก · ป้ายปุ่มสลับ = "จอมือถือเต็มจอ" · มือถือ (≤820px) ยังเข้าโหมดนี้อัตโนมัติ',
     ],
   },
+  {
+    version: '1.10',
+    date: '04/07/2026',
+    title: 'ออกแบบการ์ดคอกสัตว์เล็กใหม่ (.pen2) แนวตั้ง สไตล์รูปอ้างอิง — แทนการ์ดหมวดเดิม',
+    details: [
+      'เปลี่ยน renderAnimals("small") จากการ์ดแนวนอน .pcard → การ์ดแนวตั้ง .pen2 (penSmallCardHtml): ป้ายไม้หัวการ์ด (ชื่อ+ดาว) + ป้าย NEW + สถานะ "กำลังผลิต" (จุดกระพริบ) + ภาพคอกใหญ่ (pen-small-coop.png) บนพื้นหลังฟ้า-หญ้า',
+      'แถวสถิติ 5 ช่อง (คอกย่อย 3/6 · ประเภทสัตว์ 2/5 · ผลิตผล 3/8 · คนงาน 3/6 · พื้นที่ 300 ตร.ม.) + แถวชื่อเสียงสะสม +15 / มูลค่าทรัพย์สิน 28,450 + แถบ Lv.2 (230/300) + ปุ่มอัปเกรด ⬆️',
+      'ค่าทั้งหมดเป็นค่าตัวอย่างตายตัว (mockup) ใน PEN_SMALL_CARD ยังไม่ผูกข้อมูลจริง · เก็บ .pc-numbadge (สลับลำดับหมวด) + ปุ่ม ⬆️ (data-addtype=small → startConstruction) ให้ฟังก์ชันเดิมทำงานต่อได้',
+      'การ์ดกว้าง 100% ของ #main จึงพอดีกรอบเกมทุกโหมด (มือถือเต็มจอ/PC)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7502,10 +7601,56 @@ function penCardV2Html(type){
   </div>`;
 }
 
+// ── การ์ดคอกสัตว์เล็ก v3 (แนวตั้ง สไตล์รูปอ้างอิง) — ค่าตัวอย่างตายตัว (mockup) ──
+const PEN_SMALL_CARD = {
+  title:'คอกสัตว์เล็ก', stars:2, tag:'NEW', status:'กำลังผลิต',
+  scene:'ภาพหน้าจอ/pen-small-coop.png',
+  stats:[
+    { ic:'🏚️',   label:'คอกย่อยทั้งหมด', val:'3/6' },
+    { ic:'🐔',   label:'ประเภทสัตว์',    val:'2/5' },
+    { ic:'🥚',   label:'ผลิตผลที่จะได้',  val:'3/8' },
+    { ic:'👨‍🌾', label:'คนงานทั้งหมด',   val:'3/6' },
+    { ic:'🌿',   label:'พื้นที่ทั้งหมด',  val:'300 ตร.ม.' },
+  ],
+  fame:'+15', asset:'28,450',
+  level:2, expNow:230, expMax:300,
+};
+function penSmallCardHtml(){
+  const d = PEN_SMALL_CARD;
+  // รูปคอก: ใช้ตัวที่ฝัง base64 ใน BUILD_CARD.small.thumb (ไฟล์ build) · fallback = path (ซอร์ส)
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || d.scene;
+  const secidx = (typeof sectionOrder!=='undefined') ? sectionOrder.indexOf('small') : -1;
+  let stars=''; for(let i=0;i<5;i++) stars += `<i class="${i < d.stars ? 'on':'off'}"></i>`;
+  const stats = d.stats.map(s =>
+    `<div class="pen2-stat"><span class="pen2-stat-ic">${s.ic}</span><span class="pen2-stat-label">${s.label}</span><span class="pen2-stat-val">${s.val}</span></div>`
+  ).join('<span class="pen2-stat-div"></span>');
+  const pct = Math.max(0, Math.min(100, Math.round(d.expNow / d.expMax * 100)));
+  return `<div class="pen2">
+    <div class="pc-numbadge" data-secidx="${secidx}">1</div>
+    <div class="pen2-head">
+      <div class="pen2-title">${d.title}</div>
+      <div class="pen2-stars">${stars}</div>
+      ${d.tag ? `<div class="pen2-new">${d.tag}</div>` : ''}
+    </div>
+    <div class="pen2-status"><span class="dot"></span>${d.status}</div>
+    <div class="pen2-scene"><img src="${scene}" alt="คอกสัตว์เล็ก"></div>
+    <div class="pen2-stats">${stats}</div>
+    <div class="pen2-repbar">
+      <div class="pen2-rep"><span class="pen2-rep-ic">⭐</span><div class="pen2-rep-txt"><span class="pen2-rep-label">ชื่อเสียงสะสม</span><span class="pen2-rep-val">${d.fame}</span></div></div>
+      <div class="pen2-rep"><span class="pen2-rep-ic">🪙</span><div class="pen2-rep-txt"><span class="pen2-rep-label">มูลค่าทรัพย์สิน</span><span class="pen2-rep-val">${d.asset} <span class="pen2-coin">🪙</span></span></div></div>
+    </div>
+    <div class="pen2-foot">
+      <div class="pen2-lv">Lv.${d.level}</div>
+      <div class="pen2-exp"><div class="pen2-exp-fill" style="width:${pct}%"></div><span class="pen2-exp-txt">${d.expNow}/${d.expMax}</span></div>
+      <div class="pen2-up" data-addtype="small" title="อัปเกรด/เพิ่มคอก">⬆️</div>
+    </div>
+  </div>`;
+}
+
 function renderAnimals(){
   const smallGrid = document.getElementById('small-grid');
   const bigGrid   = document.getElementById('big-grid');
-  if(smallGrid){ smallGrid.innerHTML = penCardV2Html('small'); }  // เทสการ์ด v2 (รูปจริง)
+  if(smallGrid){ smallGrid.innerHTML = penSmallCardHtml(); }  // การ์ด v3 (แนวตั้ง สไตล์รูปอ้างอิง)
   if(bigGrid){   bigGrid.innerHTML   = bcardHtml('big'); }
 }
 
@@ -10352,6 +10497,12 @@ farmContainer.addEventListener('click', function(e){
   const pAdd = e.target.closest('.pc-addcol');
   if(pAdd){
     if(pAdd.dataset.addtype) startConstruction(pAdd.dataset.addtype);
+    return;
+  }
+  // ปุ่มอัปเกรด/เพิ่มคอก ในการ์ดคอกสัตว์เล็ก v3 (.pen2-up) — สั่งก่อสร้าง
+  const pUp = e.target.closest('.pen2-up');
+  if(pUp){
+    if(pUp.dataset.addtype) startConstruction(pUp.dataset.addtype);
     return;
   }
   // กล่องเล็ก (ปุ่มเพิ่ม) ในการ์ดสิ่งปลูกสร้างแบบใหม่ — สั่งก่อสร้าง
