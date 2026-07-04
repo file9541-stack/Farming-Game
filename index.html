@@ -3504,16 +3504,16 @@ html.mode-landscape #main{ height:100%; max-width:none; }
 html.mode-landscape #topbar{ max-width:none; }
 html.mode-landscape #bottom-nav{ max-width:none; }
 
-/* ===== โหมดหน้าจอ 13:16 แนวตั้ง (มาตรฐานจอโทรศัพท์ DEV-001) — เวทีกลางจอ letterbox =====
-   เทคนิคเดียวกับ 4:3: transform บน body → ลูก position:fixed อิงกรอบเวที 13:16 อัตโนมัติ */
+/* ===== โหมดหน้าจอ 9:16 แนวตั้ง (มาตรฐานจอโทรศัพท์ DEV-001) — เวทีกลางจอ letterbox =====
+   เทคนิคเดียวกับ 4:3: transform บน body → ลูก position:fixed อิงกรอบเวที 9:16 อัตโนมัติ */
 html.mode-portrait{
   min-height:100vh;
   display:flex; align-items:center; justify-content:center;
 }
 html.mode-portrait body{
   max-width:none;
-  width:585px;          /* ฟิกขนาดตายตัว 13:16 (585×720) — ไม่ยืด/หดตามจอ */
-  height:720px;
+  width:585px;          /* ฟิกขนาดตายตัว 9:16 (585×1040) — ไม่ยืด/หดตามจอ */
+  height:1040px;
   min-height:0;
   margin:0;
   transform:translateZ(0);     /* สร้าง containing block ให้ลูก position:fixed → เข้ากรอบเวที */
@@ -3538,7 +3538,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
 }
 .screen-toggle:hover{ background:rgba(200,140,0,0.18); }
 .screen-toggle:active{ transform:scale(0.96); }
-/* มือถือเอาไว้ก่อน — ตอนนี้ทำ PC อย่างเดียว แสดงเฉพาะกรอบ 13:16 จึงซ่อนปุ่มสลับโหมด
+/* มือถือเอาไว้ก่อน — ตอนนี้ทำ PC อย่างเดียว แสดงเฉพาะกรอบ 9:16 จึงซ่อนปุ่มสลับโหมด
    (เก็บโค้ด/ตรรกะปุ่มไว้ครบ รอเปิดใช้ตอนพัฒนาเวอร์ชันมือถือ) */
 #screen-mode-toggle{ display:none; }
 
@@ -3851,7 +3851,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
       try{ localStorage.setItem(MODE_KEY, next); }catch(e){}
       applyMode(next);
       if(typeof window.toast === 'function'){
-        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 13:16 📱');
+        window.toast(next === 'landscape' ? 'สลับเป็นจอแนวนอน 4:3 🖥️' : 'สลับเป็นจอแนวตั้ง 9:16 📱');
       }
     });
   }
@@ -6042,6 +6042,22 @@ const UPDATE_HISTORY = [
     details: [
       'เปลี่ยน .pc-numbadge กลับเป็น position:absolute top:10px left:10px (มุมบนซ้าย เว้นระยะ ไม่ชิด/ไม่ยื่นออกมุม)',
       'ลด padding-top การ์ด 15→11px ขยับชื่อ+ดาวขึ้น · titlewrap padding-left:33px ให้ชื่อพ้น badge · .pc-title white-space:nowrap (flex:0 1 auto) กันชื่อตกบรรทัด',
+    ],
+  },
+  {
+    version: '1.06',
+    date: '30/06/2026',
+    title: 'ขยายรูปคอกอีกนิด + ขยับไปทางซ้าย',
+    details: [
+      'ปรับ .pc-thumb-img เป็น width/height:108% + margin-left:-8px · .pc-thumb justify-content:flex-start, background-position:left center — รูปคอกใหญ่ขึ้นและเยื้องไปทางซ้าย',
+    ],
+  },
+  {
+    version: '1.07',
+    date: '04/07/2026',
+    title: 'เปลี่ยนมาตรฐานจอแนวตั้ง (มือถือ) จาก 13:16 → 9:16',
+    details: [
+      'ปรับเวทีโหมดแนวตั้ง (mode-portrait) จากฟิกขนาด 585×720 (13:16) → ฟิกขนาด 585×1040 (9:16) คงความกว้าง 585 · อัปเดตข้อความ toast สลับโหมดเป็น "9:16"',
     ],
   },
 ];
