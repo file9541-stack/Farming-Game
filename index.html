@@ -514,6 +514,13 @@ body{
   box-shadow:0 3px 6px rgba(40,90,20,0.32), inset 0 1px 0 rgba(255,255,255,0.35);
   transition:transform 0.1s, filter 0.15s; }
 .pen2-act:active{ transform:scale(0.95); filter:brightness(1.08); }
+/* ===== เวอร์ชันทดสอบ (TEST_ONLY_SMALL): โชว์เฉพาะคอกสัตว์เล็ก 4 กล่อง จัดกลางหน้า ===== */
+html.test-only-small #tab-farm > .space-bar-inline,
+html.test-only-small #tab-farm > #farmland-btn{ display:none !important; }
+html.test-only-small #farm-sections-container{
+  min-height:calc(100dvh - 190px);
+  display:flex; flex-direction:column; justify-content:center;
+}
 
 
 .plot{
@@ -6208,6 +6215,15 @@ const UPDATE_HISTORY = [
       'ปรับ #main จาก width:calc(100% - 40px) max-width:520px → width:calc(100% - 20px) max-width:540px → กล่องเนื้อหากว้างขึ้นอีก เหลือพื้นหลังฟาร์มโผล่ที่ขอบซ้าย-ขวาข้างละ ~10px ตามที่ผู้ใช้ขอ',
     ],
   },
+  {
+    version: '1.15',
+    date: '04/07/2026',
+    title: 'เวอร์ชันทดสอบ (TEST_ONLY_SMALL): โชว์เฉพาะคอกสัตว์เล็ก 4 กล่อง จัดกลางหน้า',
+    details: [
+      'เพิ่ม flag const TEST_ONLY_SMALL = true → renderFarmSections เรนเดอร์เฉพาะหมวด small (กรอง sectionOrder) · ซ่อนแถบพื้นที่เกษตร (.space-bar-inline) + ปุ่มขายที่ดิน (#farmland-btn) · จัด #farm-sections-container กลางหน้าแนวตั้ง (flex justify-center, min-height 100dvh-190px)',
+      'ลบชั่วคราว: แปลงปลูกพืช/สวนไม้/คอกสัตว์ใหญ่/บ่อเลี้ยงปลา + แถบสรุปพื้นที่ · ใช้ทดสอบตัดสินใจขนาดกล่อง · ตั้ง TEST_ONLY_SMALL=false เพื่อคืนทุกหมวดตามปกติ (ไม่ลบโค้ดเดิม)',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7176,11 +7192,15 @@ function selCrop(id){
 //  FARM PLOTS
 // ============================================================
 // ─── render หมวดเกษตรทั้งหมดตาม sectionOrder (real-time) ───
+// ===== เวอร์ชันทดสอบ: true = โชว์เฉพาะหมวดคอกสัตว์เล็ก (4 กล่อง) จัดกลางหน้า · false = โชว์ครบทุกหมวดตามปกติ =====
+const TEST_ONLY_SMALL = true;
+try{ document.documentElement.classList.toggle('test-only-small', TEST_ONLY_SMALL); }catch(e){}
 function renderFarmSections(){
   const container = document.getElementById('farm-sections-container');
   if(!container) return;
   const nums = ['①','②','③','④','⑤'];
-  container.innerHTML = sectionOrder.map((key, si) => {
+  const order = TEST_ONLY_SMALL ? sectionOrder.filter(k => k === 'small') : sectionOrder;
+  container.innerHTML = order.map((key, si) => {
     const m = SECTION_META[key];
     const gridTag = key==='trees'
       ? `<div id="${m.gridId}" style="${m.gridStyle}"></div>`
