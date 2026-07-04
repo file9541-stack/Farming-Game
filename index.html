@@ -185,7 +185,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 20px);max-width:540px;   /* v1.14: ขยายกล่อง UI อีก เหลือขอบพื้นหลังฟาร์มข้างละ ~10px */
+  width:calc(100% - 8px);max-width:560px;   /* v1.16: ขยายกล่อง UI สุด เหลือขอบพื้นหลังฟาร์มข้างละ ~4px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -521,6 +521,9 @@ html.test-only-small #farm-sections-container{
   min-height:calc(100dvh - 190px);
   display:flex; flex-direction:column; justify-content:center;
 }
+/* v1.16: ขยาย 4 กล่องออกด้านข้างสุด — ตัด padding ข้างของ #main + .farm-section (เหลือขอบ ~4px) */
+html.test-only-small #main{ padding-left:0; padding-right:0; }
+html.test-only-small .farm-section[data-seckey="small"]{ padding-left:0; padding-right:0; }
 
 
 .plot{
@@ -1450,7 +1453,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 20px);max-width:540px;   /* v1.14: ขยายกล่อง UI อีก เหลือขอบพื้นหลังฟาร์มข้างละ ~10px */
+  width:calc(100% - 8px);max-width:560px;   /* v1.16: ขยายกล่อง UI สุด เหลือขอบพื้นหลังฟาร์มข้างละ ~4px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -6222,6 +6225,15 @@ const UPDATE_HISTORY = [
     details: [
       'เพิ่ม flag const TEST_ONLY_SMALL = true → renderFarmSections เรนเดอร์เฉพาะหมวด small (กรอง sectionOrder) · ซ่อนแถบพื้นที่เกษตร (.space-bar-inline) + ปุ่มขายที่ดิน (#farmland-btn) · จัด #farm-sections-container กลางหน้าแนวตั้ง (flex justify-center, min-height 100dvh-190px)',
       'ลบชั่วคราว: แปลงปลูกพืช/สวนไม้/คอกสัตว์ใหญ่/บ่อเลี้ยงปลา + แถบสรุปพื้นที่ · ใช้ทดสอบตัดสินใจขนาดกล่อง · ตั้ง TEST_ONLY_SMALL=false เพื่อคืนทุกหมวดตามปกติ (ไม่ลบโค้ดเดิม)',
+    ],
+  },
+  {
+    version: '1.16',
+    date: '04/07/2026',
+    title: 'ขยาย 4 กล่องคอกสัตว์เล็กออกด้านข้างสุด — เหลือพื้นหลังฟาร์มที่ขอบข้างละ ~4px',
+    details: [
+      'card ห่างขอบ 32px มาจาก 3 ชั้น: body→#main margin 10 + #main padding-x 12 + .farm-section padding-x 10',
+      'ลด: #main width:calc(100% - 20px) max-width:540 → calc(100% - 8px) max-width:560 (margin 10→4) · โหมดทดสอบตัด padding ข้างของ #main + .farm-section[small] เป็น 0 → การ์ดชิดขอบ ~4px กว้างขึ้น 170→198px (ไม่กระทบแท็บอื่น เพราะ scope ด้วย .test-only-small)',
     ],
   },
 ];
