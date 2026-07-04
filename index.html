@@ -199,6 +199,7 @@ body{
   height: 100vh;
   height: 100dvh;
   overflow-y: auto;
+  overflow-x: hidden;   /* เลื่อนได้แค่แนวตั้ง — กันหน้าจอหลักเลื่อนด้านข้าง */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;        /* Firefox: ซ่อน scrollbar */
   -ms-overflow-style: none;     /* IE/Edge เก่า: ซ่อน scrollbar */
@@ -289,8 +290,8 @@ body{
 /* หมายเหตุ: เป็นกล่องเปล่า (placeholder) — รอเติมรูป/ตัวอักษร/อีโมจิ ทีหลัง */
 .bcard{
   position:relative; width:100%; grid-column:1 / -1;   /* กินเต็มความกว้างของ grid section */
-  display:grid; grid-template-columns:128px 1fr 1.05fr 110px;
-  gap:9px; align-items:start; padding:11px;
+  display:grid; grid-template-columns:96px minmax(0,1fr) minmax(0,1fr) 88px;
+  gap:7px; align-items:start; padding:11px;
   background:linear-gradient(155deg,#fdf6e1,#f3e6c2);
   border:2.5px solid #d8b877; border-radius:18px;
   box-shadow:0 6px 16px rgba(90,60,20,0.26), inset 0 2px 0 rgba(255,255,255,0.7), inset 0 -3px 7px rgba(150,110,50,0.16);
@@ -324,7 +325,7 @@ body{
   display:flex; align-items:center; justify-content:center; font-size:2.6rem;
   box-shadow:inset 0 2px 5px rgba(120,80,20,0.15); overflow:hidden; }
 /* คอลัมน์ 2: ผลิตผล / คอลัมน์ 3: ข้อมูล */
-.bc-col{ display:flex; flex-direction:column; gap:6px; padding-top:1px; }
+.bc-col{ display:flex; flex-direction:column; gap:6px; padding-top:1px; min-width:0; }
 .bc-colhead{ font-size:0.62rem; font-weight:800; color:#7a5a20; margin-bottom:2px; }
 .bc-prow{ display:flex; align-items:center; gap:6px; }
 .bc-pic{ flex:0 0 auto; font-size:1rem; line-height:1; }
@@ -335,7 +336,7 @@ body{
 .bc-iic{ flex:0 0 auto; font-size:0.92rem; line-height:1; }
 .bc-itxt{ display:flex; flex-direction:column; line-height:1.15; min-width:0; }
 .bc-ilabel{ font-size:0.5rem; font-weight:700; color:#9a7a40; white-space:nowrap; }
-.bc-ival{ font-size:0.62rem; font-weight:800; color:#4a3210; white-space:nowrap; }
+.bc-ival{ font-size:0.62rem; font-weight:800; color:#4a3210; white-space:normal; }
 /* คอลัมน์ 4 = กล่องเล็ก (ปุ่มเพิ่ม) แนวตั้ง */
 .acard{
   align-self:stretch; cursor:pointer;
@@ -1456,6 +1457,7 @@ body{
   height: 100vh;
   height: 100dvh;
   overflow-y: auto;
+  overflow-x: hidden;   /* เลื่อนได้แค่แนวตั้ง — กันหน้าจอหลักเลื่อนด้านข้าง */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;        /* Firefox: ซ่อน scrollbar */
   -ms-overflow-style: none;     /* IE/Edge เก่า: ซ่อน scrollbar */
@@ -6177,6 +6179,16 @@ const UPDATE_HISTORY = [
       'แต่ละการ์ด (ตามรูป): ป้ายไม้หัวการ์ด (ชื่อ+ดาว) + badge (NEW/HOT/EVENT สีต่างกัน) + รูปคอก + แถวผลิตผล (ไอคอน×จำนวน) + มินิสถิติ 2×2 (เวลาต่อรอบ/ชื่อเสียง/ใช้แรงงาน/มูลค่าที่ดิน) + แถบความสมบูรณ์ % + ปุ่ม "เพิ่มคอก"',
       'ย่อรูป/ตัวอักษร/อีโมจิ/กล่องทั้งหมดให้กะทัดรัด · 4 คอกตัวอย่าง (ไก่ไข่/เป็ด/ห่าน/นกกระทา) ค่าตายตัวใน PEN_SMALL_ITEMS · เพิ่มหัวหมวด .pen2-cathead (span 2 คอลัมน์) + ย้าย .pc-numbadge (สลับลำดับ) มาที่หัวหมวด',
       'ปุ่มเพิ่มคอกผูก .pen2-act[data-addtype=small] → startConstruction (delegation)',
+    ],
+  },
+  {
+    version: '1.12',
+    date: '04/07/2026',
+    title: 'หน้าจอหลักเลื่อนได้แค่แนวตั้ง — กันเลื่อนด้านข้าง (overflow-x:hidden) + แก้ .bcard ให้พอดีจอ',
+    details: [
+      'ตั้ง #main{ overflow-x:hidden } (เดิม overflow-y:auto บังคับ overflow-x เป็น auto ทำให้เลื่อนด้านข้างได้) → เลื่อนได้แค่แนวตั้ง · แถวแปลงปลูก .plots-scroll ยังเลื่อนแนวนอนในตัวได้เหมือนเดิม',
+      'ต้นเหตุที่เนื้อหาล้นด้านข้าง ~91px = การ์ด .bcard (คอกใหญ่/บ่อปลา/พืช/ไม้) กว้างเกินกรอบมือถือ (368px) → ปุ่มเพิ่มหลุดขอบขวา',
+      'แก้ .bcard: grid-template-columns 128px/1fr/1.05fr/110px → 96px/minmax(0,1fr)/minmax(0,1fr)/88px · gap 9→7 · .bc-col{min-width:0} · .bc-ival ห่อบรรทัดได้ (white-space:normal) → การ์ดพอดีกรอบ ปุ่มเพิ่มไม่โดนตัด',
     ],
   },
 ];
