@@ -185,7 +185,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 40px);max-width:520px;   /* v1.13: ขยายกล่อง UI ให้กว้างขึ้น เหลือขอบพื้นหลังฟาร์มข้างละ ~20px */
+  width:calc(100% - 20px);max-width:540px;   /* v1.14: ขยายกล่อง UI อีก เหลือขอบพื้นหลังฟาร์มข้างละ ~10px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -1440,7 +1440,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 40px);max-width:520px;   /* v1.13: ขยายกล่อง UI ให้กว้างขึ้น เหลือขอบพื้นหลังฟาร์มข้างละ ~20px */
+  width:calc(100% - 20px);max-width:540px;   /* v1.14: ขยายกล่อง UI อีก เหลือขอบพื้นหลังฟาร์มข้างละ ~10px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -6195,6 +6195,14 @@ const UPDATE_HISTORY = [
     details: [
       'ปรับ #main จาก width:calc(100% - 44px) max-width:500px → width:calc(100% - 40px) max-width:520px → กล่องเนื้อหากว้างขึ้น เหลือพื้นหลังฟาร์มโผล่ที่ขอบซ้าย-ขวาข้างละ ~20px (เดิม ~22px แต่ขยาย max-width ให้กว้างขึ้นบนจอใหญ่)',
       'การ์ด/ตัวอักษรแสดงผลใหญ่ขึ้นเล็กน้อย · ยังเลื่อนด้านข้างไม่ได้ (v1.12) และการ์ดไม่ล้นกรอบ',
+    ],
+  },
+  {
+    version: '1.14',
+    date: '04/07/2026',
+    title: 'ขยายกล่อง UI (#main) อีก เหลือขอบพื้นหลังฟาร์มข้างละ ~10px',
+    details: [
+      'ปรับ #main จาก width:calc(100% - 40px) max-width:520px → width:calc(100% - 20px) max-width:540px → กล่องเนื้อหากว้างขึ้นอีก เหลือพื้นหลังฟาร์มโผล่ที่ขอบซ้าย-ขวาข้างละ ~10px ตามที่ผู้ใช้ขอ',
     ],
   },
 ];
