@@ -185,7 +185,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 8px);max-width:560px;   /* v1.16: ขยายกล่อง UI สุด เหลือขอบพื้นหลังฟาร์มข้างละ ~4px */
+  width:calc(100% - 14px);max-width:560px;   /* v1.17: ขอบพื้นหลังฟาร์มข้างละ ~7px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -1453,7 +1453,7 @@ body{
 
 /* ===== MAIN AREA ===== */
 #main{
-  width:calc(100% - 8px);max-width:560px;   /* v1.16: ขยายกล่อง UI สุด เหลือขอบพื้นหลังฟาร์มข้างละ ~4px */
+  width:calc(100% - 14px);max-width:560px;   /* v1.17: ขอบพื้นหลังฟาร์มข้างละ ~7px */
   margin-left:auto;margin-right:auto;
   background:transparent;
   border:none;
@@ -6234,6 +6234,14 @@ const UPDATE_HISTORY = [
     details: [
       'card ห่างขอบ 32px มาจาก 3 ชั้น: body→#main margin 10 + #main padding-x 12 + .farm-section padding-x 10',
       'ลด: #main width:calc(100% - 20px) max-width:540 → calc(100% - 8px) max-width:560 (margin 10→4) · โหมดทดสอบตัด padding ข้างของ #main + .farm-section[small] เป็น 0 → การ์ดชิดขอบ ~4px กว้างขึ้น 170→198px (ไม่กระทบแท็บอื่น เพราะ scope ด้วย .test-only-small)',
+    ],
+  },
+  {
+    version: '1.17',
+    date: '04/07/2026',
+    title: 'ปรับขอบพื้นหลังฟาร์มจาก ~4px เป็น ~7px',
+    details: [
+      'ปรับ #main width:calc(100% - 8px) → calc(100% - 14px) (margin 4→7) → ขอบพื้นหลังฟาร์มข้างละ ~7px · การ์ด 198→195px',
     ],
   },
 ];
