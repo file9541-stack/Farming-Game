@@ -2739,7 +2739,7 @@ body { padding-bottom: 72px; }
   background: #fff; border-top: 1.5px solid #d4e4f4;
 }
 .chat-input {
-  flex: 1; border: 1.5px solid #c0d4e8; border-radius: 18px;
+  flex: 1; min-width: 0; border: 1.5px solid #c0d4e8; border-radius: 18px;
   padding: 9px 14px; font-family: inherit; font-size: 0.85rem;
   color: #2a3a48; outline: none; background: #f6faff;
 }
@@ -2778,6 +2778,20 @@ body { padding-bottom: 72px; }
   display: flex; align-items: center; justify-content: center;
 }
 #nav-toggle:active { transform: scale(0.94); }
+/* ปุ่มเต็มจอ ⛶ (ลอยซ้าย ใต้ปุ่มแชท) — กดสลับเข้า/ออก fullscreen */
+#fs-toggle {
+  position: fixed;
+  left: 0; top: 78px;
+  z-index: 100001;   /* เหนือ #login-screen (100000) → โชว์บนหน้า Login ด้วย */
+  background: linear-gradient(135deg,#7bc86c,#4e9c3f);
+  color: #fff; border: none;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 7px;
+  font-size: 1.2rem; cursor: pointer;
+  box-shadow: 2px 2px 10px rgba(40,90,30,0.35);
+  display: flex; align-items: center; justify-content: center;
+}
+#fs-toggle:active { transform: scale(0.94); }
 
 #nav-overlay {
   display: none;
@@ -4092,6 +4106,7 @@ html.mode-portrait  #login-screen{ max-width:none; width:100%; }
 
 <!-- ===== NAV DRAWER (เมนูแฮมเบอร์เกอร์ — slide-in ด้านขวา) ===== -->
 <button id="nav-toggle" aria-label="เปิดเมนู">☰</button>
+<button id="fs-toggle" aria-label="เต็มจอ" title="เต็มจอ / ออกจากเต็มจอ">⛶</button>
 <div id="nav-overlay"></div>
 <div id="nav-drawer">
   <div class="navd-header">
@@ -6409,6 +6424,24 @@ const UPDATE_HISTORY = [
     title: 'แก้ปุ่มส่งแชทล้นมุมโค้งของแผง',
     details: [
       'เพิ่ม padding-right ของ .chat-input-row จาก 14px → 24px (padding: 12px 24px 12px 14px) → ปุ่มส่ง ➤ ขยับเข้ามาพ้นมุมโค้ง 22px ของแผง · ช่องกรอก (flex:1) หดตามอัตโนมัติ ไม่ล้นกรอบ',
+    ],
+  },
+  {
+    version: '1.24',
+    date: '05/07/2026',
+    title: 'เพิ่มปุ่มเต็มจอ ⛶ (ซ่อนแถบ URL บนมือถือ)',
+    details: [
+      'เพิ่มปุ่มลอย #fs-toggle (⛶) ฝั่งซ้ายใต้ปุ่มแชท · กดสลับเข้า/ออก fullscreen ด้วย requestFullscreen/exitFullscreen (มี webkit fallback) → บนมือถือซ่อนแถบ URL เบราว์เซอร์ได้',
+      'ผูก event ใน [init] เป็น IIFE แยก + ฟัง fullscreenchange สลับไอคอน ⛶ ↔ 🗕 · ไม่ใช้ onclick ใน HTML (ตาม DEV-001 ข้อ 10)',
+    ],
+  },
+  {
+    version: '1.25',
+    date: '05/07/2026',
+    title: 'แก้ปุ่มส่งแชทล้นจริง (min-width) + โชว์ปุ่มเต็มจอบนหน้า Login',
+    details: [
+      'แก้ .chat-input เพิ่ม min-width:0 → flex item หดได้จริง ไม่ดันปุ่มส่ง ➤ ล้นออกนอกมุมโค้งของแผง (ต้นเหตุจริง: default min-width:auto ทำให้ช่องกรอกไม่ยอมหด)',
+      'ยก z-index ปุ่ม #fs-toggle จาก 1500 → 100001 (เหนือ #login-screen 100000) → ปุ่มเต็มจอ ⛶ โชว์บนหน้า Login ด้วย กดเข้า fullscreen ได้ตั้งแต่ก่อนเข้าเกม',
     ],
   },
 ];
@@ -10492,6 +10525,26 @@ document.getElementById('chat-rooms').addEventListener('click', function(e){
 document.getElementById('chat-emoji-panel').addEventListener('click', function(e){
   const b = e.target.closest('.chat-emoji-item'); if(b) insertEmoji(b.dataset.emoji);
 });
+
+// ─────────────────────────── FULLSCREEN TOGGLE (ปุ่มเต็มจอ ⛶) ───────────────────────────
+(function(){
+  var btn = document.getElementById('fs-toggle');
+  if(!btn) return;
+  function isFs(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function enter(){
+    var el = document.documentElement;
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+  function exit(){
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+  btn.addEventListener('click', function(){ if(isFs()) exit(); else enter(); });
+  function sync(){ btn.textContent = isFs() ? '🗕' : '⛶'; }
+  document.addEventListener('fullscreenchange', sync);
+  document.addEventListener('webkitfullscreenchange', sync);
+})();
 
 // ─────────────────────────── NAV DRAWER (เมนูแฮมเบอร์เกอร์ ฝั่งขวา) ───────────────────────────
 (function(){
