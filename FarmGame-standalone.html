@@ -2682,7 +2682,7 @@ body { padding-bottom: 72px; }
 #chat-panel {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดซ้าย เว้นขวาให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; left: 0; right: auto;
-  width: calc(100% - 200px); max-width: none;   /* เหลือพื้นหลังเบลอโชว์ 200px */
+  width: calc(100% - 80px); max-width: none;   /* เหลือพื้นหลังเบลอโชว์ 80px */
   border-radius: 0 22px 22px 0;
   overflow: hidden;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
@@ -2792,7 +2792,7 @@ body { padding-bottom: 72px; }
 #nav-drawer {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดขวา เว้นซ้ายให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; right: 0; left: auto;
-  width: calc(100% - 200px); max-width: none;   /* เหลือพื้นหลังเบลอโชว์ 200px */
+  width: calc(100% - 80px); max-width: none;   /* เหลือพื้นหลังเบลอโชว์ 80px */
   border-radius: 22px 0 0 22px;
   overflow: hidden;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
@@ -6393,6 +6393,14 @@ const UPDATE_HISTORY = [
     title: 'เพิ่มขอบที่เหลือของแผงแชท/เมนู เป็น 200px',
     details: [
       'ปรับ #chat-panel และ #nav-drawer จาก calc(100% - 50px) → calc(100% - 200px) เหลือพื้นหลังฉากเกมเบลอโชว์ ~200px ฝั่งตรงข้าม (เดิม ~50px)',
+    ],
+  },
+  {
+    version: '1.22',
+    date: '05/07/2026',
+    title: 'ปรับขอบที่เหลือของแผงแชท/เมนู เป็น 80px',
+    details: [
+      'ปรับ #chat-panel และ #nav-drawer จาก calc(100% - 200px) → calc(100% - 80px) เหลือพื้นหลังฉากเกมเบลอโชว์ ~80px ฝั่งตรงข้าม (เดิม ~200px)',
     ],
   },
 ];
