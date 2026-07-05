@@ -639,6 +639,186 @@ html.test-only-small .farm-section[data-seckey="small"]{ padding-left:0; padding
 .pd-slot.add .pd-slotsub{ color:#fff; }
 .pd-slotplus{ font-size:1.2rem; font-weight:900; }
 
+/* ===== ANIMAL DETAIL OVERLAY (หน้า "สัตว์ในคอกสัตว์เล็ก" — เต็มจอ · ค่า mock ตามรูป) ===== */
+#animal-detail-overlay{ position:fixed; inset:0; z-index:100060; display:none;
+  flex-direction:column; gap:5px; padding:7px 7px 8px;
+  background:linear-gradient(160deg,#bfe0f2 0%,#cfe6b4 42%,#b7d98c 100%);
+  overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+#animal-detail-overlay::-webkit-scrollbar{ display:none; }
+#animal-detail-overlay.show{ display:flex; }
+/* upper: คอก(ซ้าย) + รายละเอียดสัตว์หลัก(ขวา) */
+.ad-uprow{ display:flex; gap:5px; align-items:stretch; }
+.ad-pencol{ flex:0 0 30%; display:flex; flex-direction:column; gap:4px; }
+.ad-penimg{ flex:1; border-radius:12px; overflow:hidden; border:2px solid #cBA876;
+  background:linear-gradient(#bfe6f7,#cfe6b0); display:flex; align-items:center; justify-content:center; padding:3px; min-height:88px; }
+.ad-penimg img{ max-width:100%; max-height:92px; object-fit:contain; filter:drop-shadow(0 3px 4px rgba(60,40,10,0.3)); }
+.ad-penlv{ font-size:0.5rem; font-weight:900; color:#4a3210; text-align:center; }
+.ad-upbtn{ padding:4px; border-radius:8px; text-align:center; cursor:pointer; font-size:0.54rem; font-weight:900;
+  color:#f3e2c0; background:linear-gradient(#a9702f,#6e4114); border:1.5px solid #caa15e; box-shadow:0 2px 4px rgba(50,30,8,0.3); }
+.ad-upbtn:active{ transform:scale(0.97); }
+.ad-main{ flex:1; min-width:0; }
+.ad-head{ display:flex; align-items:center; gap:6px; }
+.ad-head .ad-hic{ font-size:1.5rem; }
+.ad-hname{ font-size:0.8rem; font-weight:900; color:#4a3210; }
+.ad-hsub{ font-size:0.5rem; color:#8a6a3a; font-weight:700; }
+.ad-desc{ font-size:0.46rem; color:#6a5030; line-height:1.3; margin:3px 0; }
+.ad-mainrow{ display:flex; gap:5px; }
+.ad-subpanel{ flex:1; min-width:0; background:linear-gradient(#fbf3dd,#f2e4c0); border:1.5px solid #dcc596; border-radius:8px; padding:4px 6px; }
+.ad-subhead{ font-size:0.46rem; font-weight:900; color:#8a5a2c; border-bottom:1px solid rgba(180,140,80,0.4); padding-bottom:2px; margin-bottom:2px; }
+.ad-krow{ display:flex; align-items:center; font-size:0.46rem; color:#6a5030; font-weight:700; padding:1px 0; }
+.ad-krow b{ margin-left:auto; color:#3a2a10; font-weight:900; }
+.ad-getcol{ flex:0 0 30%; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.ad-getic{ font-size:1.9rem; line-height:1; }
+.ad-getbtn{ padding:4px 8px; border-radius:8px; text-align:center; cursor:pointer; font-size:0.5rem; font-weight:900;
+  color:#fff; background:linear-gradient(#7ac84a,#3f9220); border:1.5px solid #5aa832; box-shadow:0 2px 4px rgba(40,110,20,0.4); }
+/* category tabs */
+.ad-cats{ display:flex; gap:3px; }
+.ad-cat{ flex:1; padding:5px 2px; border-radius:8px 8px 3px 3px; text-align:center; cursor:pointer; font-size:0.48rem; font-weight:900;
+  color:#f3e2c0; background:linear-gradient(#8a5a2c,#5f3a17); border:1.5px solid #6e4114; box-shadow:0 2px 3px rgba(50,30,8,0.3); }
+.ad-cat.active{ color:#6e4114; background:linear-gradient(#fdedcb,#f0d69e); border-color:#caa15e; }
+/* lower: grid(ซ้าย) + selected(ขวา) */
+.ad-lowrow{ display:flex; gap:5px; align-items:flex-start; }
+.ad-grid{ flex:1.15; min-width:0; display:grid; grid-template-columns:1fr 1fr; gap:4px; align-content:start; }
+.ad-acard{ position:relative; background:linear-gradient(#fbf3dd,#f2e4c0); border:2px solid #dcc596; border-radius:9px; padding:4px 5px; display:flex; align-items:center; gap:5px; cursor:pointer; }
+.ad-acard.sel{ border-color:#6bbf3e; box-shadow:0 0 0 2px rgba(107,191,62,0.5); }
+.ad-acard.locked{ background:linear-gradient(#e3dccb,#d3c9b0); cursor:default; }
+.ad-aimg{ width:32px; height:32px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:1.5rem; }
+.ad-ainfo{ min-width:0; }
+.ad-aname{ font-size:0.52rem; font-weight:900; color:#4a3210; white-space:nowrap; }
+.ad-alv{ font-size:0.44rem; font-weight:800; color:#3c7d1c; }
+.ad-aqty{ font-size:0.42rem; color:#8a6a3a; font-weight:700; }
+.ad-astar{ position:absolute; top:2px; right:4px; font-size:0.55rem; color:#f5c518; }
+.ad-alock{ font-size:0.4rem; font-weight:900; color:#9a7a50; white-space:nowrap; }
+.ad-acard.locked .ad-aimg{ filter:grayscale(0.6); opacity:0.7; }
+/* selected animal detail (right) */
+.ad-sel{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.ad-selban{ align-self:center; padding:3px 18px; border-radius:8px; font-size:0.62rem; font-weight:900; color:#fff;
+  background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:1.5px solid rgba(255,255,255,0.5); box-shadow:0 2px 4px rgba(40,90,20,0.35); }
+.ad-selimg{ text-align:center; font-size:2.6rem; line-height:1.05; }
+.ad-selprog{ display:flex; align-items:center; gap:5px; }
+.ad-selstars{ font-size:0.68rem; color:#f5c518; letter-spacing:-1px; }
+.ad-selstars .o{ color:#d8c89a; }
+.ad-selbar{ flex:1; position:relative; height:12px; border-radius:6px; overflow:hidden; background:rgba(40,30,10,0.22); border:1px solid #d8b877; display:flex; align-items:center; justify-content:center; }
+.ad-selbar>i{ position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#7ce04a,#3f9220); }
+.ad-selbar>span{ position:relative; font-size:0.42rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.4); }
+.ad-selup{ flex:0 0 auto; width:20px; height:15px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; background:linear-gradient(160deg,#6bbf3e,#3c7d1c); color:#fff; border:1px solid rgba(255,255,255,0.5); }
+.ad-base{ background:linear-gradient(#fbf3dd,#f2e4c0); border:1.5px solid #dcc596; border-radius:8px; padding:3px 7px; }
+.ad-brow{ display:flex; align-items:center; font-size:0.46rem; color:#6a5030; font-weight:700; padding:2px 0; border-bottom:1px dashed rgba(180,140,80,0.35); }
+.ad-brow:last-child{ border-bottom:none; }
+.ad-brow b{ margin-left:auto; color:#3a2a10; font-weight:900; }
+.ad-selacts{ display:flex; gap:5px; }
+.ad-sbtn{ flex:1; padding:6px; border-radius:9px; text-align:center; cursor:pointer; font-size:0.56rem; font-weight:900; color:#fff; }
+.ad-sbtn.green{ background:linear-gradient(#7ac84a,#3f9220); border:1.5px solid #5aa832; box-shadow:0 2px 4px rgba(40,110,20,0.4); }
+.ad-sbtn.blue{ background:linear-gradient(#5a9bd4,#2f6ba0); border:1.5px solid #7bb4e0; box-shadow:0 2px 4px rgba(30,80,120,0.4); }
+.ad-sbtn:active{ transform:scale(0.97); }
+.ad-food{ font-size:0.46rem; font-weight:800; color:#6a5030; text-align:center; }
+/* tip + bottom nav */
+.ad-tip{ font-size:0.46rem; font-weight:800; color:#7a5a20; text-align:center; padding:1px; }
+.ad-bnav{ display:flex; gap:3px; }
+.ad-bn{ flex:1; display:flex; flex-direction:column; align-items:center; gap:1px; padding:4px 2px; border-radius:8px; cursor:pointer;
+  font-size:0.44rem; font-weight:900; color:#6e4114; background:linear-gradient(#f7ecd0,#ecdcb0); border:1.5px solid #d8b877; }
+.ad-bn.active{ color:#fff; background:linear-gradient(#a9702f,#6e4114); border-color:#caa15e; }
+.ad-bn .ad-bnic{ font-size:1rem; }
+
+/* ===== PRODUCT / UPGRADE / HISTORY DETAIL OVERLAYS (เต็มจอ · mock ตามรูป) ===== */
+#product-detail-overlay,#upgrade-detail-overlay,#history-detail-overlay{ position:fixed; inset:0; z-index:100060; display:none;
+  flex-direction:column; gap:5px; padding:7px 7px 8px;
+  background:linear-gradient(160deg,#bfe0f2 0%,#cfe6b4 42%,#b7d98c 100%);
+  overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+#product-detail-overlay::-webkit-scrollbar,#upgrade-detail-overlay::-webkit-scrollbar,#history-detail-overlay::-webkit-scrollbar{ display:none; }
+#product-detail-overlay.show,#upgrade-detail-overlay.show,#history-detail-overlay.show{ display:flex; }
+/* ---- product ---- */
+.pr-uprow{ display:flex; gap:5px; align-items:stretch; }
+.pr-penimg{ flex:0 0 30%; border-radius:12px; overflow:hidden; border:2px solid #cBA876; background:linear-gradient(#bfe6f7,#cfe6b0);
+  display:flex; align-items:center; justify-content:center; padding:3px; min-height:96px; }
+.pr-penimg img{ max-width:100%; max-height:100px; object-fit:contain; filter:drop-shadow(0 3px 4px rgba(60,40,10,0.3)); }
+.pr-info{ flex:1; min-width:0; }
+.pr-desc{ font-size:0.46rem; color:#6a5030; line-height:1.3; margin:2px 0 4px; }
+.pr-irow{ display:flex; align-items:center; font-size:0.5rem; color:#6a5030; font-weight:700; padding:2px 0; border-bottom:1px dashed rgba(180,140,80,0.35); }
+.pr-irow b{ margin-left:auto; color:#3a2a10; font-weight:900; }
+.pr-collectbtn{ margin-top:5px; padding:5px; border-radius:8px; text-align:center; cursor:pointer; font-size:0.56rem; font-weight:900; color:#fff;
+  background:linear-gradient(#7ac84a,#3f9220); border:1.5px solid #5aa832; box-shadow:0 2px 4px rgba(40,110,20,0.4); }
+.pr-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px 5px; }
+.pr-card{ position:relative; background:linear-gradient(#fbf3dd,#f2e4c0); border:2px solid #dcc596; border-radius:10px; padding:5px 3px 4px; text-align:center; }
+.pr-badge{ position:absolute; top:-6px; right:-4px; min-width:16px; height:16px; padding:0 3px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:0.5rem; font-weight:900; color:#fff; background:linear-gradient(150deg,#ff5a4d,#d81f10); border:1.5px solid #fff; box-shadow:0 1px 3px rgba(150,20,10,0.4); }
+.pr-cname{ font-size:0.5rem; font-weight:900; color:#5a3d12; }
+.pr-cic{ font-size:1.7rem; line-height:1.1; margin:2px 0; }
+.pr-cqty{ font-size:0.54rem; font-weight:900; color:#3a2a10; }
+.pr-cval{ margin-top:3px; padding:2px; border-radius:7px; font-size:0.5rem; font-weight:900; color:#8a5a12; background:linear-gradient(#fff2cf,#f3e0a8); border:1px solid #e0c074; }
+.pr-acts{ display:flex; gap:5px; }
+.pr-abtn{ flex:1; padding:6px 4px; border-radius:9px; text-align:center; cursor:pointer; font-size:0.54rem; font-weight:900; color:#fff; line-height:1.2; }
+.pr-abtn small{ display:block; font-size:0.44rem; font-weight:800; opacity:0.95; }
+.pr-abtn:active{ transform:scale(0.98); }
+.pr-abtn.blue{ background:linear-gradient(#5a9bd4,#2f6ba0); border:1.5px solid #7bb4e0; box-shadow:0 2px 4px rgba(30,80,120,0.4); }
+.pr-abtn.green{ background:linear-gradient(#7ac84a,#3f9220); border:1.5px solid #5aa832; box-shadow:0 2px 4px rgba(40,110,20,0.4); }
+.pr-abtn.purple{ background:linear-gradient(#9a6bd4,#6a3aa0); border:1.5px solid #b89be0; box-shadow:0 2px 4px rgba(80,40,120,0.4); }
+/* ---- upgrade ---- */
+.ug-uprow{ display:flex; gap:5px; align-items:stretch; }
+.ug-pencol{ flex:0 0 34%; display:flex; flex-direction:column; gap:4px; }
+.ug-penimg{ flex:1; border-radius:12px; overflow:hidden; border:2px solid #cBA876; background:linear-gradient(#bfe6f7,#cfe6b0);
+  display:flex; align-items:center; justify-content:center; padding:3px; min-height:78px; }
+.ug-penimg img{ max-width:100%; max-height:82px; object-fit:contain; filter:drop-shadow(0 3px 4px rgba(60,40,10,0.3)); }
+.ug-lvbar{ display:flex; align-items:center; gap:4px; }
+.ug-lvtag{ flex:0 0 auto; padding:2px 6px; border-radius:6px; font-size:0.5rem; font-weight:900; color:#fff; background:linear-gradient(160deg,#6bbf3e,#3c7d1c); border:1px solid rgba(255,255,255,0.5); }
+.ug-bar{ flex:1; position:relative; height:13px; border-radius:7px; overflow:hidden; background:rgba(40,30,10,0.35); border:1px solid #d8b877; display:flex; align-items:center; justify-content:center; }
+.ug-bar>i{ position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#ffd24a,#f0a81e); }
+.ug-bar>span{ position:relative; font-size:0.44rem; font-weight:900; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.4); }
+.ug-bup{ flex:0 0 auto; width:22px; height:16px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:0.58rem; background:linear-gradient(160deg,#6bbf3e,#3c7d1c); color:#fff; border:1px solid rgba(255,255,255,0.5); }
+.ug-ov{ flex:1; min-width:0; }
+.ug-lvhead{ display:flex; align-items:center; justify-content:center; gap:12px; font-size:0.9rem; font-weight:900; color:#3c7d1c; padding:1px 0 4px; }
+.ug-row{ display:flex; align-items:center; font-size:0.46rem; font-weight:700; color:#6a5030; padding:2px 0; border-bottom:1px dashed rgba(180,140,80,0.3); }
+.ug-row .ug-lb{ flex:1; display:flex; align-items:center; gap:3px; }
+.ug-row .ug-v1{ flex:0 0 20%; text-align:right; font-weight:900; color:#4a3210; }
+.ug-row .ug-ar{ flex:0 0 14%; text-align:center; color:#6bbf3e; font-weight:900; }
+.ug-row .ug-v2{ flex:0 0 26%; text-align:left; font-weight:900; color:#2f8a18; }
+.ug-cols{ display:flex; gap:5px; align-items:flex-start; }
+.ug-col{ flex:1; min-width:0; display:flex; flex-direction:column; gap:7px; }
+.ug-cond{ display:flex; align-items:center; font-size:0.46rem; font-weight:700; color:#6a5030; padding:3px 0; border-bottom:1px dashed rgba(180,140,80,0.3); gap:4px; }
+.ug-cond .ug-cn{ flex:1; } .ug-cond b{ font-weight:900; color:#4a3210; }
+.ug-cond .ok{ color:#2f8a18; font-weight:900; } .ug-cond .no{ color:#d81f10; font-weight:900; }
+.ug-mats{ display:flex; gap:5px; }
+.ug-mat{ flex:1; text-align:center; font-size:0.42rem; font-weight:900; color:#c0491f; line-height:1.3; }
+.ug-mat .ug-matic{ font-size:1.2rem; display:block; }
+.ug-getimg{ border-radius:10px; overflow:hidden; border:2px solid #cBA876; background:linear-gradient(#bfe6f7,#cfe6b0); min-height:70px; display:flex; align-items:center; justify-content:center; padding:3px; }
+.ug-getimg img{ max-width:100%; max-height:74px; object-fit:contain; }
+.ug-gets{ display:flex; gap:4px; justify-content:space-around; margin-top:4px; }
+.ug-get{ text-align:center; font-size:0.4rem; font-weight:800; color:#5a4020; line-height:1.3; }
+.ug-get .ug-getic{ font-size:1.1rem; display:block; }
+.ug-note{ font-size:0.42rem; color:#6a5030; text-align:center; line-height:1.3; margin-top:4px; }
+.ug-dobar{ display:flex; align-items:center; gap:8px; justify-content:center; }
+.ug-dobtn{ padding:6px 22px; border-radius:12px; text-align:center; cursor:pointer; font-size:0.72rem; font-weight:900; color:#fff; line-height:1.15;
+  background:linear-gradient(#8f9aa2,#5f6a72); border:2px solid #aeb8bf; box-shadow:0 3px 6px rgba(40,50,60,0.35); }
+.ug-dobtn:active{ transform:scale(0.98); } .ug-dobtn small{ display:block; font-size:0.5rem; }
+.ug-dotime{ font-size:0.44rem; font-weight:800; color:#6a5030; text-align:center; line-height:1.3; }
+/* ---- history ---- */
+.hi-banner{ border-radius:12px; overflow:hidden; border:2px solid #cBA876; background:linear-gradient(#bfe6f7,#cfe6b0); min-height:62px;
+  display:flex; align-items:center; justify-content:center; padding:3px; }
+.hi-banner img{ max-width:100%; max-height:66px; object-fit:contain; filter:drop-shadow(0 3px 4px rgba(60,40,10,0.3)); }
+.hi-cols{ display:flex; gap:5px; align-items:stretch; }
+.hi-col{ flex:1; min-width:0; }
+.hi-srow{ display:flex; align-items:center; font-size:0.46rem; font-weight:700; color:#6a5030; padding:3px 0; border-bottom:1px dashed rgba(180,140,80,0.3); gap:5px; }
+.hi-srow b{ margin-left:auto; color:#3a2a10; font-weight:900; }
+.hi-legend{ display:flex; gap:8px; justify-content:flex-end; font-size:0.4rem; font-weight:800; color:#5a4020; margin-bottom:3px; }
+.hi-lg{ display:flex; align-items:center; gap:3px; }
+.hi-dot{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+.hi-chart{ display:flex; align-items:flex-end; gap:4px; height:78px; padding:3px 2px 0; border-left:1px solid #caa15e; border-bottom:1px solid #caa15e; }
+.hi-day{ flex:1; display:flex; align-items:flex-end; justify-content:center; gap:1px; height:100%; }
+.hi-b{ width:26%; border-radius:2px 2px 0 0; min-height:2px; }
+.hi-b.g{ background:linear-gradient(#7ac84a,#3f9220); } .hi-b.o{ background:linear-gradient(#ffb04a,#e07f10); } .hi-b.b{ background:linear-gradient(#5a9bd4,#2f6ba0); }
+.hi-days{ display:flex; gap:4px; margin-top:2px; }
+.hi-dl{ flex:1; text-align:center; font-size:0.36rem; font-weight:700; color:#8a6a3a; }
+.hi-log{ display:flex; align-items:center; gap:7px; font-size:0.46rem; padding:4px 2px; border-bottom:1px solid rgba(180,140,80,0.25); }
+.hi-lic{ font-size:1.15rem; flex:0 0 auto; }
+.hi-lmain{ flex:1; min-width:0; }
+.hi-lt{ font-weight:900; color:#4a3210; }
+.hi-ls{ font-size:0.42rem; color:#8a6a3a; font-weight:700; }
+.hi-ltime{ font-size:0.42rem; color:#9a7a50; font-weight:700; flex:0 0 auto; }
+.hi-lval{ font-weight:900; flex:0 0 auto; margin-left:4px; }
+.hi-lval.pos{ color:#2f8a18; } .hi-lval.neg{ color:#d81f10; }
+.hi-morebtn{ align-self:center; margin:4px auto 0; padding:5px 20px; border-radius:9px; cursor:pointer; font-size:0.54rem; font-weight:900; color:#f3e2c0;
+  background:linear-gradient(#a9702f,#6e4114); border:1.5px solid #caa15e; box-shadow:0 2px 4px rgba(50,30,8,0.3); }
+
 
 .plot{
   aspect-ratio:1;background:var(--soil);
@@ -6441,6 +6621,20 @@ const UPDATE_HISTORY = [
       'ยก z-index ปุ่ม #fs-toggle จาก 1500 → 100001 (เหนือ #login-screen 100000) → ปุ่มเต็มจอ ⛶ โชว์บนหน้า Login ด้วย กดเข้า fullscreen ได้ตั้งแต่ก่อนเข้าเกม',
     ],
   },
+  {
+    version: '1.26',
+    date: '05/07/2026',
+    title: 'แท็บในหน้า pen detail → เปิดหน้า detail เต็มจอของตัวเอง (สัตว์/ผลิตผล/อัปเกรด/ประวัติ)',
+    details: [
+      'เพิ่มแอตทริบิวต์ data-pdtab ให้ 5 แท็บ (info/upgrade/animals/products/history) · openPenDetail wire ให้แต่ละแท็บเปิด overlay ของตัวเอง (ข้อมูล=คงเนื้อหาเดิม)',
+      'สร้าง overlay เต็มจอใหม่ 4 หน้า (mock ตายตัวตามรูป · ย่อ font 0.4–0.95rem พอดีหน้าเดียว scrollHeight==clientHeight ไม่ต้องสกอล):',
+      '• สัตว์ #animal-detail-overlay (.ad-*): การ์ดคอก+รายละเอียดไก่ · แท็บหมวด · กริดสัตว์ 8 ตัว(4 ปลดล็อก+4 ล็อก) · แผงสัตว์ที่เลือก(ดาว/แถบ/ค่าพื้นฐาน/ปุ่ม) · bottom nav',
+      '• ผลิตผล #product-detail-overlay (.pr-*): ข้อมูลผลิตผล · แท็บหมวด · กริดผลิตผล 8 ช่อง(badge/emoji/xN/ราคา) · ปุ่ม ขาย/ส่งออเดอร์/แปรรูป · bottom nav',
+      '• อัปเกรด #upgrade-detail-overlay (.ug-*): ภาพรวม Lv.2→Lv.3 · เงื่อนไข(✔/✘) · วัสดุ 4 ชนิด · สิ่งที่จะได้รับ · ปุ่มอัปเกรด(→startConstruction) · คอกของคุณ(pd-slots เดิม)',
+      '• ประวัติ #history-detail-overlay (.hi-*): สถิติภาพรวม · กราฟแท่ง CSS 7 วัน×3 ชุด(ผลผลิต/สัตว์/มูลค่า)+legend · ประวัติกิจกรรม 5 รายการ · ปุ่มดูเพิ่มเติม',
+      'ปุ่ม ↩ ปิดกลับหน้า pen detail เดิม · ปุ่มสร้าง/อัปเกรด/เพิ่มช่อง เชื่อม startConstruction(\'small\') เดิม · ทดสอบ headless: 4 overlay FIT พอดีจอ ไม่มี JS error',
+    ],
+  },
 ];
 // เวอร์ชันปัจจุบัน = รายการล่าสุดในประวัติ
 const GAME_VERSION = UPDATE_HISTORY[UPDATE_HISTORY.length - 1].version;
@@ -7452,8 +7646,8 @@ function penDetailHtml(){
   </div>
 
   <div class="pd-tabs">
-    <div class="pd-tab active">ข้อมูล</div><div class="pd-tab">อัปเกรด</div>
-    <div class="pd-tab">สัตว์</div><div class="pd-tab">ผลิตผล</div><div class="pd-tab">ประวัติ</div>
+    <div class="pd-tab active" data-pdtab="info">ข้อมูล</div><div class="pd-tab" data-pdtab="upgrade">อัปเกรด</div>
+    <div class="pd-tab" data-pdtab="animals">สัตว์</div><div class="pd-tab" data-pdtab="products">ผลิตผล</div><div class="pd-tab" data-pdtab="history">ประวัติ</div>
   </div>
 
   <div class="pd-cols">
@@ -7527,8 +7721,13 @@ function openPenDetail(){
   ov.innerHTML = penDetailHtml();
   ov.classList.add('show');
   ov.scrollTop = 0;
-  // แท็บ (สลับ active อย่างเดียว — เนื้อหาเป็น mock หน้า "ข้อมูล")
+  // แท็บ — "ข้อมูล" คงเนื้อหาหน้าเดิม · แท็บอื่นเปิด overlay detail ของตัวเอง
   ov.querySelectorAll('.pd-tab').forEach(t => t.addEventListener('click', () => {
+    const kind = t.dataset.pdtab;
+    if(kind === 'animals'){  openAnimalDetail();  return; }
+    if(kind === 'products'){ openProductDetail(); return; }
+    if(kind === 'upgrade'){  openUpgradeDetail(); return; }
+    if(kind === 'history'){  openHistoryDetail(); return; }
     ov.querySelectorAll('.pd-tab').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
   }));
@@ -7537,6 +7736,325 @@ function closePenDetail(){
   const ov = document.getElementById('pen-detail-overlay');
   if(ov) ov.classList.remove('show');
 }
+
+// ===== ANIMAL DETAIL (หน้า "สัตว์ในคอกสัตว์เล็ก") — overlay เต็มจอ · ค่า mock ตายตัวตามรูป =====
+function animalDetailHtml(){
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
+  return `
+  <div class="pd-top">
+    <div class="pd-back" onclick="closeAnimalDetail()">↩</div>
+    <div class="pd-title">สัตว์ในคอกสัตว์เล็ก</div>
+    <div class="pd-res">
+      <div class="pd-chip"><span class="pd-chip-ic">🪙</span>125,450<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">🌾</span>2,340<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">💎</span>320<span class="pd-chip-plus">+</span></div>
+    </div>
+  </div>
+
+  <div class="ad-uprow">
+    <div class="ad-pencol">
+      <div class="ad-penimg"><img src="${scene}" alt="คอกสัตว์เล็ก"></div>
+      <div class="ad-penlv">คอกสัตว์เล็ก Lv.2</div>
+      <div class="ad-upbtn">⬆️ อัปเกรด</div>
+    </div>
+    <div class="ad-main pd-panel">
+      <div class="ad-head"><span class="ad-hic">🐔</span><div><div class="ad-hname">ไก่</div><div class="ad-hsub">คุณมีอยู่: 10 ตัว</div></div></div>
+      <div class="ad-desc">ไก่เป็นสัตว์พื้นฐาน เลี้ยงง่าย ให้ไข่เป็นประจำ</div>
+      <div class="ad-mainrow">
+        <div class="ad-subpanel">
+          <div class="ad-subhead">ผลผลิตหลัก</div>
+          <div class="ad-krow"><span>🥚 ไข่</span></div>
+          <div class="ad-krow"><span>⏱️ 45 นาที / ฟอง</span></div>
+          <div class="ad-subhead" style="margin-top:4px">ข้อมูล</div>
+          <div class="ad-krow">ประเภท<b>สัตว์ปีก</b></div>
+          <div class="ad-krow">พื้นที่ที่ใช้<b>1 ช่อง</b></div>
+          <div class="ad-krow">อายุเติบโต<b>10 นาที</b></div>
+          <div class="ad-krow">จำนวนสูงสุดในคอก<b>20 ตัว</b></div>
+        </div>
+        <div class="ad-subpanel ad-getcol">
+          <div class="ad-subhead" style="width:100%;text-align:center">ผลผลิตที่ได้รับ</div>
+          <div class="ad-getic">🥚</div>
+          <div style="font-size:0.5rem;font-weight:900;color:#4a3210">ไข่ <span style="color:#2f8a18">x10</span></div>
+          <div class="ad-getbtn">🧺 เก็บผลผลิต</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-cats">
+    <div class="ad-cat active">สัตว์ทั้งหมด</div>
+    <div class="ad-cat">🦆 สัตว์ปีก</div>
+    <div class="ad-cat">🐄 เลี้ยงลูกด้วยนม</div>
+    <div class="ad-cat">🐰 สัตว์ขนาดเล็ก</div>
+  </div>
+
+  <div class="ad-lowrow">
+    <div class="ad-grid">
+      <div class="ad-acard sel"><span class="ad-astar">⭐</span><div class="ad-aimg">🐔</div><div class="ad-ainfo"><div class="ad-aname">ไก่</div><div class="ad-alv">Lv.1</div><div class="ad-aqty">มีอยู่: 10</div></div></div>
+      <div class="ad-acard"><span class="ad-astar">⭐</span><div class="ad-aimg">🦆</div><div class="ad-ainfo"><div class="ad-aname">เป็ด</div><div class="ad-alv">Lv.1</div><div class="ad-aqty">มีอยู่: 8</div></div></div>
+      <div class="ad-acard"><span class="ad-astar">⭐</span><div class="ad-aimg">🐰</div><div class="ad-ainfo"><div class="ad-aname">กระต่าย</div><div class="ad-alv">Lv.1</div><div class="ad-aqty">มีอยู่: 6</div></div></div>
+      <div class="ad-acard"><span class="ad-astar">⭐</span><div class="ad-aimg">🦢</div><div class="ad-ainfo"><div class="ad-aname">ห่าน</div><div class="ad-alv">Lv.1</div><div class="ad-aqty">มีอยู่: 4</div></div></div>
+      <div class="ad-acard locked"><div class="ad-aimg">🦃</div><div class="ad-ainfo"><div class="ad-aname">ไก่งวง</div><div class="ad-alock">🔒 ปลดล็อก Lv.10</div></div></div>
+      <div class="ad-acard locked"><div class="ad-aimg">🐦</div><div class="ad-ainfo"><div class="ad-aname">นกกระทา</div><div class="ad-alock">🔒 ปลดล็อก Lv.12</div></div></div>
+      <div class="ad-acard locked"><div class="ad-aimg">🕊️</div><div class="ad-ainfo"><div class="ad-aname">นกพิราบ</div><div class="ad-alock">🔒 ปลดล็อก Lv.15</div></div></div>
+      <div class="ad-acard locked"><div class="ad-aimg">🐹</div><div class="ad-ainfo"><div class="ad-aname">หนูแกสบี้</div><div class="ad-alock">🔒 ปลดล็อก Lv.18</div></div></div>
+    </div>
+    <div class="ad-sel">
+      <div class="ad-selban">Lv.1 · ไก่</div>
+      <div class="ad-selimg">🐔</div>
+      <div class="ad-selprog">
+        <span class="ad-selstars">★<span class="o">★★★★</span></span>
+        <div class="ad-selbar"><i style="width:20%"></i><span>10 / 50</span></div>
+        <div class="ad-selup">⬆️</div>
+      </div>
+      <div class="ad-base">
+        <div class="ad-brow">🥚 ให้ผลผลิต<b>1 ฟอง / 45 นาที</b></div>
+        <div class="ad-brow">⏱️ อายุเติบโต<b>10 นาที</b></div>
+        <div class="ad-brow">🪙 ราคาขาย<b>15</b></div>
+        <div class="ad-brow">❤️ ค่าความสุข<b>60</b></div>
+      </div>
+      <div class="ad-selacts">
+        <div class="ad-sbtn green">⬆️ เพิ่มจำนวน</div>
+        <div class="ad-sbtn blue">❤️ ให้อาหาร</div>
+      </div>
+      <div class="ad-food">🛍️ มีอาหารสัตว์: 56</div>
+    </div>
+  </div>
+
+  <div class="ad-tip">💡 TIP: สัตว์ที่มีความสุขจะให้ผลผลิตมากขึ้น!</div>
+
+  <div class="ad-bnav">
+    <div class="ad-bn"><span class="ad-bnic">📖</span>ข้อมูล</div>
+    <div class="ad-bn active"><span class="ad-bnic">🐔</span>สัตว์</div>
+    <div class="ad-bn"><span class="ad-bnic">🥚</span>ผลิตผล</div>
+    <div class="ad-bn"><span class="ad-bnic">🌾</span>อาหารสัตว์</div>
+    <div class="ad-bn"><span class="ad-bnic">🌸</span>ตกแต่ง</div>
+  </div>`;
+}
+function openAnimalDetail(){
+  let ov = document.getElementById('animal-detail-overlay');
+  if(!ov){ ov = document.createElement('div'); ov.id = 'animal-detail-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = animalDetailHtml();
+  ov.classList.add('show');
+  ov.scrollTop = 0;
+  // แท็บหมวด / การ์ดสัตว์ / bottom nav → สลับ active อย่างเดียว (mock)
+  ov.querySelectorAll('.ad-cat').forEach(t => t.addEventListener('click', () => {
+    ov.querySelectorAll('.ad-cat').forEach(x => x.classList.remove('active')); t.classList.add('active');
+  }));
+  ov.querySelectorAll('.ad-acard:not(.locked)').forEach(c => c.addEventListener('click', () => {
+    ov.querySelectorAll('.ad-acard').forEach(x => x.classList.remove('sel')); c.classList.add('sel');
+  }));
+  ov.querySelectorAll('.ad-bn').forEach(b => b.addEventListener('click', () => {
+    ov.querySelectorAll('.ad-bn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+  }));
+}
+function closeAnimalDetail(){
+  const ov = document.getElementById('animal-detail-overlay');
+  if(ov) ov.classList.remove('show');
+}
+
+// แท็บหมวด / bottom nav ในหน้า detail — สลับ active อย่างเดียว (mock)
+function wireDetailTabs(ov){
+  ov.querySelectorAll('.ad-cat').forEach(t => t.addEventListener('click', () => {
+    ov.querySelectorAll('.ad-cat').forEach(x => x.classList.remove('active')); t.classList.add('active');
+  }));
+  ov.querySelectorAll('.ad-bn').forEach(b => b.addEventListener('click', () => {
+    ov.querySelectorAll('.ad-bn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+  }));
+}
+
+// ===== PRODUCT DETAIL (หน้า "ผลิตผล") — overlay เต็มจอ · ค่า mock =====
+function productDetailHtml(){
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
+  const P = [['ไข่ไก่','🥚','48','96','20'],['ไข่เป็ด','🥚','30','90','15'],['นมวัว','🥛','36','180','18'],['นมแพะ','🥛','16','128','8'],['ขนไก่','🪶','20','40','10'],['ขนเป็ด','🪶','12','36','6'],['เนื้อไก่','🍗','10','150','5'],['เนื้อวัว','🥩','6','240','3']];
+  const cards = P.map(p => `<div class="pr-card"><div class="pr-badge">${p[4]}</div><div class="pr-cname">${p[0]}</div><div class="pr-cic">${p[1]}</div><div class="pr-cqty">x${p[2]}</div><div class="pr-cval">🪙 ${p[3]}</div></div>`).join('');
+  return `
+  <div class="pd-top">
+    <div class="pd-back" onclick="closeProductDetail()">↩</div>
+    <div class="pd-title">ผลิตผล</div>
+    <div class="pd-res">
+      <div class="pd-chip"><span class="pd-chip-ic">🪙</span>125,450<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">🌾</span>2,340<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">💎</span>320<span class="pd-chip-plus">+</span></div>
+    </div>
+  </div>
+  <div class="pr-uprow">
+    <div class="pr-penimg"><img src="${scene}" alt="คอก"></div>
+    <div class="pr-info pd-panel">
+      <div class="pd-plabel">🧺 ข้อมูลผลิตผล</div>
+      <div class="pr-desc">รวบรวมผลิตผลจากสัตว์ของคุณ ใช้สำหรับขาย, ส่งออเดอร์ หรือแปรรูป</div>
+      <div class="pr-irow">จำนวนผลิตผลทั้งหมด<b>168</b></div>
+      <div class="pr-irow">⏱️ มูลค่ารวม<b>🪙 12,460</b></div>
+      <div class="pr-irow">ช่องเก็บผลิตผล<b>12 / 20 ช่อง</b></div>
+      <div class="pr-collectbtn">🧺 เก็บทั้งหมด</div>
+    </div>
+  </div>
+  <div class="ad-cats">
+    <div class="ad-cat active">📦 ทั้งหมด</div><div class="ad-cat">🥚 ไข่</div><div class="ad-cat">🥛 นม</div><div class="ad-cat">🪶 ขน</div><div class="ad-cat">🍖 เนื้อ</div>
+  </div>
+  <div class="pr-grid">${cards}</div>
+  <div class="ad-tip">💡 TIP: เก็บผลิตผลจากสัตว์อย่างสม่ำเสมอ · ผลิตผลจะถูกเก็บไว้ 24 ชั่วโมง</div>
+  <div class="pr-acts">
+    <div class="pr-abtn blue">🏪 ขายทั้งหมด<small>🪙 12,460</small></div>
+    <div class="pr-abtn green">📋 ส่งออเดอร์<small>3 ออเดอร์รอส่ง</small></div>
+    <div class="pr-abtn purple">🏭 แปรรูป<small>2 รายการพร้อม</small></div>
+  </div>
+  <div class="ad-bnav">
+    <div class="ad-bn"><span class="ad-bnic">📖</span>ข้อมูล</div>
+    <div class="ad-bn"><span class="ad-bnic">🐔</span>สัตว์</div>
+    <div class="ad-bn active"><span class="ad-bnic">🧺</span>ผลิตผล</div>
+    <div class="ad-bn"><span class="ad-bnic">🌾</span>อาหารสัตว์</div>
+    <div class="ad-bn"><span class="ad-bnic">🌸</span>ตกแต่ง</div>
+    <div class="ad-bn"><span class="ad-bnic">🏠</span>คลังสินค้า</div>
+  </div>`;
+}
+function openProductDetail(){
+  let ov = document.getElementById('product-detail-overlay');
+  if(!ov){ ov = document.createElement('div'); ov.id = 'product-detail-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = productDetailHtml(); ov.classList.add('show'); ov.scrollTop = 0; wireDetailTabs(ov);
+}
+function closeProductDetail(){ const ov = document.getElementById('product-detail-overlay'); if(ov) ov.classList.remove('show'); }
+
+// ===== UPGRADE DETAIL (หน้า "อัปเกรดคอกสัตว์เล็ก") — overlay เต็มจอ · ค่า mock =====
+function upgradeDetailHtml(){
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
+  return `
+  <div class="pd-top">
+    <div class="pd-back" onclick="closeUpgradeDetail()">↩</div>
+    <div class="pd-title">อัปเกรดคอกสัตว์เล็ก</div>
+    <div class="pd-res">
+      <div class="pd-chip"><span class="pd-chip-ic">🪙</span>125,450<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">🌾</span>2,340<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">💎</span>320<span class="pd-chip-plus">+</span></div>
+    </div>
+  </div>
+  <div class="ug-uprow">
+    <div class="ug-pencol">
+      <div class="ug-penimg"><img src="${scene}" alt="คอก"></div>
+      <div class="ug-lvbar"><span class="ug-lvtag">Lv.2</span><div class="ug-bar"><i style="width:50%"></i><span>150 / 300</span></div><div class="ug-bup">⬆️</div></div>
+    </div>
+    <div class="ug-ov pd-panel">
+      <div class="pd-plabel">🌿 ภาพรวมการอัปเกรด</div>
+      <div class="ug-lvhead"><span>Lv.2</span><span style="color:#6bbf3e">➡️</span><span>Lv.3</span></div>
+      <div class="ug-row"><span class="ug-lb">🗺️ ขนาดพื้นที่</span><span class="ug-v1">100</span><span class="ug-ar">➡️</span><span class="ug-v2">125 ตร.ม.</span></div>
+      <div class="ug-row"><span class="ug-lb">⏱️ เวลาการสร้าง</span><span class="ug-v1">45</span><span class="ug-ar">➡️</span><span class="ug-v2">37 นาที</span></div>
+      <div class="ug-row"><span class="ug-lb">👷 ใช้แรงงาน</span><span class="ug-v1">1</span><span class="ug-ar">➡️</span><span class="ug-v2">1 คน</span></div>
+      <div class="ug-row"><span class="ug-lb">⭐ ชื่อเสียง</span><span class="ug-v1">+15</span><span class="ug-ar">➡️</span><span class="ug-v2">+25</span></div>
+      <div class="ug-row"><span class="ug-lb">🏠 สร้างแล้ว</span><span class="ug-v1">0/4</span><span class="ug-ar">➡️</span><span class="ug-v2">0/4 หลัง</span></div>
+    </div>
+  </div>
+  <div class="ug-cols">
+    <div class="ug-col">
+      <div class="pd-panel">
+        <div class="pd-plabel">📋 เงื่อนไขการอัปเกรด</div>
+        <div class="ug-cond">⭐<span class="ug-cn">เลเวลผู้เล่น</span><b>Lv.5</b><span class="ok">✔</span></div>
+        <div class="ug-cond">🏠<span class="ug-cn">คอกสัตว์เล็ก</span><b>Lv.2</b><span class="ok">✔</span></div>
+        <div class="ug-cond">👷<span class="ug-cn">ใช้แรงงาน</span><b>1 คน</b><span class="ok">✔</span></div>
+        <div class="ug-cond">🏆<span class="ug-cn">ชื่อเสียงที่ต้องการ</span><b>25 <small style="color:#c0491f">(มี 15)</small></b><span class="no">✘</span></div>
+      </div>
+      <div class="pd-panel">
+        <div class="pd-plabel">🧱 วัสดุที่ต้องใช้</div>
+        <div class="ug-mats">
+          <div class="ug-mat"><span class="ug-matic">🪵</span>ไม้<br>18/20</div>
+          <div class="ug-mat"><span class="ug-matic">🪨</span>หิน<br>12/15</div>
+          <div class="ug-mat"><span class="ug-matic">🔩</span>ตะปู<br>8/10</div>
+          <div class="ug-mat"><span class="ug-matic">🪚</span>ไม้กระดาน<br>4/5</div>
+        </div>
+        <div class="ug-note" style="text-align:left">💡 TIP: รับวัสดุเพิ่มเติมได้จากการส่งคำสั่งซื้อ หรือทำภารกิจ</div>
+      </div>
+    </div>
+    <div class="ug-col">
+      <div class="pd-panel">
+        <div class="pd-plabel">🎁 สิ่งที่จะได้รับเมื่ออัปเกรด</div>
+        <div class="ug-getimg"><img src="${scene}" alt="Lv.3"></div>
+        <div class="ug-gets">
+          <div class="ug-get"><span class="ug-getic">↔️</span>กว้างขึ้น<br>125 ตร.ม.</div>
+          <div class="ug-get"><span class="ug-getic">⏱️</span>เวลาลดลง<br>37 นาที</div>
+          <div class="ug-get"><span class="ug-getic">⭐</span>ชื่อเสียง<br>+25</div>
+        </div>
+        <div class="ug-note">คอกที่กว้างขึ้นและแข็งแรงขึ้น สามารถเลี้ยงสัตว์ได้มากขึ้น และดูแลสัตว์ได้ดีขึ้น</div>
+      </div>
+    </div>
+  </div>
+  <div class="ug-dobar">
+    <div class="ug-dobtn" onclick="startConstruction('small')"><small>🪙 1,000</small>อัปเกรด</div>
+    <div class="ug-dotime">เวลาที่ใช้ในการอัปเกรด<br>⏱️ 37 นาที</div>
+  </div>
+  <div class="pd-panel">
+    <div class="pd-plabel">🏠 คอกสัตว์เล็กของคุณ</div>
+    <div class="pd-slots">
+      <div class="pd-slot"><img src="${scene}"><div class="pd-slotlv">Lv.2</div><div class="pd-slotsub" style="color:#3c7d1c">⭐x2 · 🟢 กำลังผลิต</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 2</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 3</div></div>
+      <div class="pd-slot locked"><div class="pd-lock">🔒</div><div class="pd-slotsub">ปลดล็อกช่องที่ 4</div></div>
+      <div class="pd-slot add" onclick="startConstruction('small')"><div class="pd-slotplus">＋</div><div class="pd-slotsub">เพิ่มช่อง 💎20</div></div>
+    </div>
+  </div>`;
+}
+function openUpgradeDetail(){
+  let ov = document.getElementById('upgrade-detail-overlay');
+  if(!ov){ ov = document.createElement('div'); ov.id = 'upgrade-detail-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = upgradeDetailHtml(); ov.classList.add('show'); ov.scrollTop = 0; wireDetailTabs(ov);
+}
+function closeUpgradeDetail(){ const ov = document.getElementById('upgrade-detail-overlay'); if(ov) ov.classList.remove('show'); }
+
+// ===== HISTORY DETAIL (หน้า "ประวัติ") — overlay เต็มจอ · ค่า mock + กราฟแท่ง CSS =====
+function historyDetailHtml(){
+  const scene = (typeof BUILD_CARD!=='undefined' && BUILD_CARD.small && BUILD_CARD.small.thumb) || 'ภาพหน้าจอ/pen-small-coop.png';
+  const mx = 800;
+  const D = [['27/05',300,175,460],['28/05',310,180,310],['29/05',510,280,420],['30/05',385,255,455],['31/05',505,270,395],['01/06',670,260,385],['02/06',335,160,245]];
+  const bars = D.map(d => `<div class="hi-day"><div class="hi-b g" style="height:${Math.round(d[1]/mx*100)}%"></div><div class="hi-b o" style="height:${Math.round(d[2]/mx*100)}%"></div><div class="hi-b b" style="height:${Math.round(d[3]/mx*100)}%"></div></div>`).join('');
+  const labels = D.map(d => `<div class="hi-dl">${d[0]}</div>`).join('');
+  const L = [['🏠','อัปเกรดคอกสัตว์เล็ก','อัปเกรดจาก Lv.2 เป็น Lv.3','02/06 14:35','🪙 -1,000','neg'],['🥚','เก็บไข่','ไข่ไก่ x12','02/06 14:20','⭐ +12','pos'],['🥛','เก็บนม','นมวัว x8','02/06 13:55','🪙 +80','pos'],['🐔','ซื้อสัตว์','ซื้อ ไก่ x5','02/06 13:30','🪙 -500','neg'],['🌾','ให้อาหารสัตว์','อาหารไก่ x10','02/06 13:15','🪙 -100','neg']];
+  const logs = L.map(x => `<div class="hi-log"><span class="hi-lic">${x[0]}</span><div class="hi-lmain"><div class="hi-lt">${x[1]}</div><div class="hi-ls">${x[2]}</div></div><span class="hi-ltime">${x[3]}</span><span class="hi-lval ${x[5]}">${x[4]}</span></div>`).join('');
+  return `
+  <div class="pd-top">
+    <div class="pd-back" onclick="closeHistoryDetail()">↩</div>
+    <div class="pd-title">ประวัติ</div>
+    <div class="pd-res">
+      <div class="pd-chip"><span class="pd-chip-ic">🪙</span>125,450<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">🌾</span>2,340<span class="pd-chip-plus">+</span></div>
+      <div class="pd-chip"><span class="pd-chip-ic">💎</span>320<span class="pd-chip-plus">+</span></div>
+    </div>
+  </div>
+  <div class="hi-banner"><img src="${scene}" alt="คอก"></div>
+  <div class="ad-cats">
+    <div class="ad-cat active">📊 ภาพรวม</div><div class="ad-cat">🥚 การผลิต</div><div class="ad-cat">⬆️ การอัปเกรด</div><div class="ad-cat">🧱 ทรัพยากร</div><div class="ad-cat">🏆 รางวัล</div>
+  </div>
+  <div class="hi-cols">
+    <div class="hi-col pd-panel">
+      <div class="pd-plabel">🌱 สถิติภาพรวม</div>
+      <div class="hi-srow">🏠 คอกสัตว์เล็กที่สร้าง<b>4 หลัง</b></div>
+      <div class="hi-srow">🐔 สัตว์ที่เลี้ยงทั้งหมด<b>56 ตัว</b></div>
+      <div class="hi-srow">🧺 ผลผลิตที่เก็บเกี่ยว<b>1,248 ชิ้น</b></div>
+      <div class="hi-srow">⭐ มูลค่าผลผลิตรวม<b>🪙 28,450</b></div>
+      <div class="hi-srow">⏱️ เวลาที่เล่นทั้งหมด<b>12 วัน 6 ชม.</b></div>
+      <div class="hi-srow">📅 วันที่เริ่มสร้างคอก<b>12/05/2567</b></div>
+    </div>
+    <div class="hi-col pd-panel">
+      <div class="pd-plabel">📈 กราฟกิจกรรมรายวัน</div>
+      <div class="hi-legend">
+        <span class="hi-lg"><span class="hi-dot" style="background:#4e9c3f"></span>ผลผลิต</span>
+        <span class="hi-lg"><span class="hi-dot" style="background:#e07f10"></span>สัตว์</span>
+        <span class="hi-lg"><span class="hi-dot" style="background:#2f6ba0"></span>มูลค่า</span>
+      </div>
+      <div class="hi-chart">${bars}</div>
+      <div class="hi-days">${labels}</div>
+    </div>
+  </div>
+  <div class="pd-panel">
+    <div class="pd-plabel">🌿 ประวัติกิจกรรมล่าสุด</div>
+    ${logs}
+    <div class="hi-morebtn">ดูเพิ่มเติม ⬇️</div>
+  </div>
+  <div class="ad-tip">💡 TIP: คุณสามารถดูประวัติได้ถึง 30 วันย้อนหลัง</div>`;
+}
+function openHistoryDetail(){
+  let ov = document.getElementById('history-detail-overlay');
+  if(!ov){ ov = document.createElement('div'); ov.id = 'history-detail-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = historyDetailHtml(); ov.classList.add('show'); ov.scrollTop = 0; wireDetailTabs(ov);
+}
+function closeHistoryDetail(){ const ov = document.getElementById('history-detail-overlay'); if(ov) ov.classList.remove('show'); }
 
 // ===== เวอร์ชันทดสอบ: true = โชว์เฉพาะหมวดคอกสัตว์เล็ก (4 กล่อง) จัดกลางหน้า · false = โชว์ครบทุกหมวดตามปกติ =====
 const TEST_ONLY_SMALL = true;
