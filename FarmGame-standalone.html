@@ -2682,7 +2682,7 @@ body { padding-bottom: 72px; }
 #chat-panel {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดซ้าย เว้นขวาให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; left: 0; right: auto;
-  width: calc(100% - 20px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 20px */
+  width: calc(100% - 50px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 50px */
   border-radius: 0 22px 22px 0;
   overflow: hidden;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
@@ -2792,7 +2792,7 @@ body { padding-bottom: 72px; }
 #nav-drawer {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดขวา เว้นซ้ายให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; right: 0; left: auto;
-  width: calc(100% - 20px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 20px */
+  width: calc(100% - 50px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 50px */
   border-radius: 22px 0 0 22px;
   overflow: hidden;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
@@ -6377,6 +6377,14 @@ const UPDATE_HISTORY = [
     title: 'ขยายแผงแชทชุมชน + เมนูแฮมเบอร์เกอร์ให้เกือบเต็มจอ',
     details: [
       'ปรับ #chat-panel และ #nav-drawer จาก width:50% → calc(100% - 20px) เหลือพื้นหลังฉากเกมเบลอโชว์แค่ ~20px ฝั่งตรงข้าม (เดิมเห็นครึ่งจอ)',
+    ],
+  },
+  {
+    version: '1.20',
+    date: '05/07/2026',
+    title: 'เพิ่มขอบที่เหลือของแผงแชท/เมนู จาก 20px เป็น 50px',
+    details: [
+      'ปรับ #chat-panel และ #nav-drawer จาก calc(100% - 20px) → calc(100% - 50px) เหลือพื้นหลังฉากเกมเบลอโชว์ ~50px ฝั่งตรงข้าม (เดิม ~20px)',
     ],
   },
 ];
