@@ -2679,7 +2679,7 @@ body { padding-bottom: 72px; }
 #chat-panel {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดซ้าย เว้นขวาให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; left: 0; right: auto;
-  width: calc(100% - 20px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 20px */
+  width: 50%; max-width: none;      /* แค่ครึ่งจอ — อีกครึ่งเห็นเกมเบลอข้างหลัง */
   border-radius: 0 22px 22px 0;
   overflow: hidden;
   background: linear-gradient(180deg,#f4f9ff,#eaf2fb);
@@ -2789,7 +2789,7 @@ body { padding-bottom: 72px; }
 #nav-drawer {
   position: fixed;                  /* แผงอยู่ในกรอบเกม ชิดขวา เว้นซ้ายให้เห็นฉากหลังเบลอ (แบบรูปที่ 2) */
   top: 0; bottom: 0; right: 0; left: auto;
-  width: calc(100% - 20px); max-width: none;   /* เกือบเต็มจอ — เหลือพื้นหลังเบลอโชว์แค่ 20px */
+  width: 50%; max-width: none;      /* แค่ครึ่งจอ — อีกครึ่งเห็นเกมเบลอข้างหลัง */
   border-radius: 22px 0 0 22px;
   overflow: hidden;
   background: linear-gradient(180deg,#fffaf0,#fbf2e2);
@@ -6366,14 +6366,6 @@ const UPDATE_HISTORY = [
       'กดการ์ด .pen2 → openPenDetail() เปิด overlay #pen-detail-overlay (position:fixed เต็มจอ z-index สูง) · ปุ่ม ↩ ปิด (closePenDetail)',
       'เลย์เอาต์เลียนแบบรูป: top bar (back+ชื่อ+ทรัพยากร 🪙🌾💎) · hero ภาพคอก+NEW+แถบ Lv.2 150/300 · แผง "สรุปรายละเอียด" · ปุ่มสร้างคอก 🪙1,000 · แท็บ ข้อมูล/อัปเกรด/สัตว์/ผลิตผล/ประวัติ · 2 คอลัมน์: รายละเอียด+ผลิตผลที่ได้รับ | ตัวอย่างสัตว์+อัปเกรด(Lv.2→3+วัสดุ) · แถบ "คอกของคุณ" (1 หลัง+3 ล็อก+เพิ่มช่อง)',
       'ค่าทั้งหมด mockup ตายตัวตามรูป · ย่ออีโมจิ/กล่อง/ตัวอักษร (font 0.42–0.95rem) ให้พอดีหน้าเดียวไม่ต้องสกอล · ปุ่มสร้าง/เพิ่มช่อง → startConstruction(small)',
-    ],
-  },
-  {
-    version: '1.19',
-    date: '05/07/2026',
-    title: 'ขยายแผงแชทชุมชน + เมนูแฮมเบอร์เกอร์ให้เกือบเต็มจอ',
-    details: [
-      'ปรับ #chat-panel และ #nav-drawer จาก width:50% → calc(100% - 20px) เหลือพื้นหลังฉากเกมเบลอโชว์แค่ ~20px ฝั่งตรงข้าม (เดิมเห็นครึ่งจอ)',
     ],
   },
 ];
