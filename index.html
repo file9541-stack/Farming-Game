@@ -2735,7 +2735,7 @@ body { padding-bottom: 72px; }
 .chat-msg .cm-time { font-size: 0.58rem; opacity: 0.6; margin-top: 2px; text-align: right; }
 .chat-input-row {
   flex-shrink: 0;
-  display: flex; gap: 8px; padding: 12px 14px;
+  display: flex; gap: 8px; padding: 12px 24px 12px 14px;
   background: #fff; border-top: 1.5px solid #d4e4f4;
 }
 .chat-input {
@@ -6401,6 +6401,14 @@ const UPDATE_HISTORY = [
     title: 'ปรับขอบที่เหลือของแผงแชท/เมนู เป็น 80px',
     details: [
       'ปรับ #chat-panel และ #nav-drawer จาก calc(100% - 200px) → calc(100% - 80px) เหลือพื้นหลังฉากเกมเบลอโชว์ ~80px ฝั่งตรงข้าม (เดิม ~200px)',
+    ],
+  },
+  {
+    version: '1.23',
+    date: '05/07/2026',
+    title: 'แก้ปุ่มส่งแชทล้นมุมโค้งของแผง',
+    details: [
+      'เพิ่ม padding-right ของ .chat-input-row จาก 14px → 24px (padding: 12px 24px 12px 14px) → ปุ่มส่ง ➤ ขยับเข้ามาพ้นมุมโค้ง 22px ของแผง · ช่องกรอก (flex:1) หดตามอัตโนมัติ ไม่ล้นกรอบ',
     ],
   },
 ];
